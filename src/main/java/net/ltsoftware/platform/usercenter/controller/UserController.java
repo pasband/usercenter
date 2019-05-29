@@ -1,8 +1,8 @@
 package net.ltsoftware.platform.usercenter.controller;
 
-import net.ltsoftware.platform.model.User;
-import net.ltsoftware.platform.service.UserService;
-import net.ltsoftware.platform.util.JsonUtil;
+import net.ltsoftware.platform.usercenter.model.User;
+import net.ltsoftware.platform.usercenter.service.UserService;
+import net.ltsoftware.platform.usercenter.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

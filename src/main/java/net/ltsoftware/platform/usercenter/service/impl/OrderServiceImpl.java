@@ -1,18 +1,17 @@
 package net.ltsoftware.platform.usercenter.service.impl;
 
-import net.ltsoftware.platform.dao.OrderMapper;
-import net.ltsoftware.platform.model.Order;
-import net.ltsoftware.platform.service.OrderService;
 import net.ltsoftware.platform.usercenter.dao.OrderMapper;
 import net.ltsoftware.platform.usercenter.model.Order;
+import net.ltsoftware.platform.usercenter.model.OrderExample;
 import net.ltsoftware.platform.usercenter.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import java.util.List;
 
-@Service("orderService")
+@Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
+    @Resource
     private OrderMapper orderMapper;
 
     @Override
@@ -33,6 +32,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer insert(Order order) throws Exception {
         return orderMapper.insert(order);
+    }
+
+    @Override
+    public List<Order> selectByExample(OrderExample orderExample) throws Exception {
+        return orderMapper.selectByExample(orderExample);
     }
 
 }

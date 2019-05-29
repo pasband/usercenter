@@ -1,7 +1,6 @@
 package net.ltsoftware.platform.usercenter.controller;
 
 import net.ltsoftware.platform.usercenter.util.JsonUtil;
-import net.ltsoftware.platform.util.JsonUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

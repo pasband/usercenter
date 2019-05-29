@@ -1,8 +1,9 @@
 package net.ltsoftware.platform.usercenter.controller;
 
-import net.ltsoftware.platform.model.Order;
-import net.ltsoftware.platform.service.OrderService;
-import net.ltsoftware.platform.util.JsonUtil;
+import net.ltsoftware.platform.usercenter.model.Order;
+import net.ltsoftware.platform.usercenter.model.OrderExample;
+import net.ltsoftware.platform.usercenter.service.OrderService;
+import net.ltsoftware.platform.usercenter.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +27,9 @@ public class OrderController {
     }
 
     @RequestMapping("/order/list")
-    public void listOrder(Order order, HttpServletResponse response) {
+    public void listOrder(OrderExample example, HttpServletResponse response) {
         try {
-
+            orderService.selectByExample(example);
             JsonUtil.writer(response, "");
         }catch (Exception e){
             e.printStackTrace();
