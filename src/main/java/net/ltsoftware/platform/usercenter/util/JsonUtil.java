@@ -41,7 +41,7 @@ public class JsonUtil {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			log.error("AppJsonUtil error:", e);
+			log.error("JsonUtil error:", e);
 			e.printStackTrace();
 		}
 	}
@@ -53,7 +53,7 @@ public class JsonUtil {
 	 * @param code
 	 *            写入的内容
 	 */
-	public static void toJsonMsg(HttpServletResponse response, String code,
+	public static void toJsonMsg(HttpServletResponse response, int code,
                                  Object data) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", code);

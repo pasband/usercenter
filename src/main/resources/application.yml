@@ -22,3 +22,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
+
+#redis配置
+jedis :
+  pool :
+    host : 127.0.0.1
+    port : 6379
+    config :
+      maxTotal: 20
+      maxIdle: 10
+      maxWaitMillis : 100000

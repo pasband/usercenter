@@ -1,5 +1,6 @@
 package net.ltsoftware.platform.usercenter.controller;
 
+import com.alibaba.fastjson.JSON;
 import net.ltsoftware.platform.usercenter.model.Order;
 import net.ltsoftware.platform.usercenter.model.OrderExample;
 import net.ltsoftware.platform.usercenter.service.OrderService;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 public class OrderController {
@@ -29,8 +31,9 @@ public class OrderController {
     @RequestMapping("/order/list")
     public void listOrder(OrderExample example, HttpServletResponse response) {
         try {
-            orderService.selectByExample(example);
-            JsonUtil.writer(response, "");
+            List<Order> orderList = orderService.selectByExample(example);
+
+            JsonUtil.writer(response, JSON.toJSONString(orderList));
         }catch (Exception e){
             e.printStackTrace();
         }
