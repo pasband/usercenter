@@ -1,13 +1,12 @@
 package net.ltsoftware.platform.usercenter.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Component
@@ -27,7 +26,18 @@ public class RedisClient<T> {
         }
     }
 
-    public String get(String key) throws Exception  {
+    public void setex(String key, int seconds, String value) throws Exception {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            jedis.setex(key, seconds, value);
+        } finally {
+            //返还到连接池
+            jedis.close();
+        }
+    }
+
+    public String get(String key) throws Exception {
 
         Jedis jedis = null;
         try {
