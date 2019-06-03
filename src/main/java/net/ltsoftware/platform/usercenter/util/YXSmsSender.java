@@ -58,7 +58,7 @@ public class YXSmsSender {
                 new BasicNameValuePair("to", phone),
                 new BasicNameValuePair("content", message));
 
-        String result = httpUtil.post(SmsConstants.SERV_URL, nvs);
+        String result = httpUtil.post(SmsConstants.SERV_URL, nvs, "GBK");
         //save msg&result to db
 
         if (result != null) {

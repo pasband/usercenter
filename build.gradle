@@ -28,7 +28,9 @@ dependencies {
     compile 'com.alibaba:druid:1.1.9'
     compile 'redis.clients:jedis:3.0.1'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.8'
-    compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.8'
+    compile 'commons-lang:commons-lang:2.6'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile fileTree(dir:'lib',includes:['*jar'])
 
     runtimeOnly 'mysql:mysql-connector-java'
 

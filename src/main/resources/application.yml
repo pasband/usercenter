@@ -1,4 +1,3 @@
-
 #默认使用配置
 spring:
   profiles:
@@ -24,11 +23,12 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
 #redis配置
-jedis :
-  pool :
-    host : 127.0.0.1
-    port : 6379
-    config :
+jedis:
+  pool:
+    host: 127.0.0.1
+    port: 6379
+    config:
       maxTotal: 20
       maxIdle: 10
-      maxWaitMillis : 100000
+      maxWaitMillis: 100000
+
