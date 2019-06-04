@@ -3,6 +3,7 @@
 <mapper namespace="net.ltsoftware.platform.usercenter.dao.UserMapper">
   <resultMap id="BaseResultMap" type="net.ltsoftware.platform.usercenter.model.User">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="QQ_OPENID" jdbcType="VARCHAR" property="qqOpenid" />
     <result column="AVATAR" jdbcType="VARCHAR" property="avatar" />
     <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
     <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
@@ -76,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, AVATAR, ACCOUNT, PASSWORD, SALT, NAME, BIRTHDAY, SEX, EMAIL, PHONE, STATUS, CREATE_TIME, 
-    UPDATE_TIME, VERSION
+    id, QQ_OPENID, AVATAR, ACCOUNT, PASSWORD, SALT, NAME, BIRTHDAY, SEX, EMAIL, PHONE, 
+    STATUS, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
   <select id="selectByExample" parameterType="net.ltsoftware.platform.usercenter.model.UserExample" resultMap="BaseResultMap">
     select
@@ -110,22 +111,27 @@
     </if>
   </delete>
   <insert id="insert" parameterType="net.ltsoftware.platform.usercenter.model.User">
-    insert into acc_user (id, AVATAR, ACCOUNT, 
-      PASSWORD, SALT, NAME, 
-      BIRTHDAY, SEX, EMAIL, 
-      PHONE, STATUS, CREATE_TIME, 
-      UPDATE_TIME, VERSION)
-    values (#{id,jdbcType=BIGINT}, #{avatar,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{birthday,jdbcType=TIMESTAMP}, #{sex,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER})
+    insert into acc_user (id, QQ_OPENID, AVATAR, 
+      ACCOUNT, PASSWORD, SALT, 
+      NAME, BIRTHDAY, SEX, 
+      EMAIL, PHONE, STATUS, 
+      CREATE_TIME, UPDATE_TIME, VERSION
+      )
+    values (#{id,jdbcType=BIGINT}, #{qqOpenid,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{sex,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="net.ltsoftware.platform.usercenter.model.User">
     insert into acc_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="qqOpenid != null">
+        QQ_OPENID,
       </if>
       <if test="avatar != null">
         AVATAR,
@@ -170,6 +176,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
+      </if>
+      <if test="qqOpenid != null">
+        #{qqOpenid,jdbcType=VARCHAR},
       </if>
       <if test="avatar != null">
         #{avatar,jdbcType=VARCHAR},
@@ -224,6 +233,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.qqOpenid != null">
+        QQ_OPENID = #{record.qqOpenid,jdbcType=VARCHAR},
+      </if>
       <if test="record.avatar != null">
         AVATAR = #{record.avatar,jdbcType=VARCHAR},
       </if>
@@ -271,6 +283,7 @@
   <update id="updateByExample" parameterType="map">
     update acc_user
     set id = #{record.id,jdbcType=BIGINT},
+      QQ_OPENID = #{record.qqOpenid,jdbcType=VARCHAR},
       AVATAR = #{record.avatar,jdbcType=VARCHAR},
       ACCOUNT = #{record.account,jdbcType=VARCHAR},
       PASSWORD = #{record.password,jdbcType=VARCHAR},
@@ -291,6 +304,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="net.ltsoftware.platform.usercenter.model.User">
     update acc_user
     <set>
+      <if test="qqOpenid != null">
+        QQ_OPENID = #{qqOpenid,jdbcType=VARCHAR},
+      </if>
       <if test="avatar != null">
         AVATAR = #{avatar,jdbcType=VARCHAR},
       </if>
@@ -335,7 +351,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="net.ltsoftware.platform.usercenter.model.User">
     update acc_user
-    set AVATAR = #{avatar,jdbcType=VARCHAR},
+    set QQ_OPENID = #{qqOpenid,jdbcType=VARCHAR},
+      AVATAR = #{avatar,jdbcType=VARCHAR},
       ACCOUNT = #{account,jdbcType=VARCHAR},
       PASSWORD = #{password,jdbcType=VARCHAR},
       SALT = #{salt,jdbcType=VARCHAR},

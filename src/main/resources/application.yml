@@ -11,9 +11,9 @@ mybatis:
 
 ---
 
-#开发配置
+#本地配置
 spring:
-  profiles: dev
+  profiles: local
   datasource:
     url: jdbc:mysql://localhost:3306/platform
     username: root
@@ -22,10 +22,34 @@ spring:
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
 
-#redis配置
+#jedis配置
 jedis:
   pool:
     host: 127.0.0.1
+    port: 6379
+    config:
+      maxTotal: 20
+      maxIdle: 10
+      maxWaitMillis: 100000
+
+---
+
+#开发服务器配置
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://rm-bp1n7rs8j305i8a26.mysql.rds.aliyuncs.com:3306/platform
+    username: lt_dev
+    password: rVMBcz4+5JDWfg
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+
+#redis配置
+jedis:
+  pool:
+    host: r-wz9nogivnknogmkk30.redis.rds.aliyuncs.com
+    pass: zPWkmOQ05KiD0Q
     port: 6379
     config:
       maxTotal: 20

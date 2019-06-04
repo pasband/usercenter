@@ -165,6 +165,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andQqOpenidIsNull() {
+            addCriterion("QQ_OPENID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidIsNotNull() {
+            addCriterion("QQ_OPENID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidEqualTo(String value) {
+            addCriterion("QQ_OPENID =", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidNotEqualTo(String value) {
+            addCriterion("QQ_OPENID <>", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidGreaterThan(String value) {
+            addCriterion("QQ_OPENID >", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidGreaterThanOrEqualTo(String value) {
+            addCriterion("QQ_OPENID >=", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidLessThan(String value) {
+            addCriterion("QQ_OPENID <", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidLessThanOrEqualTo(String value) {
+            addCriterion("QQ_OPENID <=", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidLike(String value) {
+            addCriterion("QQ_OPENID like", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidNotLike(String value) {
+            addCriterion("QQ_OPENID not like", value, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidIn(List<String> values) {
+            addCriterion("QQ_OPENID in", values, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidNotIn(List<String> values) {
+            addCriterion("QQ_OPENID not in", values, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidBetween(String value1, String value2) {
+            addCriterion("QQ_OPENID between", value1, value2, "qqOpenid");
+            return (Criteria) this;
+        }
+
+        public Criteria andQqOpenidNotBetween(String value1, String value2) {
+            addCriterion("QQ_OPENID not between", value1, value2, "qqOpenid");
+            return (Criteria) this;
+        }
+
         public Criteria andAvatarIsNull() {
             addCriterion("AVATAR is null");
             return (Criteria) this;

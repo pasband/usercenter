@@ -6,21 +6,22 @@ import net.ltsoftware.platform.usercenter.constant.TencentConstants;
 import net.ltsoftware.platform.usercenter.util.HttpUtil;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 
-public class TencentOauth2Service {
+@Service
+public class QqOauth2Service {
 
     @Autowired
     private HttpUtil httpUtil;
 
     //request https://graph.qq.com/oauth2.0/me?access_token=A110C6E862F4B29B719B8E3F37B7A403
     //response callback( {"client_id":"101584460","openid":"88076875A787B01378E9D7172DE7ED86"} );
-    public String getOpenID(String token) throws IOException {
+    public String getOpenID(String token) {
 
         String respStr = httpUtil.get(TencentConstants.QQ_OPENID_URL,
                 asList(new BasicNameValuePair("access_token", token)));
@@ -38,14 +39,14 @@ public class TencentOauth2Service {
     // &oauth_consumer_key=101584460
     // &openid=88076875A787B01378E9D7172DE7ED86
     //response
-    public String getUserinfo(String token, String openId) throws IOException {
+    public JSONObject getUserinfo(String token, String openId) {
         String respStr = httpUtil.get(TencentConstants.QQ_USERINFO_URL, asList(
                 new BasicNameValuePair("access_token", token),
                 new BasicNameValuePair("oauth_consumer", TencentConstants.QQ_APP_ID),
                 new BasicNameValuePair("openid", openId)));
         JSONObject json = JSON.parseObject(respStr);
 
-        return null;
+        return json;
     }
 
 }

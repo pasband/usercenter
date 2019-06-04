@@ -1,6 +1,8 @@
 package net.ltsoftware.platform.usercenter.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import net.ltsoftware.platform.usercenter.model.User;
+import net.ltsoftware.platform.usercenter.oauth2.QqOauth2Service;
 import net.ltsoftware.platform.usercenter.service.UserService;
 import net.ltsoftware.platform.usercenter.util.JsonUtil;
 import net.ltsoftware.platform.usercenter.util.YXSmsSender;
@@ -19,17 +21,25 @@ public class UserController {
     @Autowired
     private YXSmsSender smsSender;
 
-    @RequestMapping("/user/reg")
-    public void addUser(User user, HttpServletResponse response) {
-        try {
-            userService.insert(user);
-            JsonUtil.writer(response, "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    private QqOauth2Service qqOauth2Service;
+
+//    @RequestMapping("/user/reg")
+//    public void addUser(User user, HttpServletResponse response) {
+//        try {
+//            userService.insert(user);
+//            JsonUtil.writer(response, "");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    @RequestMapping("/bindPhone")
+    public void bindPhone(String phone, String code) {
+
     }
 
-    @RequestMapping("/user/reg/sendCode")
+    @RequestMapping("/sendCode")
     public void sendCode(String phone, HttpServletResponse response) {
         try {
             int code = smsSender.sendPhoneCode(phone);
@@ -40,13 +50,34 @@ public class UserController {
     }
 
     @RequestMapping("/login")
-    public void login(String access_token, int expires_in) {
-
+    public void login(String type, String access_token, int expires_in, HttpServletResponse response) throws Exception {
+        User user = null;
+        if ("QQ".equals(type)) {
+            String openId = qqOauth2Service.getOpenID(access_token);
+            user = userService.selectByQqOpenId(openId);
+            if (user == null) {
+                user = registerByQq(openId, access_token);
+            }
+        } else if ("WEIXIN".equals(type)) {
+            //
+        }
+        response.sendRedirect("/home");
 
     }
 
-    @RequestMapping("/user/oauth2/getCode")
-    public void getCode() {
+    private User registerByQq(String openId, String access_token) throws Exception {
+        JSONObject json = qqOauth2Service.getUserinfo(access_token, openId);
+        String nickname = json.getString("nickname");
+        User user = new User();
+        user.setName(nickname);
+        user.setQqOpenid(openId);
+        userService.insert(user);
+        return user;
+    }
+
+
+//    @RequestMapping("/user/oauth2/getCode")
+//    public void getCode() {
 //
 //
 //        //拼接url
@@ -62,7 +93,7 @@ public class UserController {
 //        String result = HttpClientUtils.get(url.toString(), "UTF-8");
 //        System.out.println(url.toString());
 //        return url.toString();
-    }
+//    }
 
 
 }

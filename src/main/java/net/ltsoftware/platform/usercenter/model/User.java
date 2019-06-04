@@ -5,6 +5,8 @@ import java.util.Date;
 public class User {
     private Long id;
 
+    private String qqOpenid;
+
     private String avatar;
 
     private String account;
@@ -37,6 +39,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getQqOpenid() {
+        return qqOpenid;
+    }
+
+    public void setQqOpenid(String qqOpenid) {
+        this.qqOpenid = qqOpenid;
     }
 
     public String getAvatar() {

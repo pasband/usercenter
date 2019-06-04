@@ -2,8 +2,8 @@ package net.ltsoftware.platform.usercenter.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,10 +13,10 @@ import java.util.Set;
 public class RedisClient<T> {
 
     @Autowired
-    private JedisPool jedisPool;
+    private ShardedJedisPool jedisPool;
 
-    public void set(String key, String value) throws Exception {
-        Jedis jedis = null;
+    public void set(String key, String value) {
+        ShardedJedis jedis = null;
         try {
             jedis = jedisPool.getResource();
             jedis.set(key, value);
@@ -26,8 +26,8 @@ public class RedisClient<T> {
         }
     }
 
-    public void setex(String key, int seconds, String value) throws Exception {
-        Jedis jedis = null;
+    public void setex(String key, int seconds, String value) {
+        ShardedJedis jedis = null;
         try {
             jedis = jedisPool.getResource();
             jedis.setex(key, seconds, value);
@@ -37,9 +37,9 @@ public class RedisClient<T> {
         }
     }
 
-    public String get(String key) throws Exception {
+    public String get(String key) {
 
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         try {
             jedis = jedisPool.getResource();
             return jedis.get(key);
@@ -49,8 +49,8 @@ public class RedisClient<T> {
         }
     }
 
-    public void setobj(String key, T value) throws Exception {
-        Jedis jedis = null;
+    public void setobj(String key, T value) {
+        ShardedJedis jedis = null;
         try {
             Set<T> set = new HashSet<T>();
             set.add(value);

@@ -4,7 +4,6 @@ import net.ltsoftware.platform.usercenter.dao.UserMapper;
 import net.ltsoftware.platform.usercenter.model.User;
 import net.ltsoftware.platform.usercenter.model.UserExample;
 import net.ltsoftware.platform.usercenter.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,6 +38,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> selectByExample(UserExample userExample) throws Exception {
         return userMapper.selectByExample(userExample);
+    }
+
+    @Override
+    public User selectByQqOpenId(String openId) {
+
+        User user = null;
+
+        UserExample example = new UserExample();
+        example.createCriteria().andQqOpenidEqualTo(openId);
+        List<User> list = userMapper.selectByExample(example);
+
+        if (list != null && list.size() == 1) {
+            user = list.get(0);
+        }
+        return user;
+
     }
 
 }

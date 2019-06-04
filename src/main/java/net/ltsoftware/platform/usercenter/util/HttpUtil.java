@@ -41,13 +41,13 @@ public class HttpUtil {
 
     }
 
-    public String get(String url, List<NameValuePair> paras) throws IOException {
+    public String get(String url, List<NameValuePair> paras) {
         return get(url, paras, "UTF-8");
     }
 
-    public String get(String url, List<NameValuePair> paras, String charset) throws IOException {
+    public String get(String url, List<NameValuePair> paras, String charset) {
 
-
+        String respStr = null;
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
         if (null != paras && paras.size() > 0) {
@@ -61,12 +61,21 @@ public class HttpUtil {
         try {
             HttpGet get = new HttpGet(url);
             logger.info("Executing request: " + get.getRequestLine());
-            return httpclient.execute(get, new SimpleHandler());
+            respStr = httpclient.execute(get, new SimpleHandler());
 
+
+        } catch (ClientProtocolException e) {
+            logger.error("Executing request error: ", e);
+        } catch (IOException e) {
+            logger.error("Executing request error: ", e);
         } finally {
-            httpclient.close();
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                logger.error("Close httpclient error: ", e);
+            }
         }
-
+        return respStr;
     }
 
     private class SimpleHandler implements ResponseHandler<String> {
