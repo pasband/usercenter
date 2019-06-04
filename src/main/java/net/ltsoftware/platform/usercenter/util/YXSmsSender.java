@@ -43,8 +43,12 @@ public class YXSmsSender {
         }
         String code = CodeHelper.getRandomNum();
         String message = SmsConstants.LOGIN_CONTENT.replaceAll("%s", code);
-
-        return send(phone, message);
+        int errcode = send(phone, message);
+        if (errcode == 0) {
+            //set to redis
+            redis.setex(SmsConstants.PREFIX + phone, SmsConstants.MIN_INTERVAL, code);
+        }
+        return ErrorCode.SUCCESS;
     }
 
     private int send(String phone, String message) throws Exception {
@@ -65,11 +69,8 @@ public class YXSmsSender {
             String[] words = result.split("/");
             if (words.length > 1) {
                 int code = Integer.parseInt(words[0]);
-                if (code == 0) {
-                    //set to redis
-                    redis.setex(SmsConstants.PREFIX + phone, SmsConstants.MIN_INTERVAL, phone);
-                    return code;
-                }
+                return code;
+
             }
         }
 

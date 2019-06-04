@@ -35,15 +35,15 @@ public class UserController {
 //    }
 
     @RequestMapping("/bindPhone")
-    public void bindPhone(String phone, String code) {
+    public void bindPhone(String phone, String code, String userId) {
 
     }
 
     @RequestMapping("/sendCode")
     public void sendCode(String phone, HttpServletResponse response) {
         try {
-            int code = smsSender.sendPhoneCode(phone);
-            JsonUtil.toJsonMsg(response, code, null);
+            int errCode = smsSender.sendPhoneCode(phone);
+            JsonUtil.toJsonMsg(response, errCode, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
