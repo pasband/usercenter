@@ -4,12 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import net.ltsoftware.platform.usercenter.model.User;
 import net.ltsoftware.platform.usercenter.oauth2.QqOauth2Service;
 import net.ltsoftware.platform.usercenter.service.UserService;
+import net.ltsoftware.platform.usercenter.util.CodeHelper;
 import net.ltsoftware.platform.usercenter.util.JsonUtil;
 import net.ltsoftware.platform.usercenter.util.YXSmsSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -24,6 +29,8 @@ public class UserController {
     @Autowired
     private QqOauth2Service qqOauth2Service;
 
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+
 //    @RequestMapping("/user/reg")
 //    public void addUser(User user, HttpServletResponse response) {
 //        try {
@@ -34,12 +41,12 @@ public class UserController {
 //        }
 //    }
 
-    @RequestMapping("/bindPhone")
+    @RequestMapping("/phone/bind")
     public void bindPhone(String phone, String code, String userId) {
 
     }
 
-    @RequestMapping("/sendCode")
+    @RequestMapping("/phone/code")
     public void sendCode(String phone, HttpServletResponse response) {
         try {
             int errCode = smsSender.sendPhoneCode(phone);
@@ -50,7 +57,7 @@ public class UserController {
     }
 
     @RequestMapping("/login")
-    public void login(String type, String access_token, int expires_in, HttpServletResponse response) throws Exception {
+    public void login(String type, String access_token, Integer expires_in, HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = null;
         if ("QQ".equals(type)) {
             String openId = qqOauth2Service.getOpenID(access_token);
@@ -58,9 +65,16 @@ public class UserController {
             if (user == null) {
                 user = registerByQq(openId, access_token);
             }
-        } else if ("WEIXIN".equals(type)) {
+        } else if ("WX".equals(type)) {
             //
         }
+        String token = CodeHelper.getUUID();
+        Cookie cookie1 = new Cookie("login_user", token);
+        cookie1.setPath("/");
+        Cookie cookie2 = new Cookie("login_user_id", user.getId().toString());
+        cookie2.setPath("/");
+        response.addCookie(cookie1);
+        response.addCookie(cookie2);
         response.sendRedirect("/home");
 
     }

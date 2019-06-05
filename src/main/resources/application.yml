@@ -38,7 +38,7 @@ jedis:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:mysql://rm-bp1n7rs8j305i8a26.mysql.rds.aliyuncs.com:3306/platform
+    url: jdbc:mysql://rm-wz96zu147r13k6kk3.mysql.rds.aliyuncs.com:3306/platform
     username: lt_dev
     password: rVMBcz4+5JDWfg
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -49,10 +49,11 @@ spring:
 jedis:
   pool:
     host: r-wz9nogivnknogmkk30.redis.rds.aliyuncs.com
-    pass: zPWkmOQ05KiD0Q
+    password: zPWkmOQ05KiD0Q
     port: 6379
+    timeout: 60
     config:
-      maxTotal: 20
-      maxIdle: 10
+      maxTotal: 200
+      maxIdle: 100
       maxWaitMillis: 100000
 

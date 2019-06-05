@@ -9,13 +9,13 @@ public class CodeHelper {
         return String.valueOf(num);
     }
 
-    public static String getUUID(int length) {
+    public static String getUUID() {
         String uuid = UUID.randomUUID().toString();
         return uuid;
 
     }
 
     public static void main(String[] args) {
-        System.out.println(getUUID(10));
+        System.out.println(getUUID());
     }
 }

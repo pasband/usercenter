@@ -95,17 +95,20 @@ public class HttpUtil {
     private static String encodeParameters(List<NameValuePair> postParams, String charset) {
         StringBuffer buf = new StringBuffer();
 
-        for (int j = 0; j < postParams.size(); ++j) {
+        for (int j = 0; j < postParams.size(); j++) {
             if (j != 0) {
                 buf.append("&");
             }
 
+            NameValuePair nvp = postParams.get(j);
+            System.out.println("   ---> " + j + ":" + nvp);
             try {
                 buf
-                        .append(URLEncoder.encode(postParams.get(j).getName(), charset))
+                        .append(URLEncoder.encode(nvp.getName(), charset))
                         .append("=")
-                        .append(URLEncoder.encode(postParams.get(j).getValue(), charset));
+                        .append(URLEncoder.encode(nvp.getValue(), charset));
             } catch (UnsupportedEncodingException var4) {
+
             }
         }
 
