@@ -7,7 +7,12 @@ public interface SmsConstants {
     String USER = "andrew888";
     String PASS = "andrew888";
     String PREFIX = "SMS_";
+    String FREQ = "FREQ_";
+    String CODE = "CODE_";
+
     int MIN_INTERVAL = 10;
+
+    int CODE_VALID = 900;
 
 //    String ENCODE = "utf8";
 
