@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
@@ -64,6 +65,7 @@ public class UserController {
     }
 
     @RequestMapping("/oauth/qqcallback")
+    @CrossOrigin(origins = "http://platform.ltsoftware.net",allowCredentials = "true")
     public void qqCallback(HttpServletRequest request, HttpServletResponse response) throws QQConnectException {
 
         try {
@@ -108,12 +110,14 @@ public class UserController {
 
                 String token = CodeHelper.getUUID();
                 Cookie cookie1 = new Cookie("login_user", token);
+//                cookie1.setDomain("platform.ltsoftware.net");
                 cookie1.setPath("/");
                 Cookie cookie2 = new Cookie("login_user_id", String.valueOf(user.getId()));
+//                cookie2.setDomain("ltsoftware.net");
                 cookie2.setPath("/");
                 response.addCookie(cookie1);
                 response.addCookie(cookie2);
-                response.sendRedirect("http://platform.ltsoftware.net/home/propagate");
+                response.sendRedirect("http://platform.ltsoftware.net/home");
 
             }
         } catch (QQConnectException e) {
