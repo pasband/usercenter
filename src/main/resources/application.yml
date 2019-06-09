@@ -8,6 +8,11 @@ mybatis:
   # typeAliasesPackage: net.ltsoftware.platform.usercenter.model
   mapperLocations: classpath:mapper/*.xml
 
+security:
+  excludeUrls:
+    - /oauth/qqurl
+    - /oauth/qqcallback
+
 
 ---
 

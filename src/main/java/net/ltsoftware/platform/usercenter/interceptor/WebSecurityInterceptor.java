@@ -4,6 +4,8 @@ import net.ltsoftware.platform.usercenter.constant.SessionConstants;
 import net.ltsoftware.platform.usercenter.util.CookieHelper;
 import net.ltsoftware.platform.usercenter.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -11,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Component
+
+@ConfigurationProperties(prefix = "myYml")
 public class WebSecurityInterceptor implements HandlerInterceptor {
 
     private List<String> excludeUrls;
