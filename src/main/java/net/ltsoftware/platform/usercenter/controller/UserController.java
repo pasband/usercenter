@@ -10,6 +10,7 @@ import net.ltsoftware.platform.usercenter.constant.ErrorCode;
 import net.ltsoftware.platform.usercenter.constant.SmsConstants;
 import net.ltsoftware.platform.usercenter.model.User;
 import net.ltsoftware.platform.usercenter.oauth2.QqOauth2Service;
+import net.ltsoftware.platform.usercenter.pay.PaymentService;
 import net.ltsoftware.platform.usercenter.service.UserService;
 import net.ltsoftware.platform.usercenter.util.CodeHelper;
 import net.ltsoftware.platform.usercenter.util.JsonUtil;
@@ -40,6 +41,9 @@ public class UserController {
     private QqOauth2Service qqOauth2Service;
 
     @Autowired
+    private PaymentService paymentServcie;
+
+    @Autowired
     private RedisClient redisClient;
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -54,6 +58,14 @@ public class UserController {
 //        }
 //    }
 
+    @RequestMapping("/user/info")
+    @CrossOrigin(origins = "http://platform.ltsoftware.net", allowCredentials = "true")
+    public void getUserInfo(User user, HttpServletResponse response) throws Exception {
+        Long id = user.getId();
+        user = userService.selectByPrimaryKey(id);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
+    }
+
     @RequestMapping("/oauth/qqurl")
     public void getQqAuthUrl(HttpServletRequest request, HttpServletResponse response) throws QQConnectException, IOException {
         String authurl = new Oauth().getAuthorizeURL(request);
@@ -65,7 +77,7 @@ public class UserController {
     }
 
     @RequestMapping("/oauth/qqcallback")
-    @CrossOrigin(origins = "http://platform.ltsoftware.net",allowCredentials = "true")
+    @CrossOrigin(origins = "http://platform.ltsoftware.net", allowCredentials = "true")
     public void qqCallback(HttpServletRequest request, HttpServletResponse response) throws QQConnectException {
 
         try {
@@ -110,14 +122,14 @@ public class UserController {
 
                 String token = CodeHelper.getUUID();
                 Cookie cookie1 = new Cookie("login_user", token);
-//                cookie1.setDomain("platform.ltsoftware.net");
+                cookie1.setDomain("ltsoftware.net");
                 cookie1.setPath("/");
                 Cookie cookie2 = new Cookie("login_user_id", String.valueOf(user.getId()));
-//                cookie2.setDomain("ltsoftware.net");
+                cookie2.setDomain("ltsoftware.net");
                 cookie2.setPath("/");
                 response.addCookie(cookie1);
                 response.addCookie(cookie2);
-                response.sendRedirect("http://platform.ltsoftware.net/home");
+                response.sendRedirect("http://platform.ltsoftware.net/home?id=" + user.getId());
 
             }
         } catch (QQConnectException e) {
@@ -153,5 +165,13 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+    @RequestMapping("/account/charge")
+    public void charge(Long userId, Integer amount, String channel, HttpServletResponse response) {
+//        paymentServcie.charge();
+
+
+    }
+
 
 }

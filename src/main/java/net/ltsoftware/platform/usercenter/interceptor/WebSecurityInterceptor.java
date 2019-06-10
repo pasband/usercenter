@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Component
-
-@ConfigurationProperties(prefix = "myYml")
+@ConfigurationProperties(prefix = "security")
 public class WebSecurityInterceptor implements HandlerInterceptor {
 
     private List<String> excludeUrls;
