@@ -1,5 +1,6 @@
 package net.ltsoftware.platform.usercenter.util;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class CodeHelper {
@@ -13,6 +14,11 @@ public class CodeHelper {
         String uuid = UUID.randomUUID().toString();
         return uuid;
 
+    }
+
+    public static String getOrderId() {
+        String time = DateUtil.getTimeStampPrefix(new Date());
+        return time;
     }
 
     public static void main(String[] args) {

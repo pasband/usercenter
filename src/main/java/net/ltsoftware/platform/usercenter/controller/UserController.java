@@ -1,5 +1,6 @@
 package net.ltsoftware.platform.usercenter.controller;
 
+import com.alipay.api.AlipayApiException;
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.OpenID;
 import com.qq.connect.api.qzone.UserInfo;
@@ -167,9 +168,9 @@ public class UserController {
     }
 
     @RequestMapping("/account/charge")
-    public void charge(Long userId, Integer amount, String channel, HttpServletResponse response) {
-//        paymentServcie.charge();
-
+    public void charge(Long userId, Integer amount, String channel, HttpServletResponse response) throws AlipayApiException {
+        String chargePage = paymentServcie.getChargePage(channel, amount, userId);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
 
     }
 
