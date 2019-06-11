@@ -5,8 +5,16 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
+
+//def getDate() {
+//    def date = new Date()
+//    def formattedDate = date.format('yyyyMMdd_HHmmss')
+//    return formattedDate
+//}
+
 group = 'net.ltsoftware.platform'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
+//version = 'beta-'+getDate()
 sourceCompatibility = '1.8'
 
 repositories {
