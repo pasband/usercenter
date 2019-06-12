@@ -4,6 +4,7 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.response.AlipayTradePagePayResponse;
 import net.ltsoftware.platform.usercenter.constant.AlipayConstants;
 import net.ltsoftware.platform.usercenter.util.CodeHelper;
 import org.slf4j.Logger;
@@ -41,9 +42,16 @@ public class PaymentService {
         switch (channel) {
             case "alipay":
                 return alipayCharge(amount, userId);
+            case "weixin":
+                return weixinCharge(amount, userId);
 
 
         }
+
+        return null;
+    }
+
+    private String weixinCharge(Integer amount, Long userId){
 
         return null;
     }
@@ -72,6 +80,7 @@ public class PaymentService {
         String total_amount = String.valueOf(amount);
         String subject = AlipayConstants.CHANGE_TITLE;
 
+        //for test
         total_amount = "0.01";
 
 //        //商户订单号，商户网站订单系统中唯一订单号，必填
@@ -91,9 +100,16 @@ public class PaymentService {
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
 
 
-        String payForm = alipayClient.pageExecute(alipayRequest).getBody();
+        AlipayTradePagePayResponse response = alipayClient.pageExecute(alipayRequest);
+        if(response.isSuccess()) {
+            String payForm = alipayClient.pageExecute(alipayRequest).getBody();
+            logger.info(payForm);
+            return payForm;
+        }
 
-        logger.info(payForm);
+        String tradeNo = response.getTradeNo();
+
+
 
 //        <form name="punchout_form" method="post" action="https://openapi.alipay.com/gateway.do?charset=utf-8&method=alipay.trade.page.pay&sign=Kw%2FKUsD8InN2SJJ5315l7kT7p393n0nCYOCvsL6JxmX9smHCtM58A3Z%2FHcdkjnzA9ZL%2FqSGCPXIJs1owc9jYP2n3Yg1%2FnbWngnIP4XVJ6KkVwnkt0I6o4uQhyRLCgXw7ys61uEbx24pNDWjkJw3%2BUt7QmYrNzA1hOhTnoKu9Bxbd%2BrMPvoSPR%2BRYcI3A7g%2FyuSG2hCRMShntqnV13jMqQw4ubWZ4ekhaz4nAQYL6fpYihoRRT%2BZOnrLoqJj1Z%2F2POsslqKt%2FY38NhW0plZtLjU6G%2FTt31dq%2B9U8fj1zjMmWxP7Ja%2Fffkf1PyZVFWyFadDtiz78k%2F7dB8%2FGNc4pGB%2BQ%3D%3D&version=1.0&app_id=2019061065521285&sign_type=RSA&timestamp=2019-06-11+18%3A25%3A34&alipay_sdk=alipay-sdk-java-3.7.89.ALL&format=JSON">
 //<input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;20190611182534264&quot;,&quot;total_amount&quot;:&quot;0.01&quot;,&quot;subject&quot;:&quot;旅通服务平台账户充值&quot;,&quot;product_code&quot;:&quot;FAST_INSTANT_TRADE_PAY&quot;}">
@@ -107,7 +123,7 @@ public class PaymentService {
 //        }
 
 
-        return payForm;
+        return null;
     }
 
 

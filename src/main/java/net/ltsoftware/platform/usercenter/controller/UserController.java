@@ -174,5 +174,10 @@ public class UserController {
 
     }
 
+    @RequestMapping("/account/notify/alipay")
+    public void aliNotify(){
+
+    }
+
 
 }
