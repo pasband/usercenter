@@ -34,7 +34,7 @@ public class JsonUtil {
 			response.setHeader("Cache-Control", "no-cache");
 			response.setHeader("Access-Control-Allow-Origin", "*");
 			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/html");
+			response.setContentType("application/json");
 			PrintWriter out = null;
 			out = response.getWriter();
 			out.print(mes);
