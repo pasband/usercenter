@@ -11,6 +11,7 @@ import com.qq.connect.oauth.Oauth;
 import net.ltsoftware.platform.usercenter.constant.AlipayConstants;
 import net.ltsoftware.platform.usercenter.constant.ErrorCode;
 import net.ltsoftware.platform.usercenter.constant.SmsConstants;
+import net.ltsoftware.platform.usercenter.model.Order;
 import net.ltsoftware.platform.usercenter.model.User;
 import net.ltsoftware.platform.usercenter.oauth2.QqOauth2Service;
 import net.ltsoftware.platform.usercenter.pay.PaymentService;
@@ -31,7 +32,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -187,7 +187,7 @@ public class UserController {
 
     //支付宝异步通知
     @RequestMapping("/pay/alipay/notify")
-    public void aliNotify(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, UnsupportedEncodingException {
+    public void aliNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<String, String>();
         Map<String, String[]> requestParams = request.getParameterMap();
@@ -245,6 +245,8 @@ public class UserController {
 
                 //注意：
                 //付款完成后，支付宝系统发送该交易状态通知
+                Order order = orderService.selectByTradeNo(out_trade_no);
+                userService.addBalance(order.getUserId(), order.getOrigAmount().intValue());
             }
 
 //            out.println("success");

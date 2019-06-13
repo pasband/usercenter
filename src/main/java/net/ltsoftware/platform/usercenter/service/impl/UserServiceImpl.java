@@ -77,4 +77,14 @@ public class UserServiceImpl implements UserService {
         return ErrorCode.PHONE_CODE_WRONG;
     }
 
+    @Override
+    public int addBalance(Long userId, Integer chargeMoney) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        int balance = user.getBalance() + chargeMoney;
+
+        user.setBalance(balance);
+        userMapper.updateByPrimaryKey(user);
+        return ErrorCode.SUCCESS;
+    }
+
 }
