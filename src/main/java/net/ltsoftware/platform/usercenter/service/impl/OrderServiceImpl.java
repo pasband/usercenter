@@ -5,6 +5,7 @@ import net.ltsoftware.platform.usercenter.model.Order;
 import net.ltsoftware.platform.usercenter.model.OrderExample;
 import net.ltsoftware.platform.usercenter.service.OrderService;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -39,4 +40,18 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectByExample(orderExample);
     }
 
+
+    @Override
+    public Order selectByTradeNo(String trade_no) {
+        Order order = null;
+
+        OrderExample example = new OrderExample();
+        example.createCriteria().andTradeNoEqualTo(trade_no);
+        List<Order> list = orderMapper.selectByExample(example);
+
+        if (list != null && list.size() == 1) {
+            order = list.get(0);
+        }
+        return order;
+    }
 }
