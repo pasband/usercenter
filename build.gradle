@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    //implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     //implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
@@ -40,7 +40,7 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile fileTree(dir:'lib',includes:['*jar'])
-
+    compile group: 'com.github.wxpay', name: 'wxpay-sdk', version: '0.0.3'
 
     implementation 'com.alipay.sdk:alipay-sdk-java:3.7.89.ALL'
 
