@@ -33,6 +33,8 @@ public class User {
 
     private Integer version;
 
+    private Integer balance;
+
     public Long getId() {
         return id;
     }
@@ -151,5 +153,13 @@ public class User {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Integer balance) {
+        this.balance = balance;
     }
 }

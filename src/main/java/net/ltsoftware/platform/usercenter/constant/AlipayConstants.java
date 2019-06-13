@@ -9,7 +9,7 @@ public interface AlipayConstants {
     String SIGN_TYPE = "RSA2";
     String FORMAT = "JSON";
     String CHARSET = "utf-8";
-    String RETURN_URL = "";
+    String RETURN_URL = "http://platform.ltsoftware.net/home/baseinformation";
     String NOTIFY_URL = "";
 
     String CHANGE_TITLE = "旅通服务平台账户充值";

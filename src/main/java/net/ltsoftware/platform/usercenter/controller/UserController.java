@@ -59,6 +59,7 @@ public class UserController {
 //        }
 //    }
 
+
     @RequestMapping("/user/info")
     @CrossOrigin(origins = "http://platform.ltsoftware.net", allowCredentials = "true")
     public void getUserInfo(User user, HttpServletResponse response) throws Exception {
@@ -175,7 +176,12 @@ public class UserController {
     }
 
     @RequestMapping("/account/notify/alipay")
-    public void aliNotify(){
+    public void aliNotify() {
+
+    }
+
+    @RequestMapping("/oauth/wxcallback")
+    public void wxCallback() {
 
     }
 

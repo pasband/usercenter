@@ -1053,6 +1053,216 @@ public class OrderExample {
             addCriterion("deleted_time not between", value1, value2, "deletedTime");
             return (Criteria) this;
         }
+
+        public Criteria andTradeNoIsNull() {
+            addCriterion("trade_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoIsNotNull() {
+            addCriterion("trade_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoEqualTo(String value) {
+            addCriterion("trade_no =", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotEqualTo(String value) {
+            addCriterion("trade_no <>", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoGreaterThan(String value) {
+            addCriterion("trade_no >", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoGreaterThanOrEqualTo(String value) {
+            addCriterion("trade_no >=", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLessThan(String value) {
+            addCriterion("trade_no <", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLessThanOrEqualTo(String value) {
+            addCriterion("trade_no <=", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoLike(String value) {
+            addCriterion("trade_no like", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotLike(String value) {
+            addCriterion("trade_no not like", value, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoIn(List<String> values) {
+            addCriterion("trade_no in", values, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotIn(List<String> values) {
+            addCriterion("trade_no not in", values, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoBetween(String value1, String value2) {
+            addCriterion("trade_no between", value1, value2, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNoNotBetween(String value1, String value2) {
+            addCriterion("trade_no not between", value1, value2, "tradeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdIsNull() {
+            addCriterion("trade_no_3rd is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdIsNotNull() {
+            addCriterion("trade_no_3rd is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdEqualTo(String value) {
+            addCriterion("trade_no_3rd =", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdNotEqualTo(String value) {
+            addCriterion("trade_no_3rd <>", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdGreaterThan(String value) {
+            addCriterion("trade_no_3rd >", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdGreaterThanOrEqualTo(String value) {
+            addCriterion("trade_no_3rd >=", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdLessThan(String value) {
+            addCriterion("trade_no_3rd <", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdLessThanOrEqualTo(String value) {
+            addCriterion("trade_no_3rd <=", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdLike(String value) {
+            addCriterion("trade_no_3rd like", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdNotLike(String value) {
+            addCriterion("trade_no_3rd not like", value, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdIn(List<String> values) {
+            addCriterion("trade_no_3rd in", values, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdNotIn(List<String> values) {
+            addCriterion("trade_no_3rd not in", values, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdBetween(String value1, String value2) {
+            addCriterion("trade_no_3rd between", value1, value2, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andTradeNo3rdNotBetween(String value1, String value2) {
+            addCriterion("trade_no_3rd not between", value1, value2, "tradeNo3rd");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelIsNull() {
+            addCriterion("pay_channel is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelIsNotNull() {
+            addCriterion("pay_channel is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelEqualTo(String value) {
+            addCriterion("pay_channel =", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelNotEqualTo(String value) {
+            addCriterion("pay_channel <>", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelGreaterThan(String value) {
+            addCriterion("pay_channel >", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelGreaterThanOrEqualTo(String value) {
+            addCriterion("pay_channel >=", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelLessThan(String value) {
+            addCriterion("pay_channel <", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelLessThanOrEqualTo(String value) {
+            addCriterion("pay_channel <=", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelLike(String value) {
+            addCriterion("pay_channel like", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelNotLike(String value) {
+            addCriterion("pay_channel not like", value, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelIn(List<String> values) {
+            addCriterion("pay_channel in", values, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelNotIn(List<String> values) {
+            addCriterion("pay_channel not in", values, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelBetween(String value1, String value2) {
+            addCriterion("pay_channel between", value1, value2, "payChannel");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayChannelNotBetween(String value1, String value2) {
+            addCriterion("pay_channel not between", value1, value2, "payChannel");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

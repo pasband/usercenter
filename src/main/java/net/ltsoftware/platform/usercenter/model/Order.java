@@ -31,6 +31,12 @@ public class Order {
 
     private String deletedTime;
 
+    private String tradeNo;
+
+    private String tradeNo3rd;
+
+    private String payChannel;
+
     public Long getId() {
         return id;
     }
@@ -149,5 +155,29 @@ public class Order {
 
     public void setDeletedTime(String deletedTime) {
         this.deletedTime = deletedTime;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public String getTradeNo3rd() {
+        return tradeNo3rd;
+    }
+
+    public void setTradeNo3rd(String tradeNo3rd) {
+        this.tradeNo3rd = tradeNo3rd;
+    }
+
+    public String getPayChannel() {
+        return payChannel;
+    }
+
+    public void setPayChannel(String payChannel) {
+        this.payChannel = payChannel;
     }
 }

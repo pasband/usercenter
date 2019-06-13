@@ -1104,6 +1104,66 @@ public class UserExample {
             addCriterion("VERSION not between", value1, value2, "version");
             return (Criteria) this;
         }
+
+        public Criteria andBalanceIsNull() {
+            addCriterion("BALANCE is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceIsNotNull() {
+            addCriterion("BALANCE is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceEqualTo(Integer value) {
+            addCriterion("BALANCE =", value, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceNotEqualTo(Integer value) {
+            addCriterion("BALANCE <>", value, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceGreaterThan(Integer value) {
+            addCriterion("BALANCE >", value, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceGreaterThanOrEqualTo(Integer value) {
+            addCriterion("BALANCE >=", value, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceLessThan(Integer value) {
+            addCriterion("BALANCE <", value, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceLessThanOrEqualTo(Integer value) {
+            addCriterion("BALANCE <=", value, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceIn(List<Integer> values) {
+            addCriterion("BALANCE in", values, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceNotIn(List<Integer> values) {
+            addCriterion("BALANCE not in", values, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceBetween(Integer value1, Integer value2) {
+            addCriterion("BALANCE between", value1, value2, "balance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalanceNotBetween(Integer value1, Integer value2) {
+            addCriterion("BALANCE not between", value1, value2, "balance");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
