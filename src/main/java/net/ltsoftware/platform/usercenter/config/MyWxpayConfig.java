@@ -13,7 +13,7 @@ public class MyWxpayConfig extends WXPayConfig {
     private byte[] certData;
 
     public MyWxpayConfig() throws Exception {
-        String certPath = "/path/to/apiclient_cert.p12";
+        String certPath = "/usr/local/usercenter/cer/apiclient_cert.p12";
         File file = new File(certPath);
         InputStream certStream = new FileInputStream(file);
         this.certData = new byte[(int) file.length()];
