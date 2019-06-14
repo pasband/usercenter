@@ -2,6 +2,7 @@ package net.ltsoftware.platform.usercenter.config;
 
 import com.github.wxpay.sdk.IWXPayDomain;
 import com.github.wxpay.sdk.WXPayConfig;
+import com.github.wxpay.sdk.WXPayConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -56,6 +57,16 @@ public class MyWxpayConfig extends WXPayConfig {
 
     @Override
     public IWXPayDomain getWXPayDomain() {
-        return null;
+        IWXPayDomain iwxPayDomain = new IWXPayDomain() {
+            public void report(String domain, long elapsedTimeMillis, Exception ex) {
+
+            }
+
+            public DomainInfo getDomain(WXPayConfig config) {
+                return new IWXPayDomain.DomainInfo(WXPayConstants.DOMAIN_API, true);
+            }
+        };
+        return iwxPayDomain;
+
     }
 }

@@ -188,7 +188,7 @@ public class UserController {
     @RequestMapping("/pay/wxpay/charge")
     public void wxCharge(Long userId, Integer amount, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ipAddresses = request.getHeader("X-Real-IP");
-        logger.info("ip : " + ipAddresses);
+//        logger.info("ip : " + ipAddresses);
         paymentServcie.weixinCharge(amount, userId, ipAddresses);
     }
 
