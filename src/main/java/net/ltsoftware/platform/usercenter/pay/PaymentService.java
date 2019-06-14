@@ -9,10 +9,12 @@ import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.platform.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.platform.usercenter.constant.AlipayConstants;
 import net.ltsoftware.platform.usercenter.util.CodeHelper;
+import net.ltsoftware.platform.usercenter.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +64,7 @@ public class PaymentService {
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("body", "旅通服务平台用户充值");
-        data.put("out_trade_no", CodeHelper.getUUID());
+        data.put("out_trade_no", DateUtil.getTimeStampPrefix(new Date()));
         data.put("device_info", "WEB");
         data.put("fee_type", "CNY");
         data.put("total_fee", "0.01");
