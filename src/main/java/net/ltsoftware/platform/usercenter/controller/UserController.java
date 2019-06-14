@@ -178,11 +178,17 @@ public class UserController {
         }
     }
 
-    @RequestMapping("/pay/charge")
-    public void charge(Long userId, Integer amount, String channel, HttpServletResponse response) throws AlipayApiException {
-        String chargePage = paymentServcie.getChargePage(channel, amount, userId);
+    @RequestMapping("/pay/alipay/charge")
+    public void aliCharge(Long userId, Integer amount, HttpServletResponse response) throws AlipayApiException {
+        String chargePage = paymentServcie.getAlipayPage(amount, userId);
         JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
 
+    }
+
+    @RequestMapping("/pay/wxpay/charge")
+    public void wxCharge(Long userId, Integer amount, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String ipAddresses = request.getHeader("X-Real-IP");
+        paymentServcie.weixinCharge(amount, userId, ipAddresses);
     }
 
     //支付宝异步通知
@@ -307,6 +313,12 @@ public class UserController {
         }
 //        JsonUtil.toJsonMsg(response, errCode, null);
         response.sendRedirect("http://platform.ltsoftware.net/home/baseinformation?code=" + errCode);
+    }
+
+    @RequestMapping("/pay/wxpay/notify")
+    public void wxpayNotify(HttpServletRequest request, HttpServletResponse response) {
+
+
     }
 
     @RequestMapping("/oauth/wxcallback")

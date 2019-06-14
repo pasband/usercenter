@@ -41,9 +41,7 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile fileTree(dir:'lib',includes:['*jar'])
     compile group: 'com.github.wxpay', name: 'wxpay-sdk', version: '0.0.3'
-
     implementation 'com.alipay.sdk:alipay-sdk-java:3.7.89.ALL'
-
     runtimeOnly 'mysql:mysql-connector-java'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

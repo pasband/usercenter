@@ -5,11 +5,16 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.github.wxpay.sdk.WXPay;
+import net.ltsoftware.platform.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.platform.usercenter.constant.AlipayConstants;
 import net.ltsoftware.platform.usercenter.util.CodeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class PaymentService {
@@ -38,32 +43,48 @@ public class PaymentService {
 
     }
 
-    public String getChargePage(String channel, Integer amount, Long userId) throws AlipayApiException {
-        switch (channel) {
-            case "alipay":
-                return alipayCharge(amount, userId);
-            case "weixin":
-                return weixinCharge(amount, userId);
+//    public String getChargePage(String channel, Integer amount, Long userId) throws Exception {
+//        switch (channel) {
+//            case "alipay":
+//                return alipayCharge(amount, userId);
+//            case "weixin":
+//                return weixinCharge(amount, userId);
+//
+//
+//        }
+//
+//        return null;
+//    }
 
+    public String weixinCharge(Integer amount, Long userId, String ip) throws Exception {
+        MyWxpayConfig config = new MyWxpayConfig();
+        WXPay wxpay = new WXPay(config);
 
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("body", "旅通服务平台用户充值");
+        data.put("out_trade_no", CodeHelper.getUUID());
+        data.put("device_info", "WEB");
+        data.put("fee_type", "CNY");
+        data.put("total_fee", "0.01");
+        data.put("spbill_create_ip", ip);
+        data.put("notify_url", "http://uc.ltsoftware.net/pay/wxpay/notify");
+        data.put("trade_type", "NATIVE");  // 此处指定为扫码支付
+        data.put("product_id", "12");
+
+        try {
+            Map<String, String> resp = wxpay.unifiedOrder(data);
+            System.out.println(resp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return null;
     }
 
-    private String weixinCharge(Integer amount, Long userId){
 
-
-
-
-
-
-
-
-        return null;
-    }
-
-    private String alipayCharge(Integer amount, Long userId) throws AlipayApiException {
+    //alipay
+    public String getAlipayPage(Integer amount, Long userId) throws AlipayApiException {
 
 
 //        AlipayOpenPublicTemplateMessageIndustryModifyRequest request = new AlipayOpenPublicTemplateMessageIndustryModifyRequest();
@@ -108,14 +129,13 @@ public class PaymentService {
 
 
         AlipayTradePagePayResponse response = alipayClient.pageExecute(alipayRequest);
-        if(response.isSuccess()) {
+        if (response.isSuccess()) {
             String payForm = alipayClient.pageExecute(alipayRequest).getBody();
             logger.info(payForm);
             return payForm;
         }
 
         String tradeNo = response.getTradeNo();
-
 
 
 //        <form name="punchout_form" method="post" action="https://openapi.alipay.com/gateway.do?charset=utf-8&method=alipay.trade.page.pay&sign=Kw%2FKUsD8InN2SJJ5315l7kT7p393n0nCYOCvsL6JxmX9smHCtM58A3Z%2FHcdkjnzA9ZL%2FqSGCPXIJs1owc9jYP2n3Yg1%2FnbWngnIP4XVJ6KkVwnkt0I6o4uQhyRLCgXw7ys61uEbx24pNDWjkJw3%2BUt7QmYrNzA1hOhTnoKu9Bxbd%2BrMPvoSPR%2BRYcI3A7g%2FyuSG2hCRMShntqnV13jMqQw4ubWZ4ekhaz4nAQYL6fpYihoRRT%2BZOnrLoqJj1Z%2F2POsslqKt%2FY38NhW0plZtLjU6G%2FTt31dq%2B9U8fj1zjMmWxP7Ja%2Fffkf1PyZVFWyFadDtiz78k%2F7dB8%2FGNc4pGB%2BQ%3D%3D&version=1.0&app_id=2019061065521285&sign_type=RSA&timestamp=2019-06-11+18%3A25%3A34&alipay_sdk=alipay-sdk-java-3.7.89.ALL&format=JSON">
