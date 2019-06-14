@@ -192,8 +192,9 @@ public class UserController {
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
             String val = request.getHeader(key);
-            logger.info(key + ":" + val);
+            logger.info("header: " + key + ":" + val);
         }
+        logger.info("request.getRemoteAddr(): " + request.getRemoteAddr());
         paymentServcie.weixinCharge(amount, userId, ipAddresses);
     }
 
