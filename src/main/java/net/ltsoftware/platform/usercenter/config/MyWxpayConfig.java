@@ -36,7 +36,8 @@ public class MyWxpayConfig extends WXPayConfig {
 
     @Override
     public String getKey() {
-        return "a1e821f5632a0265485f60e65dde643d";
+        return "7231d0955d2a4c85b2d038d39aa5588d";
+//        return "a1e821f5632a0265485f60e65dde643d";
     }
 
     @Override
