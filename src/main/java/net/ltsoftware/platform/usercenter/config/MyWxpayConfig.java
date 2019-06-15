@@ -16,7 +16,6 @@ public class MyWxpayConfig extends WXPayConfig {
     public MyWxpayConfig() throws Exception {
         String certPath = "/usr/local/usercenter/cer/apiclient_cert.p12";
 //        String certPath = "/Users/apple/ltsoft/_platform/1309846801_20190614_cert/apiclient_cert.p12";
-
         File file = new File(certPath);
         InputStream certStream = new FileInputStream(file);
         this.certData = new byte[(int) file.length()];
@@ -26,7 +25,8 @@ public class MyWxpayConfig extends WXPayConfig {
 
     @Override
     public String getAppID() {
-        return "wxe6624d74e53bd06c";
+//        return "wxe6624d74e53bd06c";
+        return "wxed61c321c91d5d92";
     }
 
     @Override
