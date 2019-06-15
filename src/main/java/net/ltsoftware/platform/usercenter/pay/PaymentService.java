@@ -67,7 +67,7 @@ public class PaymentService {
         data.put("out_trade_no", DateUtil.getTimeStampPrefix(new Date()));
         data.put("device_info", "WEB");
         data.put("fee_type", "CNY");
-        data.put("total_fee", "0.01");
+        data.put("total_fee", "1");
         data.put("spbill_create_ip", ip);
         data.put("notify_url", "http://uc.ltsoftware.net/pay/wxpay/notify");
         data.put("trade_type", "NATIVE");  // 此处指定为扫码支付
