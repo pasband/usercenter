@@ -10,10 +10,13 @@ import net.ltsoftware.platform.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.platform.usercenter.constant.AlipayConstants;
 import net.ltsoftware.platform.usercenter.util.CodeHelper;
 import net.ltsoftware.platform.usercenter.util.DateUtil;
+import net.ltsoftware.platform.usercenter.util.QrcodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +78,13 @@ public class PaymentService {
 
         try {
             Map<String, String> resp = wxpay.unifiedOrder(data);
-            System.out.println(resp);
+            logger.info(resp.toString());
+            String payurl = resp.get("code_url");
+            logger.info(payurl);
+            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")),payurl,900,"JPEG");
+            return payurl;
+
+//            System.out.println(resp);
 
         } catch (Exception e) {
             e.printStackTrace();

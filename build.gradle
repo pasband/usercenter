@@ -42,6 +42,11 @@ dependencies {
     compile fileTree(dir: 'lib', includes: ['*jar'])
     //compile group: 'com.github.wxpay', name: 'wxpay-sdk', version: '0.0.3'
     implementation 'com.alipay.sdk:alipay-sdk-java:3.7.89.ALL'
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    compile group: 'com.google.zxing', name: 'core', version: '3.4.0'
+    // https://mvnrepository.com/artifact/com.google.zxing/javase
+    compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
+
     runtimeOnly 'mysql:mysql-connector-java'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

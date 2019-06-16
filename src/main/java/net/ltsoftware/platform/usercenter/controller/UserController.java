@@ -189,7 +189,8 @@ public class UserController {
     public void wxCharge(Long userId, Integer amount, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ipAddresses = request.getHeader("X-Real-IP");
 //        logger.info("ip : " + ipAddresses);
-        paymentServcie.weixinCharge(amount, userId, ipAddresses);
+        String chargeUrl = paymentServcie.weixinCharge(amount, userId, ipAddresses);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargeUrl);
     }
 
     //支付宝异步通知
