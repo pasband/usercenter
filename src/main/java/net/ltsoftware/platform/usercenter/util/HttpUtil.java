@@ -41,14 +41,12 @@ public class HttpUtil {
 
     }
 
-    public String get(String url, List<NameValuePair> paras) {
-        return get(url, paras, "UTF-8");
+    public String getUrl(String url, List<NameValuePair> paras) {
+        return getUrl(url, paras, "UTF-8");
+
     }
 
-    public String get(String url, List<NameValuePair> paras, String charset) {
-
-        String respStr = null;
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+    public String getUrl(String url, List<NameValuePair> paras, String charset) {
 
         if (null != paras && paras.size() > 0) {
             String encodedParams = encodeParameters(paras, charset);
@@ -58,11 +56,22 @@ public class HttpUtil {
                 url = url + "&" + encodedParams;
             }
         }
+        return url;
+
+    }
+
+    public String get(String url, List<NameValuePair> paras) {
+        return get(url, paras, "UTF-8");
+    }
+
+    public String get(String url, List<NameValuePair> paras, String charset) {
+        String respStr = null;
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        getUrl(url, paras, charset);
         try {
             HttpGet get = new HttpGet(url);
             logger.info("Executing request: " + get.getRequestLine());
             respStr = httpclient.execute(get, new SimpleHandler());
-
 
         } catch (ClientProtocolException e) {
             logger.error("Executing request error: ", e);

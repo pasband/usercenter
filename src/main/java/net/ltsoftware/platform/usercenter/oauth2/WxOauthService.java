@@ -23,8 +23,28 @@ public class WxOauthService {
 
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    public String getCode() {
+//    public String getCode() {
+//
+//        List<NameValuePair> paras = new ArrayList<>();
+//        paras.add(new BasicNameValuePair("appid", WxLoginConstants.APPID));
+//        paras.add(new BasicNameValuePair("redirect_uri", WxLoginConstants.REDIRECT_URI));
+//        paras.add(new BasicNameValuePair("response_type", WxLoginConstants.RESPONSE_TYPE));
+//        paras.add(new BasicNameValuePair("scope", WxLoginConstants.SCOPE));
+//        paras.add(new BasicNameValuePair("state", CodeHelper.getRandomNum(12)));
+//
+//
+//        httpUtil = new HttpUtil();
+//        String result = httpUtil.get(WxLoginConstants.CODE_API, paras);
+//        logger.info(result);
+//
+//        return result;
+//    }
+//
+//    public static void main(String[] args) {
+//        new WxOauthService().getCode();
+//    }
 
+    public String getUrl() {
         List<NameValuePair> paras = new ArrayList<>();
         paras.add(new BasicNameValuePair("appid", WxLoginConstants.APPID));
         paras.add(new BasicNameValuePair("redirect_uri", WxLoginConstants.REDIRECT_URI));
@@ -32,16 +52,8 @@ public class WxOauthService {
         paras.add(new BasicNameValuePair("scope", WxLoginConstants.SCOPE));
         paras.add(new BasicNameValuePair("state", CodeHelper.getRandomNum(12)));
 
+        return httpUtil.get(WxLoginConstants.CODE_API, paras);
 
-        httpUtil = new HttpUtil();
-        String result = httpUtil.get(WxLoginConstants.CODE_API, paras);
-        logger.info(result);
-
-        return result;
-    }
-
-    public static void main(String[] args) {
-        new WxOauthService().getCode();
     }
 
 

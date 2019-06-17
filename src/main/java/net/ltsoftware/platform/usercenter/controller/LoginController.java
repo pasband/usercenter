@@ -159,10 +159,8 @@ public class LoginController {
 
     @RequestMapping("/oauth/wxurl")
     public void getWxOauthUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String result = wxOauthService.getCode();
-
-        response.getWriter().print(result);
-
+        String result = wxOauthService.getUrl();
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
     }
 
 }
