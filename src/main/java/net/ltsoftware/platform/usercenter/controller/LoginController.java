@@ -130,7 +130,7 @@ public class LoginController {
     public void wxCallback(String code, String state, HttpServletResponse response) {
         //redirect_uri?code=CODE&state=STATE
         //check state
-        String result = wxOauthService.getToken(code);
+        String result = wxOauthService.getToken(code, state);
         logger.info("wxcallback, token:"+result);
 
     }

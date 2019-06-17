@@ -39,7 +39,7 @@ public class WxOauthService {
 
 //    https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 
-    public String getToken(String code) {
+    public String getToken(String code, String state) {
         List<NameValuePair> paras = new ArrayList<>();
         paras.add(new BasicNameValuePair("appid", WxLoginConstants.APPID));
         paras.add(new BasicNameValuePair("secret", WxLoginConstants.SECRET));
