@@ -67,7 +67,7 @@ public class HttpUtil {
     public String get(String url, List<NameValuePair> paras, String charset) {
         String respStr = null;
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        getUrl(url, paras, charset);
+        url = getUrl(url, paras, charset);
         try {
             HttpGet get = new HttpGet(url);
             logger.info("Executing request: " + get.getRequestLine());
