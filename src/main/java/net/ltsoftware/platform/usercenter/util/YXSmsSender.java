@@ -41,7 +41,7 @@ public class YXSmsSender {
         if (val != null) {
             return ErrorCode.SMS_PHONE_FREQ_HIGH;
         }
-        String code = CodeHelper.getRandomNum();
+        String code = CodeHelper.getRandomNum(5);
         String message = SmsConstants.LOGIN_CONTENT.replaceAll("%s", code);
         int errcode = send(phone, message);
         if (errcode == 0) {

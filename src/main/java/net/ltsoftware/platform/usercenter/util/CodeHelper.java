@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class CodeHelper {
 
-    public static String getRandomNum() {
-        int num = (int) ((Math.random() * 9 + 1) * 10000);
+    public static String getRandomNum(int n) {
+        int num = (int) ((Math.random() * 9 + 1) * Math.pow(10, n - 1));
         return String.valueOf(num);
     }
 
