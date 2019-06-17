@@ -52,7 +52,7 @@ public class WxOauthService {
         paras.add(new BasicNameValuePair("scope", WxLoginConstants.SCOPE));
         paras.add(new BasicNameValuePair("state", CodeHelper.getRandomNum(12)));
 
-        return httpUtil.get(WxLoginConstants.CODE_API, paras);
+        return httpUtil.getUrl(WxLoginConstants.CODE_API, paras);
 
     }
 
