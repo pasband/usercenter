@@ -1,5 +1,10 @@
 package net.ltsoftware.platform.usercenter.constant;
 
+@Deprecated
+/**
+ * actually use qqconnectconfig.properties & sdk
+ *
+ */
 public interface TencentConstants {
 
     String QQ_APP_ID = "101584460";

@@ -41,7 +41,8 @@ public class PaymentService {
                 AlipayConstants.APP_PRI_KEY,
                 AlipayConstants.FORMAT,
                 AlipayConstants.CHARSET,
-                AlipayConstants.ALI_PUB_KEY
+                AlipayConstants.ALI_PUB_KEY,
+                AlipayConstants.SIGN_TYPE
 
         );
 
@@ -81,7 +82,7 @@ public class PaymentService {
             logger.info(resp.toString());
             String payurl = resp.get("code_url");
             logger.info(payurl);
-            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")),payurl,900,"JPEG");
+            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
             return payurl;
 
 //            System.out.println(resp);
@@ -137,7 +138,6 @@ public class PaymentService {
 //                + "\"body\":\"" + body + "\","
                 //+ "\"integration_type\":\"ALIAPP\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-
 
         AlipayTradePagePayResponse response = alipayClient.pageExecute(alipayRequest);
         if (response.isSuccess()) {

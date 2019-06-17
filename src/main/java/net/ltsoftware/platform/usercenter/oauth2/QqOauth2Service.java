@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 
+@Deprecated
 @Service
 public class QqOauth2Service {
 
