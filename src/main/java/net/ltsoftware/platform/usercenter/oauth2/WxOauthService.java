@@ -23,26 +23,6 @@ public class WxOauthService {
 
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-//    public String getCode() {
-//
-//        List<NameValuePair> paras = new ArrayList<>();
-//        paras.add(new BasicNameValuePair("appid", WxLoginConstants.APPID));
-//        paras.add(new BasicNameValuePair("redirect_uri", WxLoginConstants.REDIRECT_URI));
-//        paras.add(new BasicNameValuePair("response_type", WxLoginConstants.RESPONSE_TYPE));
-//        paras.add(new BasicNameValuePair("scope", WxLoginConstants.SCOPE));
-//        paras.add(new BasicNameValuePair("state", CodeHelper.getRandomNum(12)));
-//
-//
-//        httpUtil = new HttpUtil();
-//        String result = httpUtil.get(WxLoginConstants.CODE_API, paras);
-//        logger.info(result);
-//
-//        return result;
-//    }
-//
-//    public static void main(String[] args) {
-//        new WxOauthService().getCode();
-//    }
 
     public String getUrl() {
         List<NameValuePair> paras = new ArrayList<>();
@@ -52,8 +32,23 @@ public class WxOauthService {
         paras.add(new BasicNameValuePair("scope", WxLoginConstants.SCOPE));
         paras.add(new BasicNameValuePair("state", CodeHelper.getRandomNum(12)));
 
+        //只获取url，不发送请求
         return httpUtil.getUrl(WxLoginConstants.CODE_API, paras);
 
+    }
+
+//    https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
+
+    public String getToken(String code) {
+        List<NameValuePair> paras = new ArrayList<>();
+        paras.add(new BasicNameValuePair("appid", WxLoginConstants.APPID));
+        paras.add(new BasicNameValuePair("secret", WxLoginConstants.SECRET));
+        paras.add(new BasicNameValuePair("code", code));
+        paras.add(new BasicNameValuePair("grant_type", WxLoginConstants.GRANT_TYPE));
+
+        String result = httpUtil.get(WxLoginConstants.TOKEN_API, paras);
+
+        return null;
     }
 
 

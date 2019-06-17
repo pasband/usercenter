@@ -152,7 +152,8 @@ public class LoginController {
 
 
     @RequestMapping("/oauth/wxcallback")
-    public void wxCallback() {
+    public void wxCallback(String code, String state, HttpServletResponse response) {
+        //redirect_uri?code=CODE&state=STATE
 
 
     }

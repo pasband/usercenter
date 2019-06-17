@@ -8,4 +8,8 @@ public interface WxLoginConstants {
     String RESPONSE_TYPE = "code";
     String SCOPE = "snsapi_login";
 
+    String TOKEN_API = "https://api.weixin.qq.com/sns/oauth2/access_token";
+    String SECRET = "a1e821f5632a0265485f60e65dde643d";
+    String GRANT_TYPE = "authorization_code";
+
 }
