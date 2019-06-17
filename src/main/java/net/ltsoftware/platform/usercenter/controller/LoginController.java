@@ -124,6 +124,24 @@ public class LoginController {
     }
 
 
+
+
+    @RequestMapping("/oauth/wxcallback")
+    public void wxCallback(String code, String state, HttpServletResponse response) {
+        //redirect_uri?code=CODE&state=STATE
+        //check state
+        String result = wxOauthService.getToken(code);
+        logger.info("wxcallback, token:"+result);
+
+    }
+
+    @RequestMapping("/oauth/wxurl")
+    public void getWxOauthUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String result = wxOauthService.getUrl();
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
+    }
+
+
     @RequestMapping("/phone/bind")
     public void bindPhone(String phone, String code, String userId, HttpServletResponse response) throws Exception {
         int errCode = -1;
@@ -148,20 +166,6 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    @RequestMapping("/oauth/wxcallback")
-    public void wxCallback(String code, String state, HttpServletResponse response) {
-        //redirect_uri?code=CODE&state=STATE
-
-
-    }
-
-    @RequestMapping("/oauth/wxurl")
-    public void getWxOauthUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String result = wxOauthService.getUrl();
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
     }
 
 }

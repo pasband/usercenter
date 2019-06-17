@@ -48,7 +48,7 @@ public class WxOauthService {
 
         String result = httpUtil.get(WxLoginConstants.TOKEN_API, paras);
 
-        return null;
+        return result;
     }
 
 
