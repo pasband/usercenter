@@ -125,13 +125,11 @@ public class LoginController {
     }
 
 
-
-
     @RequestMapping("/oauth/wxcallback")
     public void wxCallback(String code, String state, HttpServletResponse response) throws Exception {
         //redirect_uri?code=CODE&state=STATE
         //check state
-        Map<String,Object> result = wxOauthService.getToken(code, state);
+        Map<String, Object> result = wxOauthService.getToken(code, state);
         String accessToken = result.get("access_token").toString();
         String tokenExpireIn = result.get("expires_in").toString();
         String refreshToken = result.get("refresh_token").toString();
@@ -144,7 +142,7 @@ public class LoginController {
             long id = userService.insert(user);
             user.setId(id);
         }
-        Map<String,Object> wxUserinfo = wxOauthService.getWxUserinfo(accessToken,openId);
+        Map<String, Object> wxUserinfo = wxOauthService.getWxUserinfo(accessToken, openId);
         String name = wxUserinfo.get("nickname").toString();
         String avatar = wxUserinfo.get("headimgurl").toString();
         user.setName(name);
@@ -167,7 +165,8 @@ public class LoginController {
     @RequestMapping("/oauth/wxurl")
     public void getWxOauthUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String result = wxOauthService.getUrl();
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
+        response.sendRedirect(result);
     }
 
 
