@@ -5,7 +5,6 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
-
 //def getDate() {
 //    def date = new Date()
 //    def formattedDate = date.format('yyyyMMdd_HHmmss')
