@@ -12,4 +12,7 @@ public interface WxLoginConstants {
     String SECRET = "381714848e653f474543c2bf327147d7";
     String GRANT_TYPE = "authorization_code";
 
+    String USERINFO_API = "https://api.weixin.qq.com/sns/userinfo";
+
+
 }

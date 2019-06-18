@@ -26,6 +26,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @Controller
 public class LoginController {
@@ -74,13 +75,13 @@ public class LoginController {
             if (accessTokenObj.getAccessToken().equals("")) {
 //                我们的网站被CSRF攻击了或者用户取消了授权
 //                做一些数据统计工作
-                System.out.print("没有获取到响应参数");
+                logger.error("没有获取到响应参数");
             } else {
                 accessToken = accessTokenObj.getAccessToken();
                 tokenExpireIn = accessTokenObj.getExpireIn();
 
-                request.getSession().setAttribute("demo_access_token", accessToken);
-                request.getSession().setAttribute("demo_token_expirein", String.valueOf(tokenExpireIn));
+//                request.getSession().setAttribute("demo_access_token", accessToken);
+//                request.getSession().setAttribute("demo_token_expirein", String.valueOf(tokenExpireIn));
 
                 // 利用获取到的accessToken 去获取当前用的openid -------- start
                 OpenID openIDObj = new OpenID(accessToken);
@@ -127,11 +128,39 @@ public class LoginController {
 
 
     @RequestMapping("/oauth/wxcallback")
-    public void wxCallback(String code, String state, HttpServletResponse response) {
+    public void wxCallback(String code, String state, HttpServletResponse response) throws Exception {
         //redirect_uri?code=CODE&state=STATE
         //check state
-        String result = wxOauthService.getToken(code, state);
-        logger.info("wxcallback, token:"+result);
+        Map<String,Object> result = wxOauthService.getToken(code, state);
+        String accessToken = result.get("access_token").toString();
+        String tokenExpireIn = result.get("expires_in").toString();
+        String refreshToken = result.get("refresh_token").toString();
+        String openId = result.get("openid").toString();
+        String unionId = result.get("unionid").toString();
+//        logger.info("wxcallback, token:"+result);
+        User user = userService.selectByWxOpenId(openId);
+        if (user == null) {
+            user = new User();
+            long id = userService.insert(user);
+            user.setId(id);
+        }
+        Map<String,Object> wxUserinfo = wxOauthService.getWxUserinfo(accessToken,openId);
+        String name = wxUserinfo.get("nickname").toString();
+        String avatar = wxUserinfo.get("headimgurl").toString();
+        user.setName(name);
+        user.setAvatar(avatar);
+        userService.updateByPrimaryKey(user);
+
+        String token = CodeHelper.getUUID();
+        Cookie cookie1 = new Cookie("login_user", token);
+        cookie1.setDomain("ltsoftware.net");
+        cookie1.setPath("/");
+        Cookie cookie2 = new Cookie("login_user_id", String.valueOf(user.getId()));
+        cookie2.setDomain("ltsoftware.net");
+        cookie2.setPath("/");
+        response.addCookie(cookie1);
+        response.addCookie(cookie2);
+        response.sendRedirect("http://platform.ltsoftware.net/home?id=" + user.getId());
 
     }
 

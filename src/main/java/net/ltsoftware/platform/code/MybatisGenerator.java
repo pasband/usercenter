@@ -17,7 +17,7 @@ public class MybatisGenerator {
 
     public static void main(String[] args) throws IOException, XMLParserException, SQLException, InterruptedException, InvalidConfigurationException {
         String configPath = "/Users/apple/IdeaProjects/usercenter/src/main/resources/generatorConfig.xml";
-//        configPath = "E:\\IdeaProjects\\usercenter\\src\\main\\resources\\generatorConfig_pc.xml";
+        configPath = "E:\\IdeaProjects\\usercenter\\src\\main\\resources\\generatorConfig_pc.xml";
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
         File configFile = new File(configPath);

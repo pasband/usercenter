@@ -49,18 +49,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User selectByQqOpenId(String openId) {
-
         User user = null;
-
         UserExample example = new UserExample();
         example.createCriteria().andQqOpenidEqualTo(openId);
         List<User> list = userMapper.selectByExample(example);
-
         if (list != null && list.size() == 1) {
             user = list.get(0);
         }
         return user;
+    }
 
+    @Override
+    public User selectByWxOpenId(String openId) {
+        User user = null;
+        UserExample example = new UserExample();
+        example.createCriteria().andWxOpenidEqualTo(openId);
+        List<User> list = userMapper.selectByExample(example);
+        if (list != null && list.size() == 1) {
+            user = list.get(0);
+        }
+        return user;
     }
 
     @Override
