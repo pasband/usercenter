@@ -92,6 +92,7 @@ public class LoginController {
 
                 if (user == null) {
                     user = new User();
+                    user.setBalance(0);
                     long id = userService.insert(user);
                     user.setId(id);
                 }
@@ -139,6 +140,7 @@ public class LoginController {
         User user = userService.selectByWxOpenId(openId);
         if (user == null) {
             user = new User();
+            user.setBalance(0);
             long id = userService.insert(user);
             user.setId(id);
         }
