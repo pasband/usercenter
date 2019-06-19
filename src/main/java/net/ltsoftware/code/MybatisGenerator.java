@@ -1,5 +1,6 @@
 package net.ltsoftware.code;
 
+import net.ltsoftware.commons.util.HttpUtil;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
@@ -26,5 +27,7 @@ public class MybatisGenerator {
         DefaultShellCallback callback = new DefaultShellCallback(overwrite);
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
         myBatisGenerator.generate(null);
+
+        HttpUtil util = new HttpUtil();
     }
 }
