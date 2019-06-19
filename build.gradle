@@ -46,7 +46,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.zxing/javase
     compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
     compile 'org.elasticsearch:elasticsearch:6.3.2'
-    compile project(':commons')
+//    compile project(':commons')
 
     runtimeOnly 'mysql:mysql-connector-java'
 
