@@ -7,4 +7,7 @@ public interface ErrorCode {
     int SMS_PHONE_FREQ_HIGH = 400100;
 
     int PHONE_CODE_WRONG = 400200;
+
+    int NEED_PHONE_BIND = 400300;
+
 }

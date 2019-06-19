@@ -4,4 +4,4 @@ pluginManagement {
     }
 }
 rootProject.name = 'usercenter'
-includeFlat 'commons'
+//includeFlat 'commons'
