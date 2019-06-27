@@ -67,7 +67,6 @@ public class LoginController {
 
         try {
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
-
             String accessToken = null,
                     openID = null;
             long tokenExpireIn = 0L;
