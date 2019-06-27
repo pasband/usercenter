@@ -17,7 +17,7 @@ public class CodeHelper {
     }
 
     public static String getOrderId() {
-        String time = DateUtil.getTimeStampPrefix(new Date());
+        String time = DateUtil.getyyyyMMddHHmmssSSS(new Date());
         return time;
     }
 
