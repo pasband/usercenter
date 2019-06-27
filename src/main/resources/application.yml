@@ -16,7 +16,7 @@ security:
 server:
   port: 6443
   ssl:
-    key-store: /etc/letsencrypt/live/uc.ltsoftware.net/mykeystore.jks
+    key-store: /etc/letsencrypt/live/ltsoftware.net/mykeystore.jks
     key-store-password: S0kiShgsZwAk
     keyAlias: springboot
     protocol: TLS
