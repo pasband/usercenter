@@ -13,6 +13,17 @@ security:
     - /oauth/qqurl
     - /oauth/qqcallback
 
+server:
+  port: 6443
+  ssl:
+    key-store: /etc/letsencrypt/live/uc.ltsoftware.net/mykeystore.jks
+    key-store-password: S0kiShgsZwAk
+    keyAlias: springboot
+    protocol: TLS
+    key-password: S0kiShgsZwAk
+    enabled: true
+  max-http-header-size: 8192
+
 ---
 
 #本地配置
@@ -35,17 +46,6 @@ jedis:
       maxTotal: 20
       maxIdle: 10
       maxWaitMillis: 100000
-
-server:
-  port: 6443
-  ssl:
-    key-store: /etc/letsencrypt/live/uc.ltsoftware.net/mykeystore.jks
-    key-store-password: S0kiShgsZwAk
-    keyAlias: springboot
-    protocol: TLS
-    key-password: S0kiShgsZwAk
-    enabled: true
-  max-http-header-size: 8192
 
 ---
 
