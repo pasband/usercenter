@@ -6,8 +6,12 @@ import java.util.Date;
 public class DateUtil {
 
     private static SimpleDateFormat yyyyMMddHHmmssSSS = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+    private static SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    public static String getTimeStampPrefix(Date date) {
+    public static String getyyyyMMddHHmmssSSS(Date date) {
         return yyyyMMddHHmmssSSS.format(date);
+    }
+    public static String getyyyyMMddHHmmss(Date date) {
+        return yyyyMMddHHmmss.format(date);
     }
 }

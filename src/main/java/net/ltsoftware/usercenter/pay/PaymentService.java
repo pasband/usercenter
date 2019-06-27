@@ -68,7 +68,7 @@ public class PaymentService {
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("body", "旅通服务平台用户充值");
-        data.put("out_trade_no", DateUtil.getTimeStampPrefix(new Date()));
+        data.put("out_trade_no", DateUtil.getyyyyMMddHHmmssSSS(new Date()));
         data.put("device_info", "WEB");
         data.put("fee_type", "CNY");
         data.put("total_fee", "1");
