@@ -62,7 +62,7 @@ public class LoginController {
     }
 
     @RequestMapping("/oauth/qqcallback")
-    @CrossOrigin(origins = "http://platform.ltsoftware.net", allowCredentials = "true")
+    @CrossOrigin(origins = "https://platform.ltsoftware.net", allowCredentials = "true")
     public void qqCallback(HttpServletRequest request, HttpServletResponse response) throws QQConnectException {
 
         try {
@@ -114,7 +114,7 @@ public class LoginController {
                 cookie2.setPath("/");
                 response.addCookie(cookie1);
                 response.addCookie(cookie2);
-                response.sendRedirect("http://platform.ltsoftware.net/home?id=" + user.getId());
+                response.sendRedirect("https://platform.ltsoftware.net/home?id=" + user.getId());
 
             }
         } catch (QQConnectException e) {
