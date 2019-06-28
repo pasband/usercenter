@@ -13,6 +13,33 @@ security:
     - /oauth/qqurl
     - /oauth/qqcallback
 
+---
+
+#本地配置
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/platform
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+
+#jedis配置
+jedis:
+  pool:
+    host: 127.0.0.1
+    password:
+    port: 6379
+    timeout: 60
+    config:
+      maxTotal: 20
+      maxIdle: 10
+      maxWaitMillis: 100000
+
+---
+
 server:
   port: 6443
   ssl:
@@ -23,31 +50,6 @@ server:
     key-password: S0kiShgsZwAk
     enabled: true
   max-http-header-size: 8192
-
----
-
-#本地配置
-spring:
-  profiles: local
-  datasource:
-    url: jdbc:mysql://localhost:3306/platform
-    username: root
-    password: ......
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    # 使用druid数据源
-    type: com.alibaba.druid.pool.DruidDataSource
-
-#jedis配置
-jedis:
-  pool:
-    host: 127.0.0.1
-    port: 6379
-    config:
-      maxTotal: 20
-      maxIdle: 10
-      maxWaitMillis: 100000
-
----
 
 #开发服务器配置
 spring:
