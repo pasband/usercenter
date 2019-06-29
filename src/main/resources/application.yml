@@ -12,7 +12,7 @@ mybatis:
 
 #本地配置
 spring:
-  profiles: local
+  profiles: dev
   datasource:
     url: jdbc:mysql://localhost:3306/platform
     username: root
