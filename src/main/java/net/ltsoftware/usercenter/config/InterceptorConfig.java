@@ -11,7 +11,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthenticationInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(getAuthenticationInterceptor()).addPathPatterns("/**");
 
 //        InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
 //        registration.addPathPatterns("/**");                    //所有路径都被拦截
@@ -20,7 +20,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public AuthenticationInterceptor authenticationInterceptor(){
+    public AuthenticationInterceptor getAuthenticationInterceptor(){
         return new AuthenticationInterceptor();
     }
 
