@@ -4,7 +4,11 @@ public interface ErrorCode {
 
     int SUCCESS = 0;
 
-    int NEED_LOGIN = 300100;
+    int TOKEN_NULL = 300100;
+
+    int INVALID_TOKEN = 300200;
+
+    int USER_NOT_FOUND = 300300;
 
     int SMS_PHONE_FREQ_HIGH = 400100;
 

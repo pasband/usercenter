@@ -112,4 +112,12 @@ public class UserService implements BaseService<User, UserExample> {
         return user;
     }
 
+    public int refreshToken(String token) {
+        String val = redisClient.get(token);
+        if(val==null)
+            return ErrorCode.INVALID_TOKEN;
+        redisClient.setex(token,SessionConstants.TIMEOUT,val);
+        return ErrorCode.SUCCESS;
+    }
+
 }

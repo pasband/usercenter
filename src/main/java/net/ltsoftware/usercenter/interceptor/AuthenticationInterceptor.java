@@ -54,13 +54,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         if (StringUtils.isBlank(token)) {
             logger.info("token blank");
-            JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
+            JsonUtil.toJsonMsg(response, ErrorCode.TOKEN_NULL,null);
             return false;
         }
         User currentUser = userService.getUserByToken(token);
         if(currentUser==null){
             logger.info("currentUser blank");
-            JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
+            //cannot found token key in redis
+            JsonUtil.toJsonMsg(response, ErrorCode.INVALID_TOKEN,null);
             return false;
         }
         if(currentUser.getStatus().equals("1") && !passPhoneBindList.contains(uri)){
@@ -68,6 +69,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
         request.setAttribute("login_user",currentUser);
+        userService.refreshToken(token);
         return true;
     }
 
