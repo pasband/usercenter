@@ -110,7 +110,7 @@ public class HttpUtil {
             }
 
             NameValuePair nvp = postParams.get(j);
-            System.out.println("   ---> " + j + ":" + nvp);
+//            System.out.println("   ---> " + j + ":" + nvp);
             try {
                 buf
                         .append(URLEncoder.encode(nvp.getName(), charset))

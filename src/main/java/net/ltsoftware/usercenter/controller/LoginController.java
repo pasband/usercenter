@@ -143,6 +143,7 @@ public class LoginController {
     private User register() throws Exception {
         User user = new User();
         user.setBalance(0);
+        user.setStatus("1");
         long id = userService.insert(user);
         user.setId(id);
         return user;

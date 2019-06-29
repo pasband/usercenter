@@ -6,12 +6,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getAuthenticationInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(getAuthenticationInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/oauth/*");
 
 //        InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
 //        registration.addPathPatterns("/**");                    //所有路径都被拦截
@@ -21,7 +27,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationInterceptor getAuthenticationInterceptor(){
-        return new AuthenticationInterceptor();
+        List<String> passPhoneBindUrls =
+                asList("/user/info","/phone/");
+        AuthenticationInterceptor au = new AuthenticationInterceptor();
+        au.setPassPhoneBind(passPhoneBindUrls);
+        return au;
     }
 
 }

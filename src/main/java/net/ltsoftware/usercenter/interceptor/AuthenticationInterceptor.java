@@ -3,12 +3,15 @@ package net.ltsoftware.usercenter.interceptor;
 import net.ltsoftware.usercenter.annotation.PassToken;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.SessionConstants;
+import net.ltsoftware.usercenter.controller.PayController;
 import net.ltsoftware.usercenter.model.User;
 import net.ltsoftware.usercenter.service.UserService;
 import net.ltsoftware.usercenter.util.CookieUtils;
 import net.ltsoftware.usercenter.util.JsonUtil;
 import net.ltsoftware.usercenter.util.SessionUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
@@ -28,23 +32,19 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private UserService userService;
 
+    private List<String> passPhoneBindList;
+
+    private static Logger logger = LoggerFactory.getLogger(PayController.class);
+
+    public void setPassPhoneBind(List<String> passPhoneBindList){
+        this.passPhoneBindList = passPhoneBindList;
+
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         //获取访问URL
-//        String url = request.getRequestURL().toString();
-
-        if(!(o instanceof HandlerMethod)){
-            return true;
-        }
-        HandlerMethod handlerMethod=(HandlerMethod) o;
-        Method method=handlerMethod.getMethod();
-        //检查是否有passToken注释，有则跳过验证
-        if(method.isAnnotationPresent(PassToken.class)){
-            PassToken passToken=method.getAnnotation(PassToken.class);
-            if(passToken.required()){
-                return true;
-            }
-        }
+        String uri = request.getRequestURI();
 
         String token = request.getHeader(SessionConstants.LOGIN_TOKEN_NAME);
         if (StringUtils.isBlank(token)) {
@@ -57,6 +57,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         User currentUser = userService.getUserByToken(token);
         if(currentUser==null){
             JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
+            return false;
+        }
+        if(currentUser.getStatus().equals("1") && !passPhoneBindList.contains(uri)){
+            JsonUtil.toJsonMsg(response, ErrorCode.NEED_PHONE_BIND,null);
             return false;
         }
         request.setAttribute("login_user",currentUser);
