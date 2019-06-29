@@ -6,7 +6,9 @@ import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.AccessToken;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.qq.connect.oauth.Oauth;
+import net.ltsoftware.usercenter.annotation.PassToken;
 import net.ltsoftware.usercenter.constant.ErrorCode;
+import net.ltsoftware.usercenter.constant.SessionConstants;
 import net.ltsoftware.usercenter.constant.SmsConstants;
 import net.ltsoftware.usercenter.model.User;
 import net.ltsoftware.usercenter.oauth2.WxOauthService;
@@ -54,6 +56,7 @@ public class LoginController {
         JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
     }
 
+    @PassToken
     @RequestMapping("/oauth/qqurl")
     public void getQqAuthUrl(HttpServletRequest request, HttpServletResponse response) throws QQConnectException, IOException {
         String authurl = new Oauth().getAuthorizeURL(request);
@@ -61,39 +64,35 @@ public class LoginController {
         response.sendRedirect(authurl);
     }
 
+    @PassToken
+    @RequestMapping("/oauth/wxurl")
+    public void getWxOauthUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String result = wxOauthService.getUrl();
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
+        response.sendRedirect(result);
+    }
+
+    @PassToken
     @RequestMapping("/oauth/qqcallback")
     @CrossOrigin(origins = "https://platform.ltsoftware.net", allowCredentials = "true")
     public void qqCallback(HttpServletRequest request, HttpServletResponse response) throws QQConnectException {
 
         try {
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
-            String accessToken = null,
-                    openID = null;
-            long tokenExpireIn = 0L;
+            String accessToken = accessTokenObj.getAccessToken();
+//            long tokenExpireIn = accessTokenObj.getExpireIn();
 
-            if (accessTokenObj.getAccessToken().equals("")) {
-//                我们的网站被CSRF攻击了或者用户取消了授权
-//                做一些数据统计工作
+            if(accessToken.equals("")){
                 logger.error("没有获取到响应参数");
             } else {
                 accessToken = accessTokenObj.getAccessToken();
-                tokenExpireIn = accessTokenObj.getExpireIn();
 
-//                request.getSession().setAttribute("demo_access_token", accessToken);
-//                request.getSession().setAttribute("demo_token_expirein", String.valueOf(tokenExpireIn));
-
-                // 利用获取到的accessToken 去获取当前用的openid -------- start
                 OpenID openIDObj = new OpenID(accessToken);
-                openID = openIDObj.getUserOpenID();
-
-
+                String openID = openIDObj.getUserOpenID();
                 User user = userService.selectByQqOpenId(openID);
 
                 if (user == null) {
-                    user = new User();
-                    user.setBalance(0);
-                    long id = userService.insert(user);
-                    user.setId(id);
+                    user = register();
                 }
                 UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
                 UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
@@ -104,17 +103,7 @@ public class LoginController {
                 user.setQqOpenid(openID);
                 user.setAvatar(avatar30);
                 userService.updateByPrimaryKey(user);
-
-                String token = CodeHelper.getUUID();
-                Cookie cookie1 = new Cookie("login_user", token);
-                cookie1.setDomain("ltsoftware.net");
-                cookie1.setPath("/");
-                Cookie cookie2 = new Cookie("login_user_id", String.valueOf(user.getId()));
-                cookie2.setDomain("ltsoftware.net");
-                cookie2.setPath("/");
-                response.addCookie(cookie1);
-                response.addCookie(cookie2);
-                response.sendRedirect("https://platform.ltsoftware.net/home?id=" + user.getId());
+                login(user.getId(), response);
 
             }
         } catch (QQConnectException e) {
@@ -124,7 +113,7 @@ public class LoginController {
         }
     }
 
-
+    @PassToken
     @RequestMapping("/oauth/wxcallback")
     public void wxCallback(String code, String state, HttpServletResponse response) throws Exception {
         //redirect_uri?code=CODE&state=STATE
@@ -138,52 +127,47 @@ public class LoginController {
 //        logger.info("wxcallback, token:"+result);
         User user = userService.selectByWxOpenId(openId);
         if (user == null) {
-            user = new User();
-            user.setBalance(0);
-            long id = userService.insert(user);
-            user.setId(id);
+            user = register();
         }
         Map<String, Object> wxUserinfo = wxOauthService.getWxUserinfo(accessToken, openId);
         String name = wxUserinfo.get("nickname").toString();
         String avatar = wxUserinfo.get("headimgurl").toString();
         user.setName(name);
         user.setAvatar(avatar);
+        user.setWxOpenid(openId);
         userService.updateByPrimaryKey(user);
-
-        String token = CodeHelper.getUUID();
-        Cookie cookie1 = new Cookie("login_user", token);
-        cookie1.setDomain("ltsoftware.net");
-        cookie1.setPath("/");
-        Cookie cookie2 = new Cookie("login_user_id", String.valueOf(user.getId()));
-        cookie2.setDomain("ltsoftware.net");
-        cookie2.setPath("/");
-        response.addCookie(cookie1);
-        response.addCookie(cookie2);
-        response.sendRedirect("http://platform.ltsoftware.net/home?id=" + user.getId());
+        login(user.getId(), response);
 
     }
 
-    @RequestMapping("/oauth/wxurl")
-    public void getWxOauthUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String result = wxOauthService.getUrl();
-//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, result);
-        response.sendRedirect(result);
+    private User register() throws Exception {
+        User user = new User();
+        user.setBalance(0);
+        long id = userService.insert(user);
+        user.setId(id);
+        return user;
+    }
+
+    private void login(Long userId, HttpServletResponse response) throws Exception {
+
+        String token = SessionConstants.LOGIN_TOKEN_PREF+CodeHelper.getUUID();
+        redisClient.setex(token,SessionConstants.TIMEOUT,userId.toString());
+        Cookie cookie1 = new Cookie(SessionConstants.LOGIN_TOKEN_NAME, token);
+        cookie1.setDomain("ltsoftware.net");
+        cookie1.setPath("/");
+//        Cookie cookie2 = new Cookie("login_user_id", String.valueOf(user.getId()));
+//        cookie2.setDomain("ltsoftware.net");
+//        cookie2.setPath("/");
+        response.addCookie(cookie1);
+//        response.addCookie(cookie2);
+        response.sendRedirect("http://platform.ltsoftware.net/home?id=" + userId);
+
     }
 
 
     @RequestMapping("/phone/bind")
     public void bindPhone(String phone, String code, String userId, HttpServletResponse response) throws Exception {
-        int errCode = -1;
-        String codeInCache = redisClient.get(SmsConstants.PREFIX + SmsConstants.CODE + phone);
-        if (codeInCache == null || codeInCache.equals(code)) {
-            errCode = ErrorCode.PHONE_CODE_WRONG;
-        } else {
-            User user = userService.selectByPrimaryKey(Long.parseLong(userId));
-            user.setPhone(phone);
-            user.setStatus("3");
-            userService.updateByPrimaryKey(user);
-            errCode = ErrorCode.SUCCESS;
-        }
+        int errCode = userService.bindPhone(phone,code,userId);
         JsonUtil.toJsonMsg(response, errCode, null);
     }
 
@@ -196,5 +180,7 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
+
 
 }

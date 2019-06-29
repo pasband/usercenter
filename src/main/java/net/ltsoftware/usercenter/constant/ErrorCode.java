@@ -4,6 +4,8 @@ public interface ErrorCode {
 
     int SUCCESS = 0;
 
+    int NEED_LOGIN = 300100;
+
     int SMS_PHONE_FREQ_HIGH = 400100;
 
     int PHONE_CODE_WRONG = 400200;

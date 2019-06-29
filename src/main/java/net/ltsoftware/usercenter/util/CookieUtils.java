@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Cookie工具类,封装Cookie常用操作
  */
-public class CookieHelper {
+public class CookieUtils {
 
     /**
      * 设置cookie有效期，根据需要自定义[本系统设置为30天]
