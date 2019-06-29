@@ -1,7 +1,7 @@
 #默认使用配置
 spring:
   profiles:
-    active: local
+    active: dev
 
 #公共配置与profiles选择无关
 mybatis:
@@ -12,7 +12,7 @@ mybatis:
 
 #本地配置
 spring:
-  profiles: dev
+  profiles: local
   datasource:
     url: jdbc:mysql://localhost:3306/platform
     username: root
