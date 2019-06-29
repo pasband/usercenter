@@ -102,7 +102,8 @@ public class UserService implements BaseService<User, UserExample> {
     }
 
     public User getUserByToken(String token) {
-        String val = redisClient.get(SessionConstants.LOGIN_TOKEN_PREF+token);
+        logger.info(token);
+        String val = redisClient.get(token);
         if(val==null)
             return null;
         Long key = Long.valueOf(val);
