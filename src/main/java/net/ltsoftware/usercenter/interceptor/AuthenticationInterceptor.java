@@ -45,6 +45,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         //获取访问URL
         String uri = request.getRequestURI();
+        logger.info("uri:"+uri);
 
         String token = request.getHeader(SessionConstants.LOGIN_TOKEN_NAME);
         if (StringUtils.isBlank(token)) {
