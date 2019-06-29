@@ -3,10 +3,13 @@ package net.ltsoftware.usercenter.service;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.SessionConstants;
 import net.ltsoftware.usercenter.constant.SmsConstants;
+import net.ltsoftware.usercenter.controller.PayController;
 import net.ltsoftware.usercenter.dao.UserMapper;
 import net.ltsoftware.usercenter.model.User;
 import net.ltsoftware.usercenter.model.UserExample;
 import net.ltsoftware.usercenter.util.RedisClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,8 @@ public class UserService implements BaseService<User, UserExample> {
 
     @Autowired
     private RedisClient redisClient;
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Override
     public User selectByPrimaryKey(Long key) throws Exception {
@@ -101,6 +106,7 @@ public class UserService implements BaseService<User, UserExample> {
         if(val==null)
             return null;
         Long key = Long.valueOf(val);
+        logger.info("user id:"+key);
         User user = userMapper.selectByPrimaryKey(key);
         return user;
     }

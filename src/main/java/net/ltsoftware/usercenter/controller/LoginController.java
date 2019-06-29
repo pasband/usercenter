@@ -153,6 +153,7 @@ public class LoginController {
 
         String token = SessionConstants.LOGIN_TOKEN_PREF+CodeHelper.getUUID();
         redisClient.setex(token,SessionConstants.TIMEOUT,userId.toString());
+        logger.info("redis set "+token+":"+userId);
         Cookie cookie1 = new Cookie(SessionConstants.LOGIN_TOKEN_NAME, token);
         cookie1.setDomain("ltsoftware.net");
         cookie1.setPath("/");

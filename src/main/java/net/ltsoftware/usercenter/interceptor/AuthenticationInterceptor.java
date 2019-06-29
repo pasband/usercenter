@@ -34,7 +34,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private List<String> passPhoneBindList;
 
-    private static Logger logger = LoggerFactory.getLogger(PayController.class);
+    private static Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
     public void setPassPhoneBind(List<String> passPhoneBindList){
         this.passPhoneBindList = passPhoneBindList;
@@ -48,14 +48,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader(SessionConstants.LOGIN_TOKEN_NAME);
         if (StringUtils.isBlank(token)) {
+            logger.info("token blank");
             token = CookieUtils.getCookieValue(request, SessionConstants.LOGIN_TOKEN_NAME);
         }
         if (StringUtils.isBlank(token)) {
+            logger.info("token blank");
             JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
             return false;
         }
         User currentUser = userService.getUserByToken(token);
         if(currentUser==null){
+            logger.info("currentUser blank");
             JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
             return false;
         }
