@@ -195,6 +195,7 @@ public class LoginController {
     @RequestMapping("/token/refresh")
     public void refreshToken(String token, HttpServletResponse response) {
         int errCode = userService.refreshToken(token);
+        JsonUtil.toJsonMsg(response,errCode);
 //        JsonUtil.toJsonMsg(response, errCode, null);
     }
 
