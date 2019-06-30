@@ -187,8 +187,7 @@ public class LoginController {
     public void getUserByToken(String token, HttpServletResponse response) {
         logger.info("feign invoked, token:"+token);
         User user = userService.getUserByToken(token);
-        logger.info("/user/getByToken invoked, user:"+user.toString());
-        logger.debug("debug");
+//        logger.info("/user/getByToken invoked, user:"+user.toString());
 //        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
         JsonUtil.toJsonMsg(response,user);
     }
