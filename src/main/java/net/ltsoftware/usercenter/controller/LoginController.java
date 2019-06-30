@@ -186,6 +186,8 @@ public class LoginController {
     @RequestMapping("/user/getByToken")
     public void getUserByToken(String token, HttpServletResponse response) {
         User user = userService.getUserByToken(token);
+        logger.info("/user/getByToken invoked, user:"+user.toString());
+        logger.debug("debug");
         JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
     }
 
