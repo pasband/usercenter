@@ -185,16 +185,18 @@ public class LoginController {
 
     @RequestMapping("/token/getUser")
     public void getUserByToken(String token, HttpServletResponse response) {
+        logger.info("feign invoked, token:"+token);
         User user = userService.getUserByToken(token);
         logger.info("/user/getByToken invoked, user:"+user.toString());
         logger.debug("debug");
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
+        JsonUtil.toJsonMsg(response,user);
     }
 
     @RequestMapping("/token/refresh")
     public void refreshToken(String token, HttpServletResponse response) {
         int errCode = userService.refreshToken(token);
-        JsonUtil.toJsonMsg(response, errCode, null);
+//        JsonUtil.toJsonMsg(response, errCode, null);
     }
 
 

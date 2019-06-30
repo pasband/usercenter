@@ -59,4 +59,10 @@ public class JsonUtil {
                 JSON.toJSONStringWithDateFormat(map, "yyyy-MM-dd HH:mm:ss.SSS"));
     }
 
+    public static void toJsonMsg(HttpServletResponse response,
+                                 Object data) {
+        writer(response,
+                JSON.toJSONStringWithDateFormat(data, "yyyy-MM-dd HH:mm:ss"));
+    }
+
 }
