@@ -17,7 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getAuthenticationInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/oauth/*");
+                .excludePathPatterns("/oauth/**","/token/**");
 
 //        InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
 //        registration.addPathPatterns("/**");                    //所有路径都被拦截
