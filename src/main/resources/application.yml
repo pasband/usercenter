@@ -10,6 +10,9 @@ mybatis:
 
 ---
 
+server:
+  port: 8080
+
 #本地配置
 spring:
   profiles: local

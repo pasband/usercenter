@@ -183,6 +183,17 @@ public class LoginController {
         }
     }
 
+    @RequestMapping("/user/getByToken")
+    public void getUserByToken(String token, HttpServletResponse response) {
+        User user = userService.getUserByToken(token);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
+    }
+
+    @RequestMapping("/user/refreshToken")
+    public void refreshToken(String token, HttpServletResponse response) {
+        int errCode = userService.refreshToken(token);
+        JsonUtil.toJsonMsg(response, errCode, null);
+    }
 
 
 }
