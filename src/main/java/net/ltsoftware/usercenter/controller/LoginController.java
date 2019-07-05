@@ -49,11 +49,11 @@ public class LoginController {
 
 
     @RequestMapping("/user/info")
-    @CrossOrigin(origins = "http://platform.ltsoftware.net", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://platform.ltsoftware.net", allowCredentials = "true")
     public void getUserInfo(User user, HttpServletResponse response) throws Exception {
         Long id = user.getId();
         user = userService.selectByPrimaryKey(id);
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user);
+        JsonUtil.toJsonMsg(response, user);
     }
 
     @PassToken
