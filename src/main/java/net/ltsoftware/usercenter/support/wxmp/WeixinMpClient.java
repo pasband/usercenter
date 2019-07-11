@@ -1,4 +1,4 @@
-package net.ltsoftware.support.wxmp;
+package net.ltsoftware.usercenter.support.wxmp;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,18 +1,14 @@
-package net.ltsoftware.support.wxmp;
+package net.ltsoftware.usercenter.support.wxmp;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import net.ltsoftware.usercenter.controller.LoginController;
 import net.ltsoftware.usercenter.util.CodeHelper;
-import net.ltsoftware.usercenter.util.DateUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class WeixinMpService {

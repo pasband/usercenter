@@ -1,6 +1,5 @@
-package net.ltsoftware.support.wxmp;
+package net.ltsoftware.usercenter.support.wxmp;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.util.JsonUtil;

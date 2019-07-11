@@ -1,4 +1,4 @@
-package net.ltsoftware.support.wxmp;
+package net.ltsoftware.usercenter.support.wxmp;
 
 public interface WeixinMpConstants {
 
