@@ -45,6 +45,11 @@ dependencies {
     compile group: 'com.google.zxing', name: 'core', version: '3.4.0'
     compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
     compile 'org.elasticsearch:elasticsearch:6.3.2'
+
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
+    compile group: 'io.swagger', name: 'swagger-models', version: '1.5.22'
 //    compile project(':commons')
 
     runtimeOnly 'mysql:mysql-connector-java'
