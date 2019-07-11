@@ -27,6 +27,7 @@ public class WeixinMpService {
             String token = getToken();
             if(token==null){
                 logger.error("wxmp: token is null, abandon to get ticket.");
+                return null;
             }
             String respTicket = weixinMpClient.getJsapiTicket(token,WeixinMpConstants.TYPE_OF_JSAPI);
             JSONObject result = JSON.parseObject(respTicket);

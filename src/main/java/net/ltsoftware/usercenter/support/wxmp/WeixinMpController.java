@@ -27,6 +27,7 @@ public class WeixinMpController {
         JSONObject json = weixinMpService.getWxmpSignData(url);
         if(json==null){
             JsonUtil.toJsonMsg(response,ErrorCode.UNCLASSIFIED,null);
+            return;
         }
         json.put("appId",WeixinMpConstants.WEIXIN_MP_APPID);
         JsonUtil.toJsonMsg(response,ErrorCode.SUCCESS,json);
