@@ -2,6 +2,8 @@ package net.ltsoftware.usercenter.constant;
 
 public interface ErrorCode {
 
+    int UNCLASSIFIED = -1;
+
     int SUCCESS = 0;
 
     int TOKEN_NULL = 300100;
