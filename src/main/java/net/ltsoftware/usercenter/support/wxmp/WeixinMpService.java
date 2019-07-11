@@ -25,6 +25,9 @@ public class WeixinMpService {
         String ticket = redisClient.get(WeixinMpConstants.REDIS_KEY_TICKET);
         if(ticket==null){
             String token = getToken();
+            if(token==null){
+                logger.error("wxmp: token is null, abandon to get ticket.");
+            }
             String respTicket = weixinMpClient.getJsapiTicket(token,WeixinMpConstants.TYPE_OF_JSAPI);
             JSONObject result = JSON.parseObject(respTicket);
             if(result.getIntValue("errcode")==0){
@@ -34,6 +37,8 @@ public class WeixinMpService {
                 }else{
                     logger.error("wxmp: get ticket failed:"+result);
                 }
+            }else{
+                logger.error("wxmp: get ticket failed:"+result);
             }
         }
         return ticket;
@@ -62,7 +67,10 @@ public class WeixinMpService {
     //生成微信权限验证的参数
     public JSONObject getWxmpSignData(String url) {
         String ticket = getTicket();
-
+        if(ticket==null){
+            logger.error("wxmp: ticket is null, abandon generate signature.");
+            return null;
+        }
         String nonceStr = CodeHelper.getRandomString(32);
         String timestamp = String.valueOf(System.currentTimeMillis()/1000);
         String signature = null;

@@ -25,6 +25,9 @@ public class WeixinMpController {
     @GetMapping("/wxmp/sign")
     public void getWxmpSign(String url, HttpServletResponse response){
         JSONObject json = weixinMpService.getWxmpSignData(url);
+        if(json==null){
+            JsonUtil.toJsonMsg(response,ErrorCode.UNCLASSIFIED,null);
+        }
         json.put("appId",WeixinMpConstants.WEIXIN_MP_APPID);
         JsonUtil.toJsonMsg(response,ErrorCode.SUCCESS,json);
 
