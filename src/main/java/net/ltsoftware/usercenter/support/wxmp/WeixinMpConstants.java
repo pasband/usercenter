@@ -3,7 +3,7 @@ package net.ltsoftware.usercenter.support.wxmp;
 public interface WeixinMpConstants {
 
     String WEIXIN_MP_APPID = "wxed61c321c91d5d92";
-    String WEIXIN_MP_SECRET = "7231d0955d2a4c85b2d038d39aa5588d";
+    String WEIXIN_MP_SECRET = "9fad261d66fbbd0df8bf0f3a0aff2db1";
     String GRANT_TYPE_OF_ACCESS_TOKEN = "client_credential";
 
     String TYPE_OF_JSAPI = "jsapi";
