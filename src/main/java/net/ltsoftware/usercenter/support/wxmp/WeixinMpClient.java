@@ -29,7 +29,7 @@ public interface WeixinMpClient {
 //        "expires_in":7200
 //    }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/cgi-bin/token")
+    @RequestMapping(method = RequestMethod.GET, value = "/cgi-bin/ticket/getticket")
     String getJsapiTicket(@RequestParam(value = "access_token", required = true) String access_token,
                           @RequestParam(value = "type", required = true) String type);
 }
