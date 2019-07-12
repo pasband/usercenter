@@ -42,6 +42,7 @@ public class WeixinMpService {
                 logger.error("wxmp: get ticket failed:"+result);
             }
         }
+        logger.info("get ticket:"+ticket);
         return ticket;
     }
 
@@ -61,6 +62,7 @@ public class WeixinMpService {
             }
 
         }
+        logger.info("get token:"+token);
         return token;
 
     }
