@@ -72,3 +72,6 @@ jedis:
       maxIdle: 100
       maxWaitMillis: 100000
 
+logging:
+  level:
+    net.ltsoftware.usercenter: trace
