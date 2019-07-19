@@ -48,8 +48,8 @@ public class PayController {
     @RequestMapping("/pay/alipay/charge")
     public void aliCharge(Long userId, Integer amount, HttpServletResponse response) throws AlipayApiException {
         String chargePage = paymentServcie.getAlipayPage(amount, userId);
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
-
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
+        JsonUtil.writer(response,chargePage);
     }
 
     @RequestMapping("/pay/wxpay/charge")
