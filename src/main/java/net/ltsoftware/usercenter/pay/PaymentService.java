@@ -141,7 +141,7 @@ public class PaymentService {
 
         AlipayTradePagePayResponse response = alipayClient.pageExecute(alipayRequest);
         if (response.isSuccess()) {
-            String payForm = alipayClient.pageExecute(alipayRequest).getBody();
+            String payForm = response.getBody();
             logger.info(payForm);
             return payForm;
         }
