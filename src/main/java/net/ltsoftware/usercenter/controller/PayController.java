@@ -8,6 +8,7 @@ import net.ltsoftware.usercenter.model.Order;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
+import net.ltsoftware.usercenter.util.HttpResponseUtil;
 import net.ltsoftware.usercenter.util.JsonUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
@@ -46,9 +47,10 @@ public class PayController {
 
 
     @RequestMapping("/pay/alipay/charge")
-    public void aliCharge(Long userId, Integer amount, HttpServletResponse response) throws AlipayApiException {
-        String chargePage = paymentServcie.getAlipayPage(amount, userId);
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
+    public void aliCharge(Long userId, Integer amount, HttpServletResponse response) throws AlipayApiException, IOException {
+        String payPage = paymentServcie.getAlipayPage(amount, userId);
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
+        HttpResponseUtil.write(response,payPage);
 
     }
 
