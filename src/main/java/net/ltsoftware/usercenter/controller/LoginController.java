@@ -53,6 +53,7 @@ public class LoginController {
     @GetMapping("/user/login/check")
     @CrossOrigin(origins = "http://buy.ltsoftware.net:8000", allowCredentials = "true")
     public void checkLogin(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         User user = (User) request.getAttribute("login_user");
         if(user==null){
             JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
@@ -199,7 +200,8 @@ public class LoginController {
 
     @GetMapping("/phone/login")
     @CrossOrigin(origins = "http://buy.ltsoftware.net:8000", allowCredentials = "true")
-    public void loginByPhone(String phone, String code, HttpServletResponse response) throws Exception {
+    public void loginByPhone(String phone, String code, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         if(StringUtils.isBlank(phone)|StringUtils.isBlank(code)){
             JsonUtil.toJsonMsg(response,ErrorCode.PARM_MISSING,null);
         }

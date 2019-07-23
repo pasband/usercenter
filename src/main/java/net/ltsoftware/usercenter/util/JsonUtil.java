@@ -1,6 +1,7 @@
 package net.ltsoftware.usercenter.util;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,8 @@ public class JsonUtil {
             // 设置页面不缓存
             response.setHeader("Pragma", "No-cache");
             response.setHeader("Cache-Control", "no-cache");
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            if(StringUtils.isBlank(response.getHeader("Access-Control-Allow-Origin")))
+                response.setHeader("Access-Control-Allow-Origin", "*");
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             PrintWriter out = null;
