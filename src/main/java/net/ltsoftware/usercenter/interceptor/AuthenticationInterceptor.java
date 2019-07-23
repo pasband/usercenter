@@ -33,6 +33,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
+        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
+
         //获取访问URL
         String uri = request.getRequestURI();
         logger.info("uri:"+uri);
