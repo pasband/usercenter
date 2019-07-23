@@ -6,9 +6,8 @@ public interface SmsConstants {
     String MONEY_URL = "http://service.winic.org/webservice/public/remoney.asp";
     String USER = "andrew888";
     String PASS = "andrew888";
-    String PREFIX = "SMS_";
-    String FREQ = "FREQ_";
-    String CODE = "CODE_";
+    String PREFIX_FREQ = "SMS_FREQ_";
+    String PREFIX_CODE = "SMS_CODE_";
 
     int MIN_INTERVAL = 10;
 

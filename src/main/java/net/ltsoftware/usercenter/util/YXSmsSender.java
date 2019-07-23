@@ -37,7 +37,7 @@ public class YXSmsSender {
 
     public int sendPhoneCode(String phone) throws Exception {
 
-        Object val = redis.get(SmsConstants.PREFIX + SmsConstants.FREQ + phone);
+        Object val = redis.get(SmsConstants.PREFIX_FREQ + phone);
         if (val != null) {
             return ErrorCode.SMS_PHONE_FREQ_HIGH;
         }
@@ -46,15 +46,15 @@ public class YXSmsSender {
         int errcode = send(phone, message);
         if (errcode == 0) {
             //defense high freq call
-            redis.setex(SmsConstants.PREFIX + SmsConstants.FREQ + phone, SmsConstants.MIN_INTERVAL, phone);
+            redis.setex(SmsConstants.PREFIX_FREQ + phone, SmsConstants.MIN_INTERVAL, phone);
             //save code to redis
-            redis.setex(SmsConstants.PREFIX + SmsConstants.CODE + phone, SmsConstants.CODE_VALID, code);
+            redis.setex(SmsConstants.PREFIX_CODE + phone, SmsConstants.CODE_VALID, code);
         }
         return ErrorCode.SUCCESS;
     }
 
     private int send(String phone, String message) throws Exception {
-        if (redis.get(SmsConstants.PREFIX + phone) != null) {
+        if (redis.get(SmsConstants.PREFIX_FREQ + phone) != null) {
             return ErrorCode.SMS_PHONE_FREQ_HIGH;
         }
 

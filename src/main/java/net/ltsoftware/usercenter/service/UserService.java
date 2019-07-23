@@ -90,7 +90,7 @@ public class UserService implements BaseService<User, UserExample> {
 
     @Transactional
     public int bindPhone(String phone, String code, String userId) {
-        String code1 = redisClient.get(SmsConstants.PREFIX + phone);
+        String code1 = redisClient.get(SmsConstants.PREFIX_CODE + phone);
         if (code.equals(code1)) {
             User user = userMapper.selectByPrimaryKey(Long.parseLong(userId));
             user.setPhone(phone);
@@ -103,7 +103,7 @@ public class UserService implements BaseService<User, UserExample> {
     }
 
     public boolean checkPhoneCode(String phone, String code){
-        String code1 = redisClient.get(SmsConstants.PREFIX + phone);
+        String code1 = redisClient.get(SmsConstants.PREFIX_CODE + phone);
         return code.equals(code1) ;
 
     }
