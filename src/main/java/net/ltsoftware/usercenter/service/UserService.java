@@ -3,7 +3,6 @@ package net.ltsoftware.usercenter.service;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.SessionConstants;
 import net.ltsoftware.usercenter.constant.SmsConstants;
-import net.ltsoftware.usercenter.controller.PayController;
 import net.ltsoftware.usercenter.dao.UserMapper;
 import net.ltsoftware.usercenter.model.User;
 import net.ltsoftware.usercenter.model.UserExample;
@@ -35,8 +34,8 @@ public class UserService implements BaseService<User, UserExample> {
 
     @Override
     @Transactional
-    public Integer updateByPrimaryKey(User order) throws Exception {
-        return userMapper.updateByPrimaryKey(order);
+    public Integer updateByPrimaryKey(User user) throws Exception {
+        return userMapper.updateByPrimaryKey(user);
     }
 
     @Override
@@ -78,6 +77,17 @@ public class UserService implements BaseService<User, UserExample> {
         return user;
     }
 
+    public User selectByPhone(String phone) {
+        User user = null;
+        UserExample example = new UserExample();
+        example.createCriteria().andPhoneEqualTo(phone);
+        List<User> list = userMapper.selectByExample(example);
+        if (list != null && list.size() == 1) {
+            user = list.get(0);
+        }
+        return user;
+    }
+
     @Transactional
     public int bindPhone(String phone, String code, String userId) {
         String code1 = redisClient.get(SmsConstants.PREFIX + phone);
@@ -91,6 +101,27 @@ public class UserService implements BaseService<User, UserExample> {
 
         return ErrorCode.PHONE_CODE_WRONG;
     }
+
+    public boolean checkPhoneCode(String phone, String code){
+        String code1 = redisClient.get(SmsConstants.PREFIX + phone);
+        return code.equals(code1) ;
+
+    }
+
+//    @Transactional
+//    public int bindPhone(String phone, String code, String userId) {
+//        String code1 = redisClient.get(SmsConstants.PREFIX + phone);
+//        if (code.equals(code1)) {
+//            User user = userMapper.selectByPrimaryKey(Long.parseLong(userId));
+//            user.setPhone(phone);
+//            user.setStatus("2");
+//            userMapper.updateByPrimaryKey(user);
+//            return ErrorCode.SUCCESS;
+//        }
+//
+//        return ErrorCode.PHONE_CODE_WRONG;
+//    }
+
 
     @Transactional
     public int addBalance(Long userId, Integer chargeMoney) {

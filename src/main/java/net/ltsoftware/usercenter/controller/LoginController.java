@@ -174,7 +174,7 @@ public class LoginController {
 //        cookie2.setPath("/");
         response.addCookie(cookie1);
 //        response.addCookie(cookie2);
-        response.sendRedirect("http://platform.ltsoftware.net/home?id=" + userId);
+//        response.sendRedirect("http://platform.ltsoftware.net/home?id=" + userId);
 
     }
 
@@ -193,6 +193,23 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @GetMapping("/phone/login")
+    public void loginByPhone(String phone, String code, HttpServletResponse response) throws Exception {
+        if(userService.checkPhoneCode(phone,code)){
+            User user = userService.selectByPhone(phone);
+            if(user==null){
+                user = register();
+            }
+            login(user.getId(),response);
+            user.setPhone(phone);
+            userService.updateByPrimaryKey(user);
+            JsonUtil.toJsonMsg(response,ErrorCode.SUCCESS,user);
+        }else{
+            JsonUtil.toJsonMsg(response,ErrorCode.PHONE_CODE_WRONG,null);
+        }
+
     }
 
     @RequestMapping("/token/getUser")
