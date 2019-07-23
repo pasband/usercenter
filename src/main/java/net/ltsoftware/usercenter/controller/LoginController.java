@@ -51,6 +51,7 @@ public class LoginController {
 
 
     @GetMapping("/user/login/check")
+    @CrossOrigin(origins = "http://buy.ltsoftware.net:8000", allowCredentials = "true")
     public void checkLogin(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) request.getAttribute("login_user");
         if(user==null){
