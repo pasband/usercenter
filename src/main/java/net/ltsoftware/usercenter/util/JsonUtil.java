@@ -31,7 +31,6 @@ public class JsonUtil {
             // 设置页面不缓存
             response.setHeader("Pragma", "No-cache");
             response.setHeader("Cache-Control", "no-cache");
-            log.info("response header:Access-Control-Allow-Origin="+response.getHeader("Access-Control-Allow-Origin"));
             if(StringUtils.isBlank(response.getHeader("Access-Control-Allow-Origin")))
                 response.setHeader("Access-Control-Allow-Origin", "*");
             response.setCharacterEncoding("UTF-8");

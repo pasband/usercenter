@@ -50,7 +50,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         User currentUser = userService.getUserByToken(token);
         if(currentUser==null){
             logger.info("currentUser blank");
-
             //cannot found token key in redis
             JsonUtil.toJsonMsg(response, ErrorCode.INVALID_TOKEN,null);
             return false;
