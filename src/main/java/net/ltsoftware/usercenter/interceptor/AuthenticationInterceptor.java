@@ -55,11 +55,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             JsonUtil.toJsonMsg(response, ErrorCode.INVALID_TOKEN,null);
             return false;
         }
-        if(currentUser.getStatus().equals("1") && !passPhoneBindList.contains(uri)){
-            logger.info("need phone bind");
-            JsonUtil.toJsonMsg(response, ErrorCode.NEED_PHONE_BIND,null);
-            return false;
-        }
+//        if(currentUser.getStatus().equals("1") && !passPhoneBindList.contains(uri)){
+//            logger.info("need phone bind");
+//            JsonUtil.toJsonMsg(response, ErrorCode.NEED_PHONE_BIND,null);
+//            return false;
+//        }
         request.setAttribute("login_user",currentUser);
         userService.refreshToken(token);
         return true;

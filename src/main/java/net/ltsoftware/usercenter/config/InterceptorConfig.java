@@ -17,8 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getAuthenticationInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/oauth/**","/token/**","/error");
-
+                .excludePathPatterns("/oauth/**","/token/**","/error","/phone/**");
 
     }
 
