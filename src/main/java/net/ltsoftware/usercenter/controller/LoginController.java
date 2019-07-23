@@ -16,6 +16,7 @@ import net.ltsoftware.usercenter.util.CodeHelper;
 import net.ltsoftware.usercenter.util.JsonUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,6 +198,9 @@ public class LoginController {
 
     @GetMapping("/phone/login")
     public void loginByPhone(String phone, String code, HttpServletResponse response) throws Exception {
+        if(StringUtils.isBlank(phone)|StringUtils.isBlank(code)){
+            JsonUtil.toJsonMsg(response,ErrorCode.PARM_MISSING,null);
+        }
         if(userService.checkPhoneCode(phone,code)){
             User user = userService.selectByPhone(phone);
             if(user==null){

@@ -6,6 +6,10 @@ public interface ErrorCode {
 
     int SUCCESS = 0;
 
+    int PARM_MISSING = 100100;
+
+    int PARM_FORMAT_WRONG = 100200;
+
     int TOKEN_NULL = 300100;
 
     int INVALID_TOKEN = 300200;
