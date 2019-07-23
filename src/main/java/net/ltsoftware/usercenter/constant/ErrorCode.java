@@ -10,7 +10,9 @@ public interface ErrorCode {
 
     int INVALID_TOKEN = 300200;
 
-    int USER_NOT_FOUND = 300300;
+    int NEED_LOGIN = 300300;
+
+    int USER_NOT_FOUND = 300400;
 
     int SMS_PHONE_FREQ_HIGH = 400100;
 

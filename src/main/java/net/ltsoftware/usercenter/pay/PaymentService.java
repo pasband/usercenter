@@ -98,19 +98,6 @@ public class PaymentService {
     //alipay
     public String getAlipayPage(Integer amount, Long userId) throws AlipayApiException {
 
-
-//        AlipayOpenPublicTemplateMessageIndustryModifyRequest request = new AlipayOpenPublicTemplateMessageIndustryModifyRequest();
-//        //SDK已经封装掉了公共参数，这里只需要传入业务参数
-//        //此次只是参数展示，未进行字符串转义，实际情况下请转义
-//        request.setBizContent("  {" +
-//                "    \"primary_industry_name\":\"IT科技/IT软件与服务\"," +
-//                "    \"primary_industry_code\":\"10001/20102\"," +
-//                "    \"secondary_industry_code\":\"10001/20102\"," +
-//                "    \"secondary_industry_name\":\"IT科技/IT软件与服务\"" +
-//                " }");
-//        AlipayOpenPublicTemplateMessageIndustryModifyResponse response = alipayClient.execute(request);
-
-
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         alipayRequest.setReturnUrl(AlipayConstants.RETURN_URL);

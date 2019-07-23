@@ -9,7 +9,6 @@ import com.qq.connect.oauth.Oauth;
 import net.ltsoftware.usercenter.annotation.PassToken;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.SessionConstants;
-import net.ltsoftware.usercenter.constant.SmsConstants;
 import net.ltsoftware.usercenter.model.User;
 import net.ltsoftware.usercenter.oauth2.WxOauthService;
 import net.ltsoftware.usercenter.service.UserService;
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
@@ -46,6 +46,18 @@ public class LoginController {
     private WxOauthService wxOauthService;
 
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+
+
+    @GetMapping("/user/login/check")
+    public void checkLogin(HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) request.getAttribute("login_user");
+        if(user==null){
+            JsonUtil.toJsonMsg(response, ErrorCode.NEED_LOGIN,null);
+        }else{
+            JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, user.getPhone());
+        }
+    }
 
 
     @RequestMapping("/user/info")
