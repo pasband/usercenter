@@ -197,7 +197,7 @@ public class LoginController {
     }
 
     @GetMapping("/phone/login")
-    @CrossOrigin(origins = "*", allowCredentials = "true")
+    @CrossOrigin(origins = "http://buy.ltsoftware.net:8000", allowCredentials = "true")
     public void loginByPhone(String phone, String code, HttpServletResponse response) throws Exception {
         if(StringUtils.isBlank(phone)|StringUtils.isBlank(code)){
             JsonUtil.toJsonMsg(response,ErrorCode.PARM_MISSING,null);
