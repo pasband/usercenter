@@ -11,7 +11,7 @@ mybatis:
 ---
 
 server:
-  port: 8080
+  port: 6443
 
 #本地配置
 spring:

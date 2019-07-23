@@ -66,7 +66,7 @@ public class YXSmsSender {
 
         String result = httpUtil.post(SmsConstants.SERV_URL, nvs, "GBK");
         //save msg&result to db
-
+        log.info(result);
         if (result != null) {
             String[] words = result.split("/");
             if (words.length > 1) {
@@ -96,10 +96,10 @@ public class YXSmsSender {
         return 1;
     }
 
-    public static void main(String[] args) throws IOException {
-//		new YXSmsSender().send("18598050612","验证码111111");
-        int code = Integer.parseInt("-02");
-        System.out.println(code);
+    public static void main(String[] args) throws Exception {
+		new YXSmsSender().send("18598050612","验证码111111");
+//        int code = Integer.parseInt("-02");
+//        System.out.println(code);
     }
 
 }
