@@ -10,6 +10,8 @@ public interface ErrorCode {
 
     int PARM_FORMAT_WRONG = 100200;
 
+    int PAY_RETURN_VERIFY_FAIL = 200100;
+
     int TOKEN_NULL = 300100;
 
     int INVALID_TOKEN = 300200;
@@ -23,5 +25,7 @@ public interface ErrorCode {
     int PHONE_CODE_WRONG = 400200;
 
     int NEED_PHONE_BIND = 400300;
+
+
 
 }

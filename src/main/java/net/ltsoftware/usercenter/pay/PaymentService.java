@@ -8,6 +8,7 @@ import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
+import net.ltsoftware.usercenter.constant.WxpayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class PaymentService {
 //        return null;
 //    }
 
-    public String getWxpayUrl(String tradeNo, Long amount, String clientIp, String notifyUrl) throws Exception {
+    public String getWxpayUrl(String tradeNo, Long amount, String clientIp) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
@@ -67,7 +68,7 @@ public class PaymentService {
         data.put("fee_type", "CNY");
         data.put("total_fee", "1");
         data.put("spbill_create_ip", clientIp);
-        data.put("notify_url", notifyUrl);
+        data.put("notify_url", WxpayConstants.NOTIFY_URL);
         data.put("trade_type", "NATIVE");  // 此处指定为扫码支付
         data.put("product_id", "12");
 
@@ -82,12 +83,12 @@ public class PaymentService {
 
 
     //alipay
-    public String getAlipayPage(String tradeNo, Long amount, String returnUrl, String notifyUrl) throws AlipayApiException {
+    public String getAlipayPage(String tradeNo, Long amount) throws AlipayApiException {
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(returnUrl);
-        alipayRequest.setNotifyUrl(notifyUrl);
+        alipayRequest.setReturnUrl(AlipayConstants.RETURN_URL);
+        alipayRequest.setNotifyUrl(AlipayConstants.NOTIFY_URL);
 
         String out_trade_no = tradeNo;
         String total_amount = String.valueOf(amount);
@@ -119,7 +120,7 @@ public class PaymentService {
             return payForm;
         }
 
-        String tradeNo3rd = response.getTradeNo();
+//        String tradeNo3rd = response.getTradeNo();
 
 
 //        <form name="punchout_form" method="post" action="https://openapi.alipay.com/gateway.do?charset=utf-8&method=alipay.trade.page.pay&sign=Kw%2FKUsD8InN2SJJ5315l7kT7p393n0nCYOCvsL6JxmX9smHCtM58A3Z%2FHcdkjnzA9ZL%2FqSGCPXIJs1owc9jYP2n3Yg1%2FnbWngnIP4XVJ6KkVwnkt0I6o4uQhyRLCgXw7ys61uEbx24pNDWjkJw3%2BUt7QmYrNzA1hOhTnoKu9Bxbd%2BrMPvoSPR%2BRYcI3A7g%2FyuSG2hCRMShntqnV13jMqQw4ubWZ4ekhaz4nAQYL6fpYihoRRT%2BZOnrLoqJj1Z%2F2POsslqKt%2FY38NhW0plZtLjU6G%2FTt31dq%2B9U8fj1zjMmWxP7Ja%2Fffkf1PyZVFWyFadDtiz78k%2F7dB8%2FGNc4pGB%2BQ%3D%3D&version=1.0&app_id=2019061065521285&sign_type=RSA&timestamp=2019-06-11+18%3A25%3A34&alipay_sdk=alipay-sdk-java-3.7.89.ALL&format=JSON">

@@ -6,6 +6,6 @@ public interface SessionConstants {
     String USER_TOKEN = "user_token";
     String LOGIN_TOKEN_NAME = "LOGIN_TOKEN";
     String LOGIN_TOKEN_PREF = "token_";
-    int TIMEOUT = 300; //for test
+    int TIMEOUT = 3600; //for test
 
 }

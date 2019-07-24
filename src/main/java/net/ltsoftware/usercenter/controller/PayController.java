@@ -3,15 +3,17 @@ package net.ltsoftware.usercenter.controller;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
-import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.model.Order;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
 import net.ltsoftware.usercenter.util.HttpResponseUtil;
+import net.ltsoftware.usercenter.util.HttpUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class PayController {
@@ -44,6 +44,9 @@ public class PayController {
     @Autowired
     private RedisClient redisClient;
 
+    @Autowired
+    private HttpUtil httpUtil;
+
     private static Logger logger = LoggerFactory.getLogger(PayController.class);
 
     @GetMapping("/pay")
@@ -52,11 +55,14 @@ public class PayController {
 
         switch (payChannel) {
             case AlipayConstants.CHANNEL_NAME:
-                String payPage = paymentServcie.getAlipayPage(tradeNo,amount,returnUrl,notifyUrl);
+                String payPage = paymentServcie.getAlipayPage(tradeNo,amount);
+                redisClient.set(tradeNo+AlipayConstants.RETURN_URL,returnUrl);
+                redisClient.set(tradeNo+AlipayConstants.NOTIFY_URL,notifyUrl);
                 HttpResponseUtil.write(response,payPage);
                 break;
             case WxpayConstants.CHANNEL_NAME:
-                String chargeUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,notifyUrl);
+                String chargeUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
+                redisClient.set(tradeNo+WxpayConstants.NOTIFY_URL,notifyUrl);
                 HttpResponseUtil.write(response,chargeUrl);
                 break;
         }
@@ -159,11 +165,10 @@ public class PayController {
     @RequestMapping("/pay/alipay/return")
     public void aliReturn(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
         //获取支付宝GET过来反馈信息
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         Map<String, String[]> requestParams = request.getParameterMap();
-        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
-            String name = (String) iter.next();
-            String[] values = (String[]) requestParams.get(name);
+        for (String name : requestParams.keySet()) {
+            String[] values = requestParams.get(name);
             String valueStr = "";
             for (int i = 0; i < values.length; i++) {
                 valueStr = (i == values.length - 1) ? valueStr + values[i]
@@ -181,10 +186,8 @@ public class PayController {
 
         logger.info("alipay return : " + signVerified);
 
-        int errCode = -1;
         //——请在这里编写您的程序（以下代码仅作参考）——
         if (signVerified) {
-            errCode = ErrorCode.SUCCESS;
             //商户订单号
             String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
 
@@ -194,14 +197,22 @@ public class PayController {
             //付款金额
             String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
 
-            orderService.selectByTradeNo(out_trade_no);
-//          out.println("trade_no:"+trade_no+"<br/>out_trade_no:"+out_trade_no+"<br/>total_amount:"+total_amount);
-        } else {
-//            out.println("验签失败");
+            String returnUrl = redisClient.get(out_trade_no+AlipayConstants.KEY_RETURN_URL_TAIL);
 
+            List<NameValuePair> paralist = new ArrayList<>();
+            paralist.add(new BasicNameValuePair("tradeNo",out_trade_no));
+            paralist.add(new BasicNameValuePair("tradeNo3rd",trade_no));
+            paralist.add(new BasicNameValuePair("amount",total_amount));
+
+            String result = httpUtil.get(returnUrl,paralist);
+            logger.info("recall: "+returnUrl+", result: "+result);
+
+        } else {
+
+            logger.error("验签失败"+request.toString());
         }
 //        JsonUtil.toJsonMsg(response, errCode, null);
-        response.sendRedirect("http://platform.ltsoftware.net/home/baseinformation?code=" + errCode);
+
     }
 
     @RequestMapping("/pay/wxpay/notify")
