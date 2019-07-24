@@ -56,13 +56,13 @@ public class PayController {
         switch (payChannel) {
             case AlipayConstants.CHANNEL_NAME:
                 String payPage = paymentServcie.getAlipayPage(tradeNo,amount);
-                redisClient.set(tradeNo+AlipayConstants.RETURN_URL,returnUrl);
-                redisClient.set(tradeNo+AlipayConstants.NOTIFY_URL,notifyUrl);
+                redisClient.set(tradeNo+AlipayConstants.KEY_RETURN_URL_TAIL,returnUrl);
+                redisClient.set(tradeNo+AlipayConstants.KEY_NOTIFY_URL_TAIL,notifyUrl);
                 HttpResponseUtil.write(response,payPage);
                 break;
             case WxpayConstants.CHANNEL_NAME:
                 String chargeUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
-                redisClient.set(tradeNo+WxpayConstants.NOTIFY_URL,notifyUrl);
+                redisClient.set(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,notifyUrl);
                 HttpResponseUtil.write(response,chargeUrl);
                 break;
         }
@@ -200,6 +200,9 @@ public class PayController {
             String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
 
             String returnUrl = redisClient.get(out_trade_no+AlipayConstants.KEY_RETURN_URL_TAIL);
+            if(returnUrl==null){
+                logger.error("cannot find return url in cache.");
+            }
 
             List<NameValuePair> paralist = new ArrayList<>();
             paralist.add(new BasicNameValuePair("tradeNo",out_trade_no));
