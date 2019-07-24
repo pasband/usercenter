@@ -56,7 +56,7 @@ public class PaymentService {
 //        return null;
 //    }
 
-    public String getWxpayUrl(String tradeNo, Integer amount, String clientIp, String notifyUrl) throws Exception {
+    public String getWxpayUrl(String tradeNo, Long amount, String clientIp, String notifyUrl) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
@@ -82,7 +82,7 @@ public class PaymentService {
 
 
     //alipay
-    public String getAlipayPage(String tradeNo, Integer amount, String returnUrl, String notifyUrl) throws AlipayApiException {
+    public String getAlipayPage(String tradeNo, Long amount, String returnUrl, String notifyUrl) throws AlipayApiException {
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();

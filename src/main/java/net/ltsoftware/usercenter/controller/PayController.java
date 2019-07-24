@@ -47,7 +47,7 @@ public class PayController {
     private static Logger logger = LoggerFactory.getLogger(PayController.class);
 
     @GetMapping("/pay")
-    public void pay(String tradeNo, Integer amount, String payChannel, String clientIp,
+    public void pay(String tradeNo, Long amount, String payChannel, String clientIp,
                     String returnUrl, String notifyUrl, HttpServletResponse response) throws Exception {
 
         switch (payChannel) {
