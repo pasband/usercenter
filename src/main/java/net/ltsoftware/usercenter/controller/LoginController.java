@@ -51,7 +51,7 @@ public class LoginController {
 
 
     @GetMapping("/user/login/check")
-    @CrossOrigin(origins = "http://buy.ltsoftware.net:8000", allowCredentials = "true")
+    @CrossOrigin(origins = "http://try.ltsoftware.net", allowCredentials = "true")
     public void checkLogin(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         User user = (User) request.getAttribute("login_user");
@@ -189,7 +189,9 @@ public class LoginController {
     }
 
     @RequestMapping("/phone/code")
-    public void sendCode(String phone, HttpServletResponse response) {
+    @CrossOrigin(origins = "http://try.ltsoftware.net", allowCredentials = "true")
+    public void sendCode(String phone, HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         try {
             int errCode = smsSender.sendPhoneCode(phone);
             JsonUtil.toJsonMsg(response, errCode, null);
@@ -199,7 +201,7 @@ public class LoginController {
     }
 
     @GetMapping("/phone/login")
-    @CrossOrigin(origins = "http://buy.ltsoftware.net:8000", allowCredentials = "true")
+    @CrossOrigin(origins = "http://try.ltsoftware.net", allowCredentials = "true")
     public void loginByPhone(String phone, String code, HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         if(StringUtils.isBlank(phone)|StringUtils.isBlank(code)){
