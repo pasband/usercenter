@@ -8,16 +8,10 @@ import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
-import net.ltsoftware.usercenter.util.CodeHelper;
-import net.ltsoftware.usercenter.util.DateUtil;
-import net.ltsoftware.usercenter.util.QrcodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,48 +56,40 @@ public class PaymentService {
 //        return null;
 //    }
 
-    public String weixinCharge(Integer amount, Long userId, String ip) throws Exception {
+    public String getWxpayUrl(String tradeNo, Integer amount, String clientIp, String notifyUrl) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("body", "旅通服务平台用户充值");
-        data.put("out_trade_no", DateUtil.getyyyyMMddHHmmssSSS(new Date()));
+        data.put("out_trade_no", tradeNo);
         data.put("device_info", "WEB");
         data.put("fee_type", "CNY");
         data.put("total_fee", "1");
-        data.put("spbill_create_ip", ip);
-        data.put("notify_url", "http://uc.ltsoftware.net/pay/wxpay/notify");
+        data.put("spbill_create_ip", clientIp);
+        data.put("notify_url", notifyUrl);
         data.put("trade_type", "NATIVE");  // 此处指定为扫码支付
         data.put("product_id", "12");
 
-        try {
-            Map<String, String> resp = wxpay.unifiedOrder(data);
-            logger.info(resp.toString());
-            String payurl = resp.get("code_url");
-            logger.info(payurl);
-            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
-            return payurl;
+        Map<String, String> resp = wxpay.unifiedOrder(data);
+        logger.info(resp.toString());
+        String payurl = resp.get("code_url");
+        logger.info(payurl);
+//            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
+        return payurl;
 
-//            System.out.println(resp);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
 
     //alipay
-    public String getAlipayPage(Integer amount, Long userId) throws AlipayApiException {
+    public String getAlipayPage(String tradeNo, Integer amount, String returnUrl, String notifyUrl) throws AlipayApiException {
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(AlipayConstants.RETURN_URL);
-        alipayRequest.setNotifyUrl(AlipayConstants.NOTIFY_URL);
+        alipayRequest.setReturnUrl(returnUrl);
+        alipayRequest.setNotifyUrl(notifyUrl);
 
-        String out_trade_no = CodeHelper.getOrderId();
+        String out_trade_no = tradeNo;
         String total_amount = String.valueOf(amount);
         String subject = AlipayConstants.CHANGE_TITLE;
 
@@ -133,7 +119,7 @@ public class PaymentService {
             return payForm;
         }
 
-        String tradeNo = response.getTradeNo();
+        String tradeNo3rd = response.getTradeNo();
 
 
 //        <form name="punchout_form" method="post" action="https://openapi.alipay.com/gateway.do?charset=utf-8&method=alipay.trade.page.pay&sign=Kw%2FKUsD8InN2SJJ5315l7kT7p393n0nCYOCvsL6JxmX9smHCtM58A3Z%2FHcdkjnzA9ZL%2FqSGCPXIJs1owc9jYP2n3Yg1%2FnbWngnIP4XVJ6KkVwnkt0I6o4uQhyRLCgXw7ys61uEbx24pNDWjkJw3%2BUt7QmYrNzA1hOhTnoKu9Bxbd%2BrMPvoSPR%2BRYcI3A7g%2FyuSG2hCRMShntqnV13jMqQw4ubWZ4ekhaz4nAQYL6fpYihoRRT%2BZOnrLoqJj1Z%2F2POsslqKt%2FY38NhW0plZtLjU6G%2FTt31dq%2B9U8fj1zjMmWxP7Ja%2Fffkf1PyZVFWyFadDtiz78k%2F7dB8%2FGNc4pGB%2BQ%3D%3D&version=1.0&app_id=2019061065521285&sign_type=RSA&timestamp=2019-06-11+18%3A25%3A34&alipay_sdk=alipay-sdk-java-3.7.89.ALL&format=JSON">

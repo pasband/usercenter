@@ -68,6 +68,6 @@ public class MyWxpayConfig extends WXPayConfig {
             }
         };
         return iwxPayDomain;
-
     }
+
 }

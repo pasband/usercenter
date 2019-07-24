@@ -15,21 +15,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
     private UserService userService;
 
-    private List<String> passPhoneBindList;
+//    private List<String> passPhoneBindList;
 
     private static Logger logger = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
-    public void setPassPhoneBind(List<String> passPhoneBindList){
-        this.passPhoneBindList = passPhoneBindList;
-
-    }
+//    public void setPassPhoneBind(List<String> passPhoneBindList){
+//        this.passPhoneBindList = passPhoneBindList;
+//    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {

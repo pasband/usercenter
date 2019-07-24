@@ -14,4 +14,6 @@ public interface AlipayConstants {
 
     String CHANGE_TITLE = "旅通服务平台账户充值";
 
+    String CHANNEL_NAME = "alipay";
+
 }

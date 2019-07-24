@@ -4,18 +4,19 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
 import net.ltsoftware.usercenter.constant.ErrorCode;
+import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.model.Order;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
 import net.ltsoftware.usercenter.util.HttpResponseUtil;
-import net.ltsoftware.usercenter.util.JsonUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,22 +46,39 @@ public class PayController {
 
     private static Logger logger = LoggerFactory.getLogger(PayController.class);
 
+    @GetMapping("/pay")
+    public void pay(String tradeNo, Integer amount, String payChannel, String clientIp,
+                    String returnUrl, String notifyUrl, HttpServletResponse response) throws Exception {
 
-    @RequestMapping("/pay/alipay/charge")
-    public void aliCharge(Long userId, Integer amount, HttpServletResponse response) throws AlipayApiException, IOException {
-        String payPage = paymentServcie.getAlipayPage(amount, userId);
-//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
-        HttpResponseUtil.write(response,payPage);
+        switch (payChannel) {
+            case AlipayConstants.CHANNEL_NAME:
+                String payPage = paymentServcie.getAlipayPage(tradeNo,amount,returnUrl,notifyUrl);
+                HttpResponseUtil.write(response,payPage);
+                break;
+            case WxpayConstants.CHANNEL_NAME:
+                String chargeUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,notifyUrl);
+                HttpResponseUtil.write(response,chargeUrl);
+                break;
+        }
 
     }
 
-    @RequestMapping("/pay/wxpay/charge")
-    public void wxCharge(Long userId, Integer amount, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String ipAddresses = request.getHeader("X-Real-IP");
-//        logger.info("ip : " + ipAddresses);
-        String chargeUrl = paymentServcie.weixinCharge(amount, userId, ipAddresses);
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargeUrl);
-    }
+
+//    @RequestMapping("/pay/alipay/charge")
+//    public void aliCharge(Long userId, Integer amount, HttpServletResponse response) throws AlipayApiException, IOException {
+//        String payPage = paymentServcie.getAlipayPage(amount, userId);
+////        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargePage);
+//        HttpResponseUtil.write(response,payPage);
+//
+//    }
+
+//    @RequestMapping("/pay/wxpay/charge")
+//    public void wxCharge(Long userId, Integer amount, HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        String ipAddresses = request.getHeader("X-Real-IP");
+////        logger.info("ip : " + ipAddresses);
+//        String chargeUrl = paymentServcie.getWxpayUrl(amount, userId, ipAddresses);
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargeUrl);
+//    }
 
     //支付宝异步通知
     @RequestMapping("/pay/alipay/notify")

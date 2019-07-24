@@ -6,10 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
@@ -17,16 +13,16 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getAuthenticationInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/oauth/**","/token/**","/error","/phone/**","/wxmp/**");
+                .excludePathPatterns("/oauth/**","/token/**","/error","/phone/**","/wxmp/**","/pay");
 
     }
 
     @Bean
     public AuthenticationInterceptor getAuthenticationInterceptor(){
-        List<String> passPhoneBindUrls =
-                asList("/user/info","/phone/");
+//        List<String> passPhoneBindUrls =
+//                asList("/user/info","/phone/");
         AuthenticationInterceptor au = new AuthenticationInterceptor();
-        au.setPassPhoneBind(passPhoneBindUrls);
+//        au.setPassPhoneBind(passPhoneBindUrls);
         return au;
     }
 

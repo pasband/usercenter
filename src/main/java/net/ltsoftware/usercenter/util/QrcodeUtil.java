@@ -81,8 +81,8 @@ public class QrcodeUtil {
      */
     public static void main(String[] args) throws IOException, WriterException {
 
-        createQrCode(new FileOutputStream(new File("d:\\qrcode.jpg")), "weixin://wxpay/bizpayurl?pr=quhU6W8", 900, "JPEG");
-//        readQrCode(new FileInputStream(new File("d:\\qrcode.jpg")));
+//        createQrCode(new FileOutputStream(new File("d:\\qrcode.jpg")), "weixin://wxpay/bizpayurl?pr=quhU6W8", 900, "JPEG");
+        readQrCode(new FileInputStream(new File("d:\\__laolao\\qrcode.png")));
     }
 
 }
