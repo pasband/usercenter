@@ -12,8 +12,6 @@ import net.ltsoftware.usercenter.util.HttpResponseUtil;
 import net.ltsoftware.usercenter.util.HttpUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @Controller
 public class PayController {
@@ -204,16 +204,15 @@ public class PayController {
                 logger.error("cannot find return url in cache.");
             }
 
-            List<NameValuePair> paralist = new ArrayList<>();
-            paralist.add(new BasicNameValuePair("tradeNo",out_trade_no));
-            paralist.add(new BasicNameValuePair("tradeNo3rd",trade_no));
-            paralist.add(new BasicNameValuePair("amount",total_amount));
-
-            String result = httpUtil.get(returnUrl,paralist);
-            logger.info("recall: "+returnUrl+", result: "+result);
+//            List<NameValuePair> paralist = new ArrayList<>();
+//            paralist.add(new BasicNameValuePair("tradeNo",out_trade_no));
+//            paralist.add(new BasicNameValuePair("tradeNo3rd",trade_no));
+//            paralist.add(new BasicNameValuePair("amount",total_amount));
+            returnUrl = returnUrl+"?tradeNo="+out_trade_no+"&tradeNo3rd="+trade_no+"&amount="+total_amount;
+            logger.info("sendRedirect:"+returnUrl);
+            response.sendRedirect(returnUrl);
 
         } else {
-
             logger.error("验签失败"+request.toString());
         }
 //        JsonUtil.toJsonMsg(response, errCode, null);
