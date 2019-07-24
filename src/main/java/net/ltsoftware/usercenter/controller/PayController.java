@@ -177,6 +177,7 @@ public class PayController {
             logger.info("name:"+name+", valueStr:"+valueStr);
             //乱码解决，这段代码在出现乱码时使用
             valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            logger.info("name:"+name+", valueStr:"+valueStr);
             params.put(name, valueStr);
         }
 
