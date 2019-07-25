@@ -2,6 +2,9 @@ package net.ltsoftware.usercenter.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.github.wxpay.sdk.WXPay;
+import com.github.wxpay.sdk.WXPayUtil;
+import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.model.Order;
@@ -12,6 +15,8 @@ import net.ltsoftware.usercenter.util.HttpResponseUtil;
 import net.ltsoftware.usercenter.util.HttpUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class PayController {
@@ -220,8 +224,68 @@ public class PayController {
     }
 
     @RequestMapping("/pay/wxpay/notify")
-    public void wxpayNotify(HttpServletRequest request, HttpServletResponse response) {
+    public void wxpayNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        BufferedReader reader =  request.getReader();
+        String line ;
+        StringBuilder inputString = new StringBuilder();
 
+        while ((line = reader.readLine()) != null) {
+            inputString.append(line);
+        }
+        String notifyData = inputString.toString(); // 支付结果通知的xml格式数据
+        logger.info("wxpay notify: "+notifyData);
+        MyWxpayConfig config = new MyWxpayConfig();
+        WXPay wxpay = new WXPay(config);
+        Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);  // 转换成map
+
+
+        if (wxpay.isPayResultNotifySignatureValid(notifyMap)) {
+            logger.info("wxpay notify signature valid.");
+            // 签名正确
+            // 进行处理。
+            // 注意特殊情况：订单已经退款，但收到了支付结果成功的通知，不应把商户侧订单状态从退款改成支付成功
+            //返回状态码
+            String returnCode = notifyMap.get("return_code");
+            //业务结果
+            String resultCode = notifyMap.get("result_code");
+
+            if(!WxpayConstants.NOTIFY_RETURN_SUCCESS.equals(returnCode)){
+                logger.error("wxpay notify failed, return code:"+returnCode);
+                return;
+            }
+
+            if(!WxpayConstants.NOTIFY_RESULT_SUCCESS.equals(resultCode)){
+                logger.error("wxpay notify failed, result code:"+resultCode);
+                return;
+            }
+
+            //商户订单号
+            String outTradeNo = notifyMap.get("out_trade_no");
+            //微信支付订单号
+            String transactionId= notifyMap.get("transaction_id");
+            //订单金额，单位为分
+            String totalFee = notifyMap.get("total_fee");
+
+            String notifyUrl = redisClient.get(outTradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL);
+            if(notifyUrl==null){
+                logger.error("cannot find return url in cache.");
+            }
+
+            List<NameValuePair> paralist = new ArrayList<>();
+            paralist.add(new BasicNameValuePair("tradeNo",outTradeNo));
+            paralist.add(new BasicNameValuePair("tradeNo3rd",transactionId));
+            paralist.add(new BasicNameValuePair("amount",totalFee));
+            logger.info("send notify: "+notifyUrl);
+            logger.info("tradeNo: "+outTradeNo);
+            logger.info("tradeNo3rd: "+transactionId);
+            logger.info("amount: "+totalFee);
+            String getResponse = httpUtil.get(notifyUrl,paralist);
+            logger.info("http get response: "+getResponse);
+        }
+        else {
+            logger.error("wxpay notify signature failed.");
+            // 签名错误，如果数据里没有sign字段，也认为是签名错误
+        }
 
     }
 

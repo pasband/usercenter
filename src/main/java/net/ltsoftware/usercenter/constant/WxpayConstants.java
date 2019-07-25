@@ -9,4 +9,8 @@ public interface WxpayConstants {
 
     String KEY_NOTIFY_URL_TAIL ="_notify_url";
 
+    String NOTIFY_RETURN_SUCCESS = "SUCCESS";
+
+    String NOTIFY_RESULT_SUCCESS = "SUCCESS";
+
 }
