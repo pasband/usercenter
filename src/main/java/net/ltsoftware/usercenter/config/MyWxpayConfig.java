@@ -5,8 +5,6 @@ import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayConstants;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class MyWxpayConfig extends WXPayConfig {
@@ -14,13 +12,13 @@ public class MyWxpayConfig extends WXPayConfig {
     private byte[] certData;
 
     public MyWxpayConfig() throws Exception {
-        String certPath = "/usr/local/usercenter/cer/apiclient_cert.p12";
-//        String certPath = "/Users/apple/ltsoft/_platform/1309846801_20190614_cert/apiclient_cert.p12";
-        File file = new File(certPath);
-        InputStream certStream = new FileInputStream(file);
-        this.certData = new byte[(int) file.length()];
-        certStream.read(this.certData);
-        certStream.close();
+//        String certPath = "/usr/local/usercenter/cer/apiclient_cert.p12";
+////        String certPath = "/Users/apple/ltsoft/_platform/1309846801_20190614_cert/apiclient_cert.p12";
+//        File file = new File(certPath);
+//        InputStream certStream = new FileInputStream(file);
+//        this.certData = new byte[(int) file.length()];
+//        certStream.read(this.certData);
+//        certStream.close();
     }
 
     @Override
