@@ -12,6 +12,8 @@ public interface ErrorCode {
 
     int PAY_RETURN_VERIFY_FAIL = 200100;
 
+    int PAY_URL_FAIL = 200200;
+
     int TOKEN_NULL = 300100;
 
     int INVALID_TOKEN = 300200;

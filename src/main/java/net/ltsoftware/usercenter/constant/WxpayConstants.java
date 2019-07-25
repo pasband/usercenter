@@ -13,4 +13,6 @@ public interface WxpayConstants {
 
     String NOTIFY_RESULT_SUCCESS = "SUCCESS";
 
+    int PAY_WAIT_TIMEOUT = 7200;
+
 }

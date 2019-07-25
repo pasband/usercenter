@@ -61,8 +61,8 @@ public class PaymentService {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("body", "旅通服务平台用户充值");
+        Map<String, String> data = new HashMap<>();
+        data.put("body", "旅易软件服务购买");
         data.put("out_trade_no", tradeNo);
         data.put("device_info", "WEB");
         data.put("fee_type", "CNY");
@@ -74,6 +74,11 @@ public class PaymentService {
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
+        String returnCode = resp.get("return_code");
+        if(!WxpayConstants.NOTIFY_RETURN_SUCCESS.equals(returnCode)){
+            logger.error("wxpay get pay url failed, return msg: "+resp.get("return_msg"));
+            return null;
+        }
         String payurl = resp.get("code_url");
         logger.info(payurl);
 //            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");

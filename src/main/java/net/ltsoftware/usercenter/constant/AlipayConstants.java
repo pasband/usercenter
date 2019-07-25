@@ -22,4 +22,6 @@ public interface AlipayConstants {
     String KEY_RETURN_URL_TAIL ="_return_url";
     String KEY_NOTIFY_URL_TAIL ="_notify_url";
 
+    int PAY_WAIT_TIMEOUT = 5400;
+
 }

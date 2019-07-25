@@ -6,13 +6,14 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
+import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.model.Order;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
-import net.ltsoftware.usercenter.util.HttpResponseUtil;
 import net.ltsoftware.usercenter.util.HttpUtil;
+import net.ltsoftware.usercenter.util.JsonUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import net.ltsoftware.usercenter.util.YXSmsSender;
 import org.apache.http.NameValuePair;
@@ -60,14 +61,24 @@ public class PayController {
         switch (payChannel) {
             case AlipayConstants.CHANNEL_NAME:
                 String payPage = paymentServcie.getAlipayPage(tradeNo,amount);
-                redisClient.set(tradeNo+AlipayConstants.KEY_RETURN_URL_TAIL,returnUrl);
-                redisClient.set(tradeNo+AlipayConstants.KEY_NOTIFY_URL_TAIL,notifyUrl);
-                HttpResponseUtil.write(response,payPage);
+                redisClient.setex(tradeNo+AlipayConstants.KEY_RETURN_URL_TAIL,AlipayConstants.PAY_WAIT_TIMEOUT,returnUrl);
+                redisClient.setex(tradeNo+AlipayConstants.KEY_NOTIFY_URL_TAIL,AlipayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
+//                HttpResponseUtil.write(response,payPage);
+                if(payPage!=null){
+                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, payPage);
+                }else{
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                }
                 break;
             case WxpayConstants.CHANNEL_NAME:
-                String chargeUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
-                redisClient.set(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,notifyUrl);
-                HttpResponseUtil.write(response,chargeUrl);
+                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
+                redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
+//                HttpResponseUtil.write(response,payUrl);
+                if(payUrl!=null){
+                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, payUrl);
+                }else{
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                }
                 break;
         }
 
