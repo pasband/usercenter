@@ -221,6 +221,7 @@ public class PayController {
             String returnUrl = redisClient.get(out_trade_no+AlipayConstants.KEY_RETURN_URL_TAIL);
             if(returnUrl==null){
                 logger.error("cannot find return url in cache.");
+                return;
             }
 
 //            List<NameValuePair> paralist = new ArrayList<>();
@@ -287,6 +288,7 @@ public class PayController {
             String notifyUrl = redisClient.get(outTradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL);
             if(notifyUrl==null){
                 logger.error("cannot find return url in cache.");
+                return;
             }
 
             List<NameValuePair> paralist = new ArrayList<>();
