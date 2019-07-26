@@ -8,7 +8,6 @@ import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
-import net.ltsoftware.usercenter.model.Order;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
@@ -29,7 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class PayController {
@@ -104,6 +106,7 @@ public class PayController {
     //支付宝异步通知
     @RequestMapping("/pay/alipay/notify")
     public void aliNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<String, String>();
         Map<String, String[]> requestParams = request.getParameterMap();
@@ -129,12 +132,12 @@ public class PayController {
 
         //——请在这里编写您的程序（以下代码仅作参考）——
 
-	/* 实际验证过程建议商户务必添加以下校验：
-	1、需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
-	2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
-	3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
-	4、验证app_id是否为该商户本身。
-	*/
+        实际验证过程建议商户务必添加以下校验：
+        1、需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
+        2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
+        3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
+        4、验证app_id是否为该商户本身。
+
         if (signVerified) {//验证成功
             //商户订单号
             String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
@@ -174,6 +177,7 @@ public class PayController {
             //String sWord = AlipaySignature.getSignCheckContentV1(params);
             //AlipayConfig.logResult(sWord);
         }
+        //*/
     }
 
     //支付宝同步跳转
@@ -249,8 +253,11 @@ public class PayController {
         WXPay wxpay = new WXPay(config);
         Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);  // 转换成map
 
+        boolean signatureValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
+        //for test
+        signatureValid = true;
 
-        if (wxpay.isPayResultNotifySignatureValid(notifyMap)) {
+        if (signatureValid) {
             logger.info("wxpay notify signature valid.");
             // 签名正确
             // 进行处理。
