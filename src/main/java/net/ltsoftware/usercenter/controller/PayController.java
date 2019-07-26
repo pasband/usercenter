@@ -1,5 +1,6 @@
 package net.ltsoftware.usercenter.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.github.wxpay.sdk.WXPay;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -301,6 +303,18 @@ public class PayController {
             logger.info("amount: "+totalFee);
             String getResponse = httpUtil.get(notifyUrl,paralist);
             logger.info("http get response: "+getResponse);
+            JSONObject respJson = JSONObject.parseObject(getResponse);
+            int errCode = respJson.getIntValue("code");
+            if(ErrorCode.SUCCESS==errCode){
+                logger.info("callback reply success");
+                response.setContentType("application/xml");
+                PrintWriter out = response.getWriter();
+                out.print(WxpayConstants.NOTIFY_REPLY);
+                out.flush();
+                out.close();
+            }else if(ErrorCode.PAY_AMOUNT_MISFIT==errCode){
+                logger.error("pay amount misfit, trade no: "+outTradeNo);
+            }
         }
         else {
             logger.error("wxpay notify signature failed.");

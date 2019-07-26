@@ -15,4 +15,6 @@ public interface WxpayConstants {
 
     int PAY_WAIT_TIMEOUT = 7200;
 
+    String NOTIFY_REPLY = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+
 }

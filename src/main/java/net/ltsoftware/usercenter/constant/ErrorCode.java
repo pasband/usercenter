@@ -14,6 +14,8 @@ public interface ErrorCode {
 
     int PAY_URL_FAIL = 200200;
 
+    int PAY_AMOUNT_MISFIT = 200300;
+
     int TOKEN_NULL = 300100;
 
     int INVALID_TOKEN = 300200;
