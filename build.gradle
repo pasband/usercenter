@@ -40,7 +40,7 @@ dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.8'
     compile 'commons-lang:commons-lang:2.6'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile fileTree(dir: 'lib', includes: ['*jar'])
+    
     implementation 'com.alipay.sdk:alipay-sdk-java:3.7.89.ALL'
     compile group: 'com.google.zxing', name: 'core', version: '3.4.0'
     compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
@@ -51,8 +51,8 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
     compile group: 'io.swagger', name: 'swagger-models', version: '1.5.22'
 //    compile project(':commons')
-
     runtimeOnly 'mysql:mysql-connector-java'
+    compile fileTree(dir: 'lib', includes: ['*jar'])
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

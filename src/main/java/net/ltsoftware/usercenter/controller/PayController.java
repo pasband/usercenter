@@ -252,13 +252,11 @@ public class PayController {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
         Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);  // 转换成map
-
         //微信支付sdk这个接口有个缺陷，如果返回消息没有指明sign_type，sdk默认用md5签名，实际上api是按照HMACSHA256签的！MMP
         //这里修改了sdk的代码，把默认签名算法改为HMAC_SHA256
         boolean signatureValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
         //for test
         //signatureValid = true;
-
         if (signatureValid) {
             logger.info("wxpay notify signature valid.");
             // 签名正确
