@@ -3,6 +3,7 @@ package net.ltsoftware.usercenter.controller;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.github.wxpay.sdk.WXPay;
+import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
@@ -253,9 +254,12 @@ public class PayController {
         WXPay wxpay = new WXPay(config);
         Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);  // 转换成map
 
+        //微信sdk这个接口有个缺陷，如果返回消息没有指明sign_type，sdk默认用md5签名，实际上api是按照HMACSHA256签的！MMP
+        //解决方法：在参数map中加入签名方法
+        notifyMap.put(WXPayConstants.FIELD_SIGN, WXPayConstants.HMACSHA256);
         boolean signatureValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
         //for test
-        signatureValid = true;
+        //signatureValid = true;
 
         if (signatureValid) {
             logger.info("wxpay notify signature valid.");
@@ -312,6 +316,7 @@ public class PayController {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
         Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);
+        System.out.println(notifyMap);
         boolean isValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
         System.out.print(isValid);
 
