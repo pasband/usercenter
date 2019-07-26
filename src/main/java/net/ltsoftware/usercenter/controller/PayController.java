@@ -256,7 +256,7 @@ public class PayController {
 
         //微信sdk这个接口有个缺陷，如果返回消息没有指明sign_type，sdk默认用md5签名，实际上api是按照HMACSHA256签的！MMP
         //解决方法：在参数map中加入签名方法
-        notifyMap.put(WXPayConstants.FIELD_SIGN, WXPayConstants.HMACSHA256);
+        notifyMap.put(WXPayConstants.FIELD_SIGN_TYPE, WXPayConstants.HMACSHA256);
         boolean signatureValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
         //for test
         //signatureValid = true;
