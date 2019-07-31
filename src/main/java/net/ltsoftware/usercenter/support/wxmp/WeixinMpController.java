@@ -34,5 +34,11 @@ public class WeixinMpController {
 
     }
 
+    @GetMapping("/wxmp/openid")
+    public void getOpenId(HttpServletResponse response){
+        String openId = weixinMpService.getOpenid();
+        JsonUtil.toJsonMsg(response,ErrorCode.SUCCESS,openId);
+    }
+
 
 }

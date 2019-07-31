@@ -68,6 +68,16 @@ public class WeixinMpService {
 
     }
 
+    public String getOpenid(){
+        String resp = weixinMpClient.getAccessToken(
+                WeixinMpConstants.GRANT_TYPE_OF_ACCESS_TOKEN,
+                WeixinMpConstants.WEIXIN_MP_APPID,
+                WeixinMpConstants.WEIXIN_MP_SECRET);
+        JSONObject json = JSON.parseObject(resp);
+        logger.info("get token resp json:"+json);
+        return json.getString("openid");
+    }
+
     //生成微信权限验证的参数
     public JSONObject getWxmpSignData(String url) {
         String ticket = getTicket();
