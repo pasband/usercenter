@@ -1,9 +1,12 @@
 package net.ltsoftware.usercenter.constant;
 
+//pc端网页支付
 public interface WxpayConstants {
 
     //more constants see config.MyWxpayConfig
     String CHANNEL_NAME = "wxpay";
+
+    String TRADE_TYPE = "NATIVE";
 
     String NOTIFY_URL = "https://uc.ltsoftware.net/pay/wxpay/notify";
 

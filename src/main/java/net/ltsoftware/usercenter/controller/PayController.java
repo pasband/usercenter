@@ -8,6 +8,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
 import net.ltsoftware.usercenter.constant.ErrorCode;
+import net.ltsoftware.usercenter.constant.MwxpayConstants;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
@@ -75,11 +76,20 @@ public class PayController {
                 }
                 break;
             case WxpayConstants.CHANNEL_NAME:
-                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
+                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,WxpayConstants.TRADE_TYPE);
                 redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
 //                HttpResponseUtil.write(response,payUrl);
                 if(payUrl!=null){
                     JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, payUrl);
+                }else{
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                }
+                break;
+            case MwxpayConstants.CHANNEL_NAME:
+                String mpayUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,MwxpayConstants.TRADE_TYPE);
+                if(mpayUrl!=null){
+//                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, mpayUrl);
+                    JsonUtil.writer(response,mpayUrl);
                 }else{
                     JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
                 }
