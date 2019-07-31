@@ -54,6 +54,7 @@ public class WeixinMpService {
                     WeixinMpConstants.WEIXIN_MP_APPID,
                     WeixinMpConstants.WEIXIN_MP_SECRET);
             JSONObject json = JSON.parseObject(resp);
+            logger.info("get token resp json:"+json);
             token = json.getString("access_token");
             if(token==null){
                 logger.error("wxmp: get token failed:"+json);

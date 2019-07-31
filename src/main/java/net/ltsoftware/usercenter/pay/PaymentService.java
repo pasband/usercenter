@@ -8,6 +8,7 @@ import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
+import net.ltsoftware.usercenter.constant.MwxpayConstants;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +58,8 @@ public class PaymentService {
 //        return null;
 //    }
 
-    public String getWxpayUrl(String tradeNo, Long amount, String clientIp, String tradeType) throws Exception {
+    public String getWxpayUrl(String tradeNo, Long amount,
+                              String clientIp, String tradeType) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
@@ -71,6 +73,12 @@ public class PaymentService {
         data.put("notify_url", WxpayConstants.NOTIFY_URL);
         data.put("trade_type", tradeType);  // 此处指定为扫码支付
         data.put("product_id", "12");
+        //公众号支付，必填openid
+        if(MwxpayConstants.TRADE_TYPE.equals(tradeType)){
+
+
+//            data.put("openid",openid);
+        }
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
