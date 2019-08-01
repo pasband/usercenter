@@ -93,6 +93,8 @@ public class WeixinMpService {
                 WeixinMpConstants.WEIXIN_MP_SECRET,
                 code,
                 WeixinMpConstants.GRANT_TYPE);
+        logger.info(code);
+        logger.info(respStr);
         JSONObject respJson = JSON.parseObject(respStr);
         return respJson.getString("openid");
     }
