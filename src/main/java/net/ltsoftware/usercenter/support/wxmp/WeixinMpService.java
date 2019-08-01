@@ -78,14 +78,23 @@ public class WeixinMpService {
 //    &scope=snsapi_base
 //    &state=123
 
-    public String getOpenid(){
-        weixinAuthClient.getCode(WeixinMpConstants.WEIXIN_MP_APPID,
-                WeixinMpConstants.REDIRECT_URL,
-                WeixinMpConstants.RESPONSE_TYPE,
-                WeixinMpConstants.SCOPE,
-                "123"
-        );
-        return null;
+    public String getOpenid(String code){
+
+
+//        String state = CodeHelper.getRandomString(32);
+//        weixinAuthClient.getCode(WeixinMpConstants.WEIXIN_MP_APPID,
+//                WeixinMpConstants.REDIRECT_URL,
+//                WeixinMpConstants.RESPONSE_TYPE,
+//                WeixinMpConstants.SCOPE,
+//                state
+//        );
+//        return state;
+        String respStr = weixinMpClient.getOpenid(WeixinMpConstants.WEIXIN_MP_APPID,
+                WeixinMpConstants.WEIXIN_MP_SECRET,
+                code,
+                WeixinMpConstants.GRANT_TYPE);
+        JSONObject respJson = JSON.parseObject(respStr);
+        return respJson.getString("openid");
     }
 
     //生成微信权限验证的参数

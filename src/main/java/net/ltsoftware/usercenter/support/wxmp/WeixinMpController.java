@@ -41,15 +41,18 @@ public class WeixinMpController {
     }
 
     @GetMapping("/wxmp/openid")
-    public void getOpenid(HttpServletRequest request, HttpServletResponse response) {
-        String resp = weixinMpService.getOpenid();
+    public void getOpenid(String code, HttpServletResponse response) {
+        String resp = weixinMpService.getOpenid(code);
         JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, resp);
     }
 
     @GetMapping("/wxmp/auth/redirect")
     public void authRedirect(HttpServletRequest request, HttpServletResponse response){
 
+//        {"code":["001JFmL908j6uz1u0lL90ximL90JFmLe"],"state":["123"]}
         String paraStr = JSON.toJSONString(request.getParameterMap());
+        String code = request.getParameter("code");
+        String state = request.getParameter("state");
         logger.info("/wxmp/auth/redirect:"+paraStr);
 
     }
