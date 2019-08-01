@@ -61,7 +61,7 @@ public class PayController {
 
     @GetMapping("/pay")
     public void pay(String tradeNo, Long amount, String payChannel, String clientIp,
-                    String returnUrl, String notifyUrl, HttpServletResponse response) throws Exception {
+                    String returnUrl, String notifyUrl, String openId, HttpServletResponse response) throws Exception {
 
         switch (payChannel) {
             case AlipayConstants.CHANNEL_NAME:
@@ -76,7 +76,7 @@ public class PayController {
                 }
                 break;
             case WxpayConstants.CHANNEL_NAME:
-                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,WxpayConstants.TRADE_TYPE);
+                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,WxpayConstants.TRADE_TYPE, null);
                 redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
 //                HttpResponseUtil.write(response,payUrl);
                 if(payUrl!=null){
@@ -86,7 +86,7 @@ public class PayController {
                 }
                 break;
             case MwxpayConstants.CHANNEL_NAME:
-                String mpayUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,MwxpayConstants.TRADE_TYPE);
+                String mpayUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,MwxpayConstants.TRADE_TYPE, openId);
                 if(mpayUrl!=null){
 //                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, mpayUrl);
                     JsonUtil.writer(response,mpayUrl);

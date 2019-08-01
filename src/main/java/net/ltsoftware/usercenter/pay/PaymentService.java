@@ -59,7 +59,7 @@ public class PaymentService {
 //    }
 
     public String getWxpayUrl(String tradeNo, Long amount,
-                              String clientIp, String tradeType) throws Exception {
+                              String clientIp, String tradeType, String openId) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
@@ -75,9 +75,7 @@ public class PaymentService {
         data.put("product_id", "12");
         //公众号支付，必填openid
         if(MwxpayConstants.TRADE_TYPE.equals(tradeType)){
-
-
-//            data.put("openid",openid);
+            data.put("openid",openId);
         }
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
