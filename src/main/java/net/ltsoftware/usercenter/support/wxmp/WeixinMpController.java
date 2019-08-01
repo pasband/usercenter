@@ -54,7 +54,7 @@ public class WeixinMpController {
 
     }
 
-    @GetMapping("/")
+    @GetMapping("/MP_verify_HgwQzcbwgDoAAs0t.txt")
     public void temp(HttpServletResponse response){
         JsonUtil.writer(response,"HgwQzcbwgDoAAs0t");
     }
