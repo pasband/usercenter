@@ -33,17 +33,10 @@ public interface WeixinMpClient {
     String getJsapiTicket(@RequestParam(value = "access_token") String access_token,
                           @RequestParam(value = "type") String type);
 
-    @RequestMapping(method = RequestMethod.GET, value = "https://open.weixin.qq.com/connect/oauth2/authorize")
-    String getCode(@RequestParam(value = "appid") String appid,
-                   @RequestParam(value = "redirect_uri") String redirect_uri,
-                   @RequestParam(value = "response_type") String response_type,
-                   @RequestParam(value = "scope") String scope,
-                   @RequestParam(value = "state", required = false) String state);
-
-    @RequestMapping(method = RequestMethod.GET, value = "https://api.weixin.qq.com/sns/oauth2/access_token")
+    @RequestMapping(method = RequestMethod.GET, value = "/sns/oauth2/access_token")
     String getOpenid(@RequestParam(value = "appid") String appid,
-                   @RequestParam(value = "secret") String secret,
-                   @RequestParam(value = "code") String code,
-                   @RequestParam(value = "grant_type") String grant_type);
+                     @RequestParam(value = "secret") String secret,
+                     @RequestParam(value = "code") String code,
+                     @RequestParam(value = "grant_type") String grant_type);
 
 }

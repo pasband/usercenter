@@ -17,6 +17,9 @@ public class WeixinMpService {
     private WeixinMpClient weixinMpClient;
 
     @Resource
+    private WeixinAuthClient weixinAuthClient;
+
+    @Resource
     private RedisClient<String> redisClient;
 
     private static Logger logger = LoggerFactory.getLogger(WeixinMpService.class);
@@ -76,7 +79,7 @@ public class WeixinMpService {
 //    &state=123
 
     public String getOpenid(){
-        weixinMpClient.getCode(WeixinMpConstants.WEIXIN_MP_APPID,
+        weixinAuthClient.getCode(WeixinMpConstants.WEIXIN_MP_APPID,
                 WeixinMpConstants.REDIRECT_URL,
                 WeixinMpConstants.RESPONSE_TYPE,
                 WeixinMpConstants.SCOPE,
