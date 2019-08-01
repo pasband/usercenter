@@ -54,5 +54,10 @@ public class WeixinMpController {
 
     }
 
+    @GetMapping("/")
+    public void temp(HttpServletResponse response){
+        JsonUtil.writer(response,"HgwQzcbwgDoAAs0t");
+    }
+
 
 }
