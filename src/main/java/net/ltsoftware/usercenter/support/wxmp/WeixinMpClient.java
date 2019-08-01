@@ -15,9 +15,9 @@ public interface WeixinMpClient {
 //    {"errcode":40013,"errmsg":"invalid appid"}
 
     @RequestMapping(method = RequestMethod.GET, value = "/cgi-bin/token")
-    String getAccessToken(@RequestParam(value = "grant_type", required = true) String grant_type,
-                   @RequestParam(value = "appid", required = true) String appid,
-                   @RequestParam(value = "secret", required = true) String secret);
+    String getAccessToken(@RequestParam(value = "grant_type") String grant_type,
+                   @RequestParam(value = "appid") String appid,
+                   @RequestParam(value = "secret") String secret);
 
 //    https请求方式: GET
 //    https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi
@@ -30,6 +30,20 @@ public interface WeixinMpClient {
 //    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/cgi-bin/ticket/getticket")
-    String getJsapiTicket(@RequestParam(value = "access_token", required = true) String access_token,
-                          @RequestParam(value = "type", required = true) String type);
+    String getJsapiTicket(@RequestParam(value = "access_token") String access_token,
+                          @RequestParam(value = "type") String type);
+
+    @RequestMapping(method = RequestMethod.GET, value = "https://open.weixin.qq.com/connect/oauth2/authorize")
+    String getCode(@RequestParam(value = "appid") String appid,
+                   @RequestParam(value = "redirect_uri") String redirect_uri,
+                   @RequestParam(value = "response_type") String response_type,
+                   @RequestParam(value = "scope") String scope,
+                   @RequestParam(value = "state", required = false) String state);
+
+    @RequestMapping(method = RequestMethod.GET, value = "https://api.weixin.qq.com/sns/oauth2/access_token")
+    String getOpenid(@RequestParam(value = "appid") String appid,
+                   @RequestParam(value = "secret") String secret,
+                   @RequestParam(value = "code") String code,
+                   @RequestParam(value = "grant_type") String grant_type);
+
 }

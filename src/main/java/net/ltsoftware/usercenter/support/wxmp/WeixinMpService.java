@@ -68,14 +68,21 @@ public class WeixinMpService {
 
     }
 
+//    https://open.weixin.qq.com/connect/oauth2/authorize?
+//    appid=wxed61c321c91d5d92
+//    &redirect_uri=http://www.ltsoftware.net/art/saas/buy.html
+//    &response_type=code
+//    &scope=snsapi_base
+//    &state=123
+
     public String getOpenid(){
-        String resp = weixinMpClient.getAccessToken(
-                WeixinMpConstants.GRANT_TYPE_OF_ACCESS_TOKEN,
-                WeixinMpConstants.WEIXIN_MP_APPID,
-                WeixinMpConstants.WEIXIN_MP_SECRET);
-        JSONObject json = JSON.parseObject(resp);
-        logger.info("get token resp json:"+json);
-        return json.getString("openid");
+        weixinMpClient.getCode(WeixinMpConstants.WEIXIN_MP_APPID,
+                WeixinMpConstants.REDIRECT_URL,
+                WeixinMpConstants.RESPONSE_TYPE,
+                WeixinMpConstants.SCOPE,
+                "123"
+        );
+        return null;
     }
 
     //生成微信权限验证的参数
