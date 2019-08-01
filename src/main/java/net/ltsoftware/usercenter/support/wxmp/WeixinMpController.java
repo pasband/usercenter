@@ -42,7 +42,8 @@ public class WeixinMpController {
 
     @GetMapping("/wxmp/openid")
     public void getOpenid(HttpServletRequest request, HttpServletResponse response) {
-        weixinMpService.getOpenid();
+        String resp = weixinMpService.getOpenid();
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, resp);
     }
 
     @GetMapping("/wxmp/auth/redirect")
