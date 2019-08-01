@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name="wxmp-service",url="https://open.weixin.qq.com/")
+@FeignClient(name="wxauth-service",url="https://open.weixin.qq.com/")
 public interface WeixinAuthClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/connect/oauth2/authorize")
