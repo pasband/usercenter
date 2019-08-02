@@ -77,7 +77,7 @@ public class PaymentService {
         if(MwxpayConstants.TRADE_TYPE.equals(tradeType)){
             data.put("openid",openId);
         }
-
+        logger.info("openid:"+openId);
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
         String returnCode = resp.get("return_code");
