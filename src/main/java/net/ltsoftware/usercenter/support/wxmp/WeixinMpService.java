@@ -3,6 +3,7 @@ package net.ltsoftware.usercenter.support.wxmp;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.ltsoftware.usercenter.util.CodeHelper;
+import net.ltsoftware.usercenter.util.DateUtil;
 import net.ltsoftware.usercenter.util.RedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +108,7 @@ public class WeixinMpService {
             return null;
         }
         String nonceStr = CodeHelper.getRandomString(32);
-        String timestamp = String.valueOf(System.currentTimeMillis()/1000);
+        String timestamp = DateUtil.getTimestamp();
         String signature = null;
         //注意这里参数名必须全部小写，且必须有序
         String string1 = "jsapi_ticket=" + ticket +

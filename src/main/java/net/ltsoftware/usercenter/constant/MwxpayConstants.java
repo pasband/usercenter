@@ -7,4 +7,6 @@ public interface MwxpayConstants {
 
     String TRADE_TYPE = "JSAPI";
 
+    String SIGN_TYPE_HMACSHA256 = "HMAC-SHA256";
+
 }

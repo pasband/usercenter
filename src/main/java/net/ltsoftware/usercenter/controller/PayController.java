@@ -13,10 +13,7 @@ import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
-import net.ltsoftware.usercenter.util.HttpUtil;
-import net.ltsoftware.usercenter.util.JsonUtil;
-import net.ltsoftware.usercenter.util.RedisClient;
-import net.ltsoftware.usercenter.util.YXSmsSender;
+import net.ltsoftware.usercenter.util.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -31,10 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class PayController {
@@ -87,14 +81,51 @@ public class PayController {
                 break;
             case MwxpayConstants.CHANNEL_NAME:
                 String prepayId = paymentServcie.getMwxpayPrepayId(tradeNo,amount,clientIp,openId);
+
+                String nonceStr = CodeHelper.getRandomString(32);
+                String timestamp = DateUtil.getTimestamp();
+
+//                "appId":"wx2421b1c4370ec43b",     //公众号名称，由商户传入
+//                "timeStamp":"1395712654",         //时间戳，自1970年以来的秒数
+//                "nonceStr":"e61463f8efa94090b1f366cccfbbb444", //随机串
+//                "package":"prepay_id=u802345jgfjsdfgsdg888",
+//                "signType":"MD5",         //微信签名方式：
+//                "paySign":"70EA570631E4BB79628FBCA90534C63FF7FADD89" //微信签名
+
+                MyWxpayConfig config = new MyWxpayConfig();
+
+                JSONObject data = new JSONObject();
+                data.put("appId", config.getAppID());
+                data.put("timeStamp",timestamp);
+                data.put("nonceStr", nonceStr);
+                data.put("package","prepay_id="+prepayId);
+                data.put("signType",MwxpayConstants.SIGN_TYPE_HMACSHA256);
+                data.put("paySign",getPaySign(data,config.getKey()));
+
                 if(prepayId!=null){
-                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, prepayId);
+                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, data);
                 }else{
                     JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
                 }
                 break;
         }
 
+    }
+
+    private String getPaySign(JSONObject data, String sec){
+
+        StringBuilder signStr = new StringBuilder();
+        List<String> keyList = new ArrayList<>(data.keySet());
+        Collections.sort(keyList);
+        for(String key:keyList){
+            signStr.append(key);
+            signStr.append("=");
+            signStr.append(data.get(key));
+            signStr.append("&");
+        }
+        signStr.append("key=");
+        signStr.append(sec);
+        return CodeHelper.getSha1(signStr.toString());
     }
 
 
