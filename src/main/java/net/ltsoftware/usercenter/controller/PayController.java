@@ -76,7 +76,7 @@ public class PayController {
                 }
                 break;
             case WxpayConstants.CHANNEL_NAME:
-                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,WxpayConstants.TRADE_TYPE, null);
+                String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
                 redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
 //                HttpResponseUtil.write(response,payUrl);
                 if(payUrl!=null){
@@ -86,10 +86,9 @@ public class PayController {
                 }
                 break;
             case MwxpayConstants.CHANNEL_NAME:
-                String mpayUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp,MwxpayConstants.TRADE_TYPE, openId);
-                if(mpayUrl!=null){
-//                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, mpayUrl);
-                    JsonUtil.writer(response,mpayUrl);
+                String prepayId = paymentServcie.getMwxpayPrepayId(tradeNo,amount,clientIp,openId);
+                if(prepayId!=null){
+                    JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, prepayId);
                 }else{
                     JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
                 }

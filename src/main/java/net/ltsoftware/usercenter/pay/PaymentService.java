@@ -58,8 +58,38 @@ public class PaymentService {
 //        return null;
 //    }
 
+    public String getMwxpayPrepayId(String tradeNo, Long amount,
+                              String clientIp, String openId) throws Exception {
+        MyWxpayConfig config = new MyWxpayConfig();
+        WXPay wxpay = new WXPay(config);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("body", "旅易软件服务购买");
+        data.put("out_trade_no", tradeNo);
+        data.put("device_info", openId);
+        data.put("fee_type", "CNY");
+        data.put("total_fee", "1");
+        data.put("spbill_create_ip", clientIp);
+        data.put("notify_url", WxpayConstants.NOTIFY_URL);
+        data.put("trade_type", MwxpayConstants.TRADE_TYPE);  // 此处指定为扫码支付
+        data.put("product_id", "12");
+        data.put("openid",openId);
+
+        Map<String, String> resp = wxpay.unifiedOrder(data);
+        logger.info(resp.toString());
+        String returnCode = resp.get("return_code");
+        if(!WxpayConstants.NOTIFY_RETURN_SUCCESS.equals(returnCode)){
+            logger.error("mwxpay get pay url failed, return msg: "+resp.get("return_msg"));
+            return null;
+        }
+        String prepayId = resp.get("prepay_id");
+        logger.info(prepayId);
+        return prepayId;
+
+    }
+
     public String getWxpayUrl(String tradeNo, Long amount,
-                              String clientIp, String tradeType, String openId) throws Exception {
+                              String clientIp) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
@@ -71,13 +101,9 @@ public class PaymentService {
         data.put("total_fee", "1");
         data.put("spbill_create_ip", clientIp);
         data.put("notify_url", WxpayConstants.NOTIFY_URL);
-        data.put("trade_type", tradeType);  // 此处指定为扫码支付
+        data.put("trade_type", WxpayConstants.TRADE_TYPE);  // 此处指定为扫码支付
         data.put("product_id", "12");
-        //公众号支付，必填openid
-        if(MwxpayConstants.TRADE_TYPE.equals(tradeType)){
-            data.put("openid",openId);
-        }
-        logger.info("openid:"+openId);
+
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
         String returnCode = resp.get("return_code");
@@ -86,6 +112,7 @@ public class PaymentService {
             return null;
         }
         String payurl = resp.get("code_url");
+
         logger.info(payurl);
 //            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
         return payurl;
