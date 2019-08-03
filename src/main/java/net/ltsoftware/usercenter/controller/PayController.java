@@ -13,7 +13,6 @@ import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.OrderService;
 import net.ltsoftware.usercenter.service.UserService;
-import net.ltsoftware.usercenter.support.wxmp.WeixinMpConstants;
 import net.ltsoftware.usercenter.util.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -100,8 +99,8 @@ public class PayController {
                 data.put("timeStamp",timestamp);
                 data.put("nonceStr", nonceStr);
                 data.put("package","prepay_id="+prepayId);
-                data.put("signType",MwxpayConstants.SIGN_TYPE_HMACSHA256);
-                data.put("paySign",getPaySign(data, WeixinMpConstants.WEIXIN_MP_SECRET));
+                data.put("signType",MwxpayConstants.SIGN_TYPE_MD5);
+                data.put("paySign",getPaySign(data, config.getKey()));
 
                 if(prepayId!=null){
                     JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, data);

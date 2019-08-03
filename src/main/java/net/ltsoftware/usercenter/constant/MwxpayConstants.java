@@ -9,4 +9,6 @@ public interface MwxpayConstants {
 
     String SIGN_TYPE_HMACSHA256 = "HMAC-SHA256";
 
+    String SIGN_TYPE_MD5 = "MD5";
+
 }
