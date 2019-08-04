@@ -104,7 +104,7 @@ public class PayController {
                 data.put("signType",MwxpayConstants.SIGN_TYPE_HMACSHA256);
                 data.put("paySign",getPaySign(data, config.getKey()));
                 logger.info("paySign"+data.getString("paySign"));
-
+                redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
                 if(prepayId!=null){
                     JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, data);
                 }else{
