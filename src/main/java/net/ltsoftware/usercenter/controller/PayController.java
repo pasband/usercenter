@@ -99,8 +99,9 @@ public class PayController {
                 data.put("timeStamp",timestamp);
                 data.put("nonceStr", nonceStr);
                 data.put("package","prepay_id="+prepayId);
-                data.put("signType",MwxpayConstants.SIGN_TYPE_MD5);
+                data.put("signType",MwxpayConstants.SIGN_TYPE_HMACSHA256);
                 data.put("paySign",getPaySign(data, config.getKey()));
+                logger.info("paySign"+data.getString("paySign"));
 
                 if(prepayId!=null){
                     JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, data);
@@ -114,18 +115,30 @@ public class PayController {
 
     private String getPaySign(JSONObject data, String sec){
 
-        StringBuilder signStr = new StringBuilder();
+        StringBuilder signStrBuf = new StringBuilder();
         List<String> keyList = new ArrayList<>(data.keySet());
         Collections.sort(keyList);
         for(String key:keyList){
-            signStr.append(key);
-            signStr.append("=");
-            signStr.append(data.get(key));
-            signStr.append("&");
+            signStrBuf.append(key);
+            signStrBuf.append("=");
+            signStrBuf.append(data.get(key));
+            signStrBuf.append("&");
         }
-        signStr.append("key=");
-        signStr.append(sec);
-        return CodeHelper.getSha1(signStr.toString());
+        signStrBuf.append("key=");
+        signStrBuf.append(sec);
+        String signStr = signStrBuf.toString();
+        logger.info("signStr"+signStr);
+        String signType = data.getString("signType");
+
+        switch (signType) {
+            case MwxpayConstants.SIGN_TYPE_MD5:
+
+
+            case MwxpayConstants.SIGN_TYPE_HMACSHA256:
+                return CodeHelper.getSha1(signStr);
+
+        }
+        return null;
     }
 
 
