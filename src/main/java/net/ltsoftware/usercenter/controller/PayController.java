@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -115,7 +115,7 @@ public class PayController {
 
     }
 
-    private String getPaySign(JSONObject data, String sec) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    private String getPaySign(JSONObject data, String sec) throws InvalidKeyException, NoSuchAlgorithmException {
 
         StringBuilder signStrBuf = new StringBuilder();
         List<String> keyList = new ArrayList<>(data.keySet());
@@ -133,10 +133,10 @@ public class PayController {
         String signType = data.getString("signType");
 
         switch (signType) {
-//            case MwxpayConstants.SIGN_TYPE_MD5:
-//
+            case MwxpayConstants.SIGN_TYPE_MD5:
+                return CodeHelper.getMD5(signStr);
             case MwxpayConstants.SIGN_TYPE_HMACSHA256:
-                return CodeHelper.getSha1(signStr).toUpperCase();
+                return CodeHelper.HMACSHA256(signStr,sec);
 
         }
         return null;
