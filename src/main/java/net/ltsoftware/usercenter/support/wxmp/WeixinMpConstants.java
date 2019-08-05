@@ -11,6 +11,14 @@ public interface WeixinMpConstants {
     String REDIS_KEY_TOKEN = "wxmp_access_token";
     String REDIS_KEY_TICKET = "wxmp_access_ticket";
 
+
+    String RESPONSE_TYPE = "code";
+    String SCOPE = "snsapi_base";
+    String TOKEN_API = "https://api.weixin.qq.com/sns/oauth2/access_token";
+    String GRANT_TYPE = "authorization_code";
+    String REDIRECT_URL = "https://uc.ltsoftware.net/wxmp/auth/redirect";
+
+
     int EXPIRES_TIME = 7200-15; //防止取到的token/ticket失效的情况，提前15秒释放
 
 }
