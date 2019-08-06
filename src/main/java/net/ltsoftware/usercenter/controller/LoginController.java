@@ -9,6 +9,7 @@ import com.qq.connect.oauth.Oauth;
 import net.ltsoftware.usercenter.annotation.PassToken;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.SessionConstants;
+import net.ltsoftware.usercenter.constant.SmsConstants;
 import net.ltsoftware.usercenter.model.User;
 import net.ltsoftware.usercenter.oauth2.WxOauthService;
 import net.ltsoftware.usercenter.service.UserService;
@@ -194,6 +195,17 @@ public class LoginController {
         try {
             int errCode = smsSender.sendPhoneCode(phone);
             JsonUtil.toJsonMsg(response, errCode, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/phone/code/get")
+    public void getCode(String phone, HttpServletRequest request, HttpServletResponse response) {
+
+        try {
+            String code1 = redisClient.get(SmsConstants.PREFIX_CODE + phone);
+            JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, code1);
         } catch (Exception e) {
             e.printStackTrace();
         }
