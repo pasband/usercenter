@@ -159,8 +159,7 @@ public class LoginController {
         User user = new User();
         user.setBalance(0);
         user.setStatus("1");
-        long id = userService.insert(user);
-        user.setId(id);
+        userService.insert(user);
         return user;
     }
 
