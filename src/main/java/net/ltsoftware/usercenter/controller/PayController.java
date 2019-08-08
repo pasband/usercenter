@@ -378,6 +378,23 @@ public class PayController {
 
     }
 
+    @GetMapping("/pay/trade/detail")
+    public void tradeDetail(String tradeNo, String payChannel, HttpServletResponse response) throws Exception {
+        switch (payChannel){
+            case AlipayConstants.CHANNEL_NAME:
+                String resp = paymentServcie.getAlipayTradeDetail(tradeNo);
+                JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, resp);
+                return;
+            case WxpayConstants.CHANNEL_NAME:
+            case MwxpayConstants.CHANNEL_NAME:
+                String respJson = paymentServcie.getWxpayTradeDetail(tradeNo);
+                JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, respJson);
+                return;
+        }
+
+
+    }
+
     public static void main(String[] args) throws Exception {
         String notifyData="<xml><appid><![CDATA[wxed61c321c91d5d92]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><device_info><![CDATA[WEB]]></device_info><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[N]]></is_subscribe><mch_id><![CDATA[1309846801]]></mch_id><nonce_str><![CDATA[JAgqfOFKTULMGcKf5M0OpK83YwT5NCCw]]></nonce_str><openid><![CDATA[oWvcPuHrXdhVYsKhR9oq39iIKQig]]></openid><out_trade_no><![CDATA[sk5q6swd_20190725145309]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[92FB5FB9461C48792FB14EED76CEF89E7C004A6E374399B2B769DBDB6CBA6013]]></sign><time_end><![CDATA[20190725145332]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[NATIVE]]></trade_type><transaction_id><![CDATA[4200000353201907252813793937]]></transaction_id></xml>";
         MyWxpayConfig config = new MyWxpayConfig();

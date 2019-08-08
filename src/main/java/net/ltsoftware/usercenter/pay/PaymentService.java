@@ -1,10 +1,13 @@
 package net.ltsoftware.usercenter.pay;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
@@ -174,6 +177,39 @@ public class PaymentService {
 
 
         return null;
+    }
+
+    public String getAlipayTradeDetail(String alipayTradeNo) throws AlipayApiException {
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+        request.setBizContent("{\"trade_no\":\"" + alipayTradeNo + "\"}");
+
+        AlipayTradeQueryResponse response = alipayClient.execute(request);
+        if (response.isSuccess()) {
+            String body = response.getBody();
+            return body;
+        }else{
+            return response.getMsg();
+        }
+
+
+    }
+
+    public String getWxpayTradeDetail(String wxpayTradeNo) throws Exception {
+        MyWxpayConfig config = new MyWxpayConfig();
+        WXPay wxpay = new WXPay(config);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("trade_no", wxpayTradeNo);
+
+        try {
+            Map<String, String> respMap = wxpay.orderQuery(data);
+            return JSON.toJSONString(respMap);
+        } catch (Exception e) {
+            logger.error("get wxpay trade order failed: ",e);
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
 
