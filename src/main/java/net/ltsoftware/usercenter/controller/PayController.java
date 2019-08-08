@@ -387,7 +387,7 @@ public class PayController {
                 return;
             case WxpayConstants.CHANNEL_NAME:
             case MwxpayConstants.CHANNEL_NAME:
-                String respJson = paymentServcie.getWxpayTradeDetail(tradeNo);
+                Map<String,String> respJson = paymentServcie.getWxpayTradeDetail(tradeNo);
                 JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, respJson);
                 return;
         }

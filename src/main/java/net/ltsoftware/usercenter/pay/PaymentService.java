@@ -1,6 +1,5 @@
 package net.ltsoftware.usercenter.pay;
 
-import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
@@ -194,16 +193,16 @@ public class PaymentService {
 
     }
 
-    public String getWxpayTradeDetail(String wxpayTradeNo) throws Exception {
+    public Map<String, String> getWxpayTradeDetail(String wxpayTradeNo) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
         Map<String, String> data = new HashMap<>();
-        data.put("trade_no", wxpayTradeNo);
+        data.put("transaction_id", wxpayTradeNo);
 
         try {
             Map<String, String> respMap = wxpay.orderQuery(data);
-            return JSON.toJSONString(respMap);
+            return respMap;
         } catch (Exception e) {
             logger.error("get wxpay trade order failed: ",e);
             e.printStackTrace();
