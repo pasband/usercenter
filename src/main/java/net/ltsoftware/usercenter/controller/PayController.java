@@ -383,7 +383,7 @@ public class PayController {
         switch (payChannel){
             case AlipayConstants.CHANNEL_NAME:
                 String resp = paymentServcie.getAlipayTradeDetail(tradeNo);
-                JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, resp);
+                JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, JSONObject.parseObject(resp));
                 return;
             case WxpayConstants.CHANNEL_NAME:
             case MwxpayConstants.CHANNEL_NAME:
