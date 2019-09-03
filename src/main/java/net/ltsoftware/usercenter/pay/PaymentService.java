@@ -10,7 +10,6 @@ import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
-import net.ltsoftware.usercenter.constant.MwxpayConstants;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,16 +64,8 @@ public class PaymentService {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
-        Map<String, String> data = new HashMap<>();
-        data.put("body", "旅易软件服务购买");
-        data.put("out_trade_no", tradeNo);
-        data.put("device_info", openId);
-        data.put("fee_type", "CNY");
-        data.put("total_fee", "1");
-        data.put("spbill_create_ip", clientIp);
-        data.put("notify_url", WxpayConstants.NOTIFY_URL);
-        data.put("trade_type", MwxpayConstants.TRADE_TYPE);  // 此处指定为扫码支付
-        data.put("product_id", "12");
+        Map<String, String> data = initWxpayData(tradeNo,clientIp);
+        //jsapi need add openid
         data.put("openid",openId);
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
@@ -90,11 +81,7 @@ public class PaymentService {
 
     }
 
-    public String getWxpayUrl(String tradeNo, Long amount,
-                              String clientIp) throws Exception {
-        MyWxpayConfig config = new MyWxpayConfig();
-        WXPay wxpay = new WXPay(config);
-
+    private Map<String, String> initWxpayData(String tradeNo, String clientIp ){
         Map<String, String> data = new HashMap<>();
         data.put("body", "旅易软件服务购买");
         data.put("out_trade_no", tradeNo);
@@ -105,6 +92,15 @@ public class PaymentService {
         data.put("notify_url", WxpayConstants.NOTIFY_URL);
         data.put("trade_type", WxpayConstants.TRADE_TYPE);  // 此处指定为扫码支付
         data.put("product_id", "12");
+        return data;
+    }
+
+    public String getWxpayUrl(String tradeNo, Long amount,
+                              String clientIp) throws Exception {
+        MyWxpayConfig config = new MyWxpayConfig();
+        WXPay wxpay = new WXPay(config);
+
+        Map<String, String> data = initWxpayData(tradeNo,clientIp);
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
