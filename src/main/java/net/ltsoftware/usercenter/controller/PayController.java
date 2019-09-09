@@ -11,7 +11,7 @@ import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.MwxpayConstants;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.pay.PaymentService;
-import net.ltsoftware.usercenter.service.OrderService;
+import net.ltsoftware.usercenter.service.TradeService;
 import net.ltsoftware.usercenter.service.UserService;
 import net.ltsoftware.usercenter.util.*;
 import org.apache.http.NameValuePair;
@@ -41,7 +41,7 @@ public class PayController {
     private UserService userService;
 
     @Autowired
-    private OrderService orderService;
+    private TradeService tradeService;
 
     @Autowired
     private YXSmsSender smsSender;

@@ -1,9 +1,9 @@
 package net.ltsoftware.usercenter.controller;
 
 import com.alibaba.fastjson.JSON;
-import net.ltsoftware.usercenter.model.Order;
-import net.ltsoftware.usercenter.model.OrderExample;
-import net.ltsoftware.usercenter.service.OrderService;
+import net.ltsoftware.usercenter.model.Trade;
+import net.ltsoftware.usercenter.model.TradeExample;
+import net.ltsoftware.usercenter.service.TradeService;
 import net.ltsoftware.usercenter.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,27 +13,27 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
-public class OrderController {
+public class TradeController {
 
     @Autowired
-    private OrderService orderService;
+    private TradeService TradeService;
 
-    @RequestMapping("/order/add")
-    public void addOrder(Order order, HttpServletResponse response) {
+    @RequestMapping("/Trade/add")
+    public void addTrade(Trade Trade, HttpServletResponse response) {
         try {
-            orderService.insert(order);
+            TradeService.insert(Trade);
             JsonUtil.writer(response, "");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @RequestMapping("/order/list")
-    public void listOrder(OrderExample example, HttpServletResponse response) {
+    @RequestMapping("/Trade/list")
+    public void listTrade(TradeExample example, HttpServletResponse response) {
         try {
-            List<Order> orderList = orderService.selectByExample(example);
+            List<Trade> TradeList = TradeService.selectByExample(example);
 
-            JsonUtil.writer(response, JSON.toJSONString(orderList));
+            JsonUtil.writer(response, JSON.toJSONString(TradeList));
         } catch (Exception e) {
             e.printStackTrace();
         }

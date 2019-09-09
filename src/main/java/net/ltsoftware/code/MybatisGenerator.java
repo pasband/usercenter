@@ -1,6 +1,5 @@
 package net.ltsoftware.code;
 
-import net.ltsoftware.usercenter.util.HttpUtil;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
@@ -18,7 +17,7 @@ public class MybatisGenerator {
 
     public static void main(String[] args) throws IOException, XMLParserException, SQLException, InterruptedException, InvalidConfigurationException {
         String configPath = "/Users/apple/IdeaProjects/platform/usercenter/src/main/resources/generatorConfig.xml";
-        configPath = "E:\\IdeaProjects\\platform\\usercenter\\src\\main\\resources\\generatorConfig_pc.xml";
+//        configPath = "E:\\IdeaProjects\\platform\\usercenter\\src\\main\\resources\\generatorConfig_pc.xml";
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
         File configFile = new File(configPath);
