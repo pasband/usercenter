@@ -12,17 +12,33 @@ mybatis:
 
 server:
   port: 6443
+#  ssl:
+#    key-store: E:\IdeaProjects\platform\saas\mykeystore.jks
+#    key-store-password: S0kiShgsZwAk
+#    keyAlias: springboot
+#    protocol: TLS
+#    key-password: S0kiShgsZwAk
+#    enabled: true
+#  max-http-header-size: 8192
 
 #本地配置
 spring:
-  profiles: local
+  profiles: local-pc
   datasource:
-    url: jdbc:mysql://localhost:3306/platform
+    url: jdbc:mysql://localhost:3306/dev-platform
     username: root
-    password:
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    database: MYSQL
+    show-sql: true
+
+#logging:
+#  level:
+#    net.ltsoftware.saas.dao: trace
+
 
 #jedis配置
 jedis:
@@ -39,6 +55,51 @@ jedis:
 ---
 
 server:
+  port: 6443
+#  ssl:
+#    key-store: /Users/apple/IdeaProjects/platform/saas/mykeystore.jks
+#    key-store-password: S0kiShgsZwAk
+#    keyAlias: springboot
+#    protocol: TLS
+#    key-password: S0kiShgsZwAk
+#    enabled: true
+#  max-http-header-size: 8192
+
+#本地配置
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/dev-platform
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    database: MYSQL
+    show-sql: true
+
+#logging:
+#  level:
+#    net.ltsoftware.usercenter.dao: trace
+
+
+#jedis配置
+jedis:
+  pool:
+    host: 127.0.0.1
+    password:
+    port: 6379
+    timeout: 60
+    config:
+      maxTotal: 20
+      maxIdle: 10
+      maxWaitMillis: 100000
+
+---
+
+#开发服务器配置
+server:
   port: 56443
   ssl:
     key-store: /etc/letsencrypt/live/ltsoftware.net/mykeystore.jks
@@ -49,7 +110,6 @@ server:
     enabled: true
   max-http-header-size: 8192
 
-#开发服务器配置
 spring:
   profiles: dev
   datasource:
@@ -72,12 +132,13 @@ jedis:
       maxIdle: 100
       maxWaitMillis: 100000
 
-logging:
-  level:
-    net.ltsoftware.usercenter: trace
+#logging:
+#  level:
+#    net.ltsoftware.usercenter: trace
 
 ---
 
+#生产服务器配置
 server:
   port: 6443
   ssl:
@@ -89,7 +150,6 @@ server:
     enabled: true
   max-http-header-size: 8192
 
-#开发服务器配置
 spring:
   profiles: product
   datasource:
@@ -112,6 +172,6 @@ jedis:
       maxIdle: 100
       maxWaitMillis: 100000
 
-logging:
-  level:
-    net.ltsoftware.usercenter: trace
+#logging:
+#  level:
+#    net.ltsoftware.usercenter: trace

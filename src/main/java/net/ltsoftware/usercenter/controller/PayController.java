@@ -323,6 +323,7 @@ public class PayController {
 
     @PostMapping("/pay/alipay/notify")
     public void alipayNotify(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, UnsupportedEncodingException {
+        logger.info("[notify]entrance");
         //获取支付宝POST过来反馈信息
         Map<String,String> params = new HashMap<>();
         Map<String,String[]> requestParams = request.getParameterMap();
@@ -337,10 +338,11 @@ public class PayController {
             //乱码解决，这段代码在出现乱码时使用
 //            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             params.put(name, valueStr);
+            logger.info("[notify]values: "+name+":"+valueStr);
         }
 
         boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConstants.ALI_PUB_KEY, AlipayConstants.CHARSET, AlipayConstants.SIGN_TYPE); //调用SDK验证签名
-
+        logger.info("[notify]signVerified: "+signVerified);
         //——请在这里编写您的程序（以下代码仅作参考）——
 
 	/* 实际验证过程建议商户务必添加以下校验：
@@ -352,13 +354,13 @@ public class PayController {
         if(signVerified) {//验证成功
             //商户订单号
             String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
-
+            logger.info("[notify]out_trade_no="+out_trade_no);
             //支付宝交易号
             String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
-
+            logger.info("[notify]trade_no="+trade_no);
             //交易状态
             String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
-
+            logger.info("[notify]trade_status="+trade_status);
             if(trade_status.equals("TRADE_FINISHED")){
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
