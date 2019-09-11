@@ -4,7 +4,8 @@ package net.ltsoftware.usercenter.constant;
 public interface WxpayConstants {
 
     //more constants see config.MyWxpayConfig
-    String CHANNEL_NAME = "wxpay";
+    String CHANNEL_PC = "wxpay";
+    String CHANNEL_H5 = "h5wxpay";
 
     String TRADE_TYPE = "NATIVE";
 
@@ -19,5 +20,14 @@ public interface WxpayConstants {
     int PAY_WAIT_TIMEOUT = 7200;
 
     String NOTIFY_REPLY = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+
+
+    String CHANNEL_MP = "mwxpay";
+
+//    String TRADE_TYPE = "JSAPI";
+
+    String SIGN_TYPE_HMACSHA256 = "HMAC-SHA256";
+
+    String SIGN_TYPE_MD5 = "MD5";
 
 }

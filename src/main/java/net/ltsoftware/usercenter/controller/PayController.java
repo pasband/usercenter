@@ -8,8 +8,8 @@ import com.github.wxpay.sdk.WXPayUtil;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
 import net.ltsoftware.usercenter.constant.ErrorCode;
-import net.ltsoftware.usercenter.constant.MwxpayConstants;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
+import net.ltsoftware.usercenter.model.Trade;
 import net.ltsoftware.usercenter.pay.PaymentService;
 import net.ltsoftware.usercenter.service.TradeService;
 import net.ltsoftware.usercenter.service.UserService;
@@ -57,12 +57,98 @@ public class PayController {
 
     private static Logger logger = LoggerFactory.getLogger(PayController.class);
 
+    @GetMapping("/pay2")
+    public void pay(String tradeNo, Long amount, String payChannel, String subSystem, String clientIp, String openId, HttpServletResponse response) {
+
+        Trade trade = new Trade();
+        trade.setAmount(amount);
+        trade.setCreateTime(DateUtil.now());
+        trade.setPayChannel(payChannel);
+        trade.setSubSystem(subSystem);
+        trade.setTradeNo(tradeNo);
+        trade.setClientIp(clientIp);
+        trade.setOpenId(openId);
+        trade.setStatus(1);
+        tradeService.insert(trade);
+
+        switch (payChannel) {
+            case AlipayConstants.CHANNEL_PC:
+                try {
+                    String payPage = paymentServcie.getAlipayPage(tradeNo,amount);
+                    if(payPage!=null){
+                        trade.setStatus(2);
+                        tradeService.updateByPrimaryKey(trade);
+                        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, payPage);
+                    }else{
+                        JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                    }
+                } catch (AlipayApiException e) {
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, e.getErrMsg());
+                }
+                break;
+
+            case AlipayConstants.CHANNEL_H5:
+
+                break;
+
+            case WxpayConstants.CHANNEL_PC:
+                try {
+                    String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
+                    if(payUrl!=null){
+                        trade.setStatus(2);
+                        tradeService.updateByPrimaryKey(trade);
+                        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, payUrl);
+                    }else{
+                        JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                    }
+                } catch (Exception e) {
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, e.toString());
+                }
+
+                break;
+            case WxpayConstants.CHANNEL_MP:
+                try {
+                    String prepayId = paymentServcie.getMwxpayPrepayId(tradeNo,amount,clientIp,openId);
+                    if(prepayId!=null){
+                        JSONObject data = getWxpayMpData(prepayId);
+                        trade.setStatus(2);
+                        tradeService.updateByPrimaryKey(trade);
+                        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, data);
+                    }else{
+                        JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                    }
+                } catch (Exception e) {
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, e.toString());
+                }
+                break;
+            case WxpayConstants.CHANNEL_H5:
+
+
+        }
+    }
+
+    private JSONObject getWxpayMpData(String prepayId) throws Exception {
+        String nonceStr = CodeHelper.getRandomString(32);
+        String timestamp = DateUtil.getTimestamp();
+
+        MyWxpayConfig config = new MyWxpayConfig();
+        JSONObject data = new JSONObject();
+        data.put("appId", config.getAppID());
+        data.put("timeStamp",timestamp);
+        data.put("nonceStr", nonceStr);
+        data.put("package","prepay_id="+prepayId);
+        data.put("signType",WxpayConstants.SIGN_TYPE_HMACSHA256);
+        data.put("paySign",getPaySign(data, config.getKey()));
+        return data;
+    }
+
+
     @GetMapping("/pay")
     public void pay(String tradeNo, Long amount, String payChannel, String clientIp,
                     String returnUrl, String notifyUrl, String openId, HttpServletResponse response) throws Exception {
 
         switch (payChannel) {
-            case AlipayConstants.CHANNEL_NAME:
+            case AlipayConstants.CHANNEL_PC:
                 String payPage = paymentServcie.getAlipayPage(tradeNo,amount);
                 redisClient.setex(tradeNo+AlipayConstants.KEY_RETURN_URL_TAIL,AlipayConstants.PAY_WAIT_TIMEOUT,returnUrl);
                 redisClient.setex(tradeNo+AlipayConstants.KEY_NOTIFY_URL_TAIL,AlipayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
@@ -73,7 +159,7 @@ public class PayController {
                     JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
                 }
                 break;
-            case WxpayConstants.CHANNEL_NAME:
+            case WxpayConstants.CHANNEL_PC:
                 String payUrl = paymentServcie.getWxpayUrl(tradeNo,amount,clientIp);
                 redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
 //                HttpResponseUtil.write(response,payUrl);
@@ -83,7 +169,7 @@ public class PayController {
                     JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
                 }
                 break;
-            case MwxpayConstants.CHANNEL_NAME:
+            case WxpayConstants.CHANNEL_MP:
                 String prepayId = paymentServcie.getMwxpayPrepayId(tradeNo,amount,clientIp,openId);
 
                 String nonceStr = CodeHelper.getRandomString(32);
@@ -103,7 +189,7 @@ public class PayController {
                 data.put("timeStamp",timestamp);
                 data.put("nonceStr", nonceStr);
                 data.put("package","prepay_id="+prepayId);
-                data.put("signType",MwxpayConstants.SIGN_TYPE_HMACSHA256);
+                data.put("signType",WxpayConstants.SIGN_TYPE_HMACSHA256);
                 data.put("paySign",getPaySign(data, config.getKey()));
                 logger.info("paySign:"+data.getString("paySign"));
                 redisClient.setex(tradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL,WxpayConstants.PAY_WAIT_TIMEOUT,notifyUrl);
@@ -136,13 +222,14 @@ public class PayController {
         String signType = data.getString("signType");
 
         switch (signType) {
-            case MwxpayConstants.SIGN_TYPE_MD5:
+            case WxpayConstants.SIGN_TYPE_MD5:
                 return CodeHelper.getMD5(signStr);
-            case MwxpayConstants.SIGN_TYPE_HMACSHA256:
+            case WxpayConstants.SIGN_TYPE_HMACSHA256:
+//                return CodeHelper.HMACSHA256(signStr,sec);
+            default:
                 return CodeHelper.HMACSHA256(signStr,sec);
-
         }
-        return null;
+
     }
 
 
@@ -162,10 +249,7 @@ public class PayController {
 //        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, chargeUrl);
 //    }
 
-
-    //支付宝同步跳转
-    @RequestMapping("/pay/alipay/return")
-    public void aliReturn(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
+    private boolean alipaySignatureCheck(HttpServletRequest request) throws AlipayApiException {
         //获取支付宝GET过来反馈信息
         Map<String, String> params = new HashMap<>();
         Map<String, String[]> requestParams = request.getParameterMap();
@@ -178,15 +262,22 @@ public class PayController {
             }
             logger.info("name:"+name+", valueStr:"+valueStr);
             //乱码解决，这段代码在出现乱码时使用
-            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             logger.info("name:"+name+", valueStr:"+valueStr);
             params.put(name, valueStr);
         }
 
-        boolean signVerified = AlipaySignature.rsaCheckV1(params,
+        return AlipaySignature.rsaCheckV1(params,
                 AlipayConstants.ALI_PUB_KEY,
                 AlipayConstants.CHARSET,
-                AlipayConstants.SIGN_TYPE); //调用SDK验证签名
+                AlipayConstants.SIGN_TYPE);
+    }
+
+    //支付宝同步跳转
+    @RequestMapping("/pay/alipay/return")
+    public void aliReturn(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
+
+        boolean signVerified = alipaySignatureCheck(request);
 
         logger.info("alipay return : " + signVerified);
 
@@ -268,24 +359,11 @@ public class PayController {
             //订单金额，单位为分
             String totalFee = notifyMap.get("total_fee");
 
-            String notifyUrl = redisClient.get(outTradeNo+WxpayConstants.KEY_NOTIFY_URL_TAIL);
-            if(notifyUrl==null){
-                logger.error("cannot find return url in cache.");
-                return;
-            }
-
-            List<NameValuePair> paralist = new ArrayList<>();
-            paralist.add(new BasicNameValuePair("tradeNo",outTradeNo));
-            paralist.add(new BasicNameValuePair("tradeNo3rd",transactionId));
-            paralist.add(new BasicNameValuePair("amount",totalFee));
-            logger.info("send notify: "+notifyUrl);
-            logger.info("tradeNo: "+outTradeNo);
-            logger.info("tradeNo3rd: "+transactionId);
-            logger.info("amount: "+totalFee);
-            String getResponse = httpUtil.get(notifyUrl,paralist);
-            logger.info("http get response: "+getResponse);
-            JSONObject respJson = JSONObject.parseObject(getResponse);
-            int errCode = respJson.getIntValue("code");
+            Trade trade = tradeService.selectByTradeNo(outTradeNo);
+            String subSystem = trade.getSubSystem();
+            trade.setTradeNo3rd(transactionId);
+            trade.setStatus(3);
+            int errCode = execSubSystemCallback(subSystem,outTradeNo,totalFee);
             if(ErrorCode.SUCCESS==errCode){
                 logger.info("callback reply success");
                 response.setContentType("application/xml");
@@ -293,9 +371,12 @@ public class PayController {
                 out.print(WxpayConstants.NOTIFY_REPLY);
                 out.flush();
                 out.close();
+                trade.setStatus(4);
             }else if(ErrorCode.PAY_AMOUNT_MISFIT==errCode){
                 logger.error("pay amount misfit, trade no: "+outTradeNo);
+                trade.setStatus(5);
             }
+            tradeService.updateByPrimaryKey(trade);
         }
         else {
             logger.error("wxpay notify signature failed.");
@@ -307,41 +388,25 @@ public class PayController {
     @GetMapping("/pay/trade/detail")
     public void tradeDetail(String tradeNo, String payChannel, HttpServletResponse response) throws Exception {
         switch (payChannel){
-            case AlipayConstants.CHANNEL_NAME:
+            case AlipayConstants.CHANNEL_PC:
                 String resp = paymentServcie.getAlipayTradeDetail(tradeNo);
                 JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, JSONObject.parseObject(resp));
                 return;
-            case WxpayConstants.CHANNEL_NAME:
-            case MwxpayConstants.CHANNEL_NAME:
+            case WxpayConstants.CHANNEL_PC:
+            case WxpayConstants.CHANNEL_MP:
                 Map<String,String> respJson = paymentServcie.getWxpayTradeDetail(tradeNo);
                 JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, respJson);
                 return;
         }
-
 
     }
 
     @PostMapping("/pay/alipay/notify")
     public void alipayNotify(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, UnsupportedEncodingException {
         logger.info("[notify]entrance");
-        //获取支付宝POST过来反馈信息
-        Map<String,String> params = new HashMap<>();
-        Map<String,String[]> requestParams = request.getParameterMap();
-        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
-            String name = iter.next();
-            String[] values = requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
-            }
-            //乱码解决，这段代码在出现乱码时使用
-//            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            params.put(name, valueStr);
-            logger.info("[notify]values: "+name+":"+valueStr);
-        }
 
-        boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConstants.ALI_PUB_KEY, AlipayConstants.CHARSET, AlipayConstants.SIGN_TYPE); //调用SDK验证签名
+
+        boolean signVerified = alipaySignatureCheck(request);
         logger.info("[notify]signVerified: "+signVerified);
         //——请在这里编写您的程序（以下代码仅作参考）——
 
@@ -388,6 +453,23 @@ public class PayController {
         }
 
         //——请在这里编写您的程序（以上代码仅作参考）——
+
+    }
+
+    private int execSubSystemCallback(String subSystem, String tradeNo, String amount){
+                    List<NameValuePair> paralist = new ArrayList<>();
+            paralist.add(new BasicNameValuePair("tradeNo",tradeNo));
+            paralist.add(new BasicNameValuePair("amount",amount));
+            String notifyUrl = null;
+            switch (subSystem) {
+                case "saas":
+                    notifyUrl = "https://saas.ltsoftware.net/api/market/v1/buy/callback";
+            }
+            String getResponse = httpUtil.get(notifyUrl,paralist);
+            logger.info("http get response: "+getResponse);
+            JSONObject respJson = JSONObject.parseObject(getResponse);
+
+        return respJson.getIntValue("code");
 
     }
 

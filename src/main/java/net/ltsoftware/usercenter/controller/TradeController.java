@@ -16,22 +16,22 @@ import java.util.List;
 public class TradeController {
 
     @Autowired
-    private TradeService TradeService;
+    private TradeService tradeService;
 
-    @RequestMapping("/Trade/add")
+    @RequestMapping("/trade/add")
     public void addTrade(Trade Trade, HttpServletResponse response) {
         try {
-            TradeService.insert(Trade);
+            tradeService.insert(Trade);
             JsonUtil.writer(response, "");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @RequestMapping("/Trade/list")
+    @RequestMapping("/trade/list")
     public void listTrade(TradeExample example, HttpServletResponse response) {
         try {
-            List<Trade> TradeList = TradeService.selectByExample(example);
+            List<Trade> TradeList = tradeService.selectByExample(example);
 
             JsonUtil.writer(response, JSON.toJSONString(TradeList));
         } catch (Exception e) {
