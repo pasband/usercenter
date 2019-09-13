@@ -189,7 +189,7 @@ public class LoginController {
     }
 
     @RequestMapping("/phone/code")
-    @CrossOrigin(origins = {"http://try.ltsoftware.net","http://www.ltsoftware.net"}, allowCredentials = "true")
+    @CrossOrigin
     public void sendCode(String phone, HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         try {
