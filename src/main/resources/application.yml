@@ -123,8 +123,8 @@ spring:
 #redis配置
 jedis:
   pool:
-    host: 127.0.0.1
-    password: 123456
+    host: r-wz9nogivnknogmkk30.redis.rds.aliyuncs.com
+    password: zPWkmOQ05KiD0Q
     port: 6379
     timeout: 60
     config:
