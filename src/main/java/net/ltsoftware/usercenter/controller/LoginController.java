@@ -52,7 +52,7 @@ public class LoginController {
 
 
     @GetMapping("/user/login/check")
-    @CrossOrigin(origins = {"http://try.ltsoftware.net","http://www.ltsoftware.net"}, allowCredentials = "true")
+    @CrossOrigin(origins = {"http://try.ltsoftware.net","http://www.ltsoftware.net","https://con.ltsoftware.net"}, allowCredentials = "true")
     public void checkLogin(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         User user = (User) request.getAttribute("login_user");
