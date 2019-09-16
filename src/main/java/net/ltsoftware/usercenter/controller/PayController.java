@@ -58,9 +58,10 @@ public class PayController {
     private static Logger logger = LoggerFactory.getLogger(PayController.class);
 
     @GetMapping("/pay2")
-    public void pay(String tradeNo, Long amount, String payChannel, String subSystem, String clientIp, String openId, HttpServletResponse response) {
+    public void pay(Long userId, String tradeNo, Long amount, String payChannel, String subSystem, String clientIp, String openId, HttpServletResponse response) {
 
         Trade trade = new Trade();
+        trade.setUserId(userId);
         trade.setAmount(amount);
         trade.setCreateTime(DateUtil.now());
         trade.setPayChannel(payChannel);
