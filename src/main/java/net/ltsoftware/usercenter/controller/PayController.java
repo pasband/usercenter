@@ -293,19 +293,21 @@ public class PayController {
             //付款金额
             String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
 
-            String returnUrl = redisClient.get(out_trade_no+AlipayConstants.KEY_RETURN_URL_TAIL);
-            if(returnUrl==null){
-                logger.error("cannot find return url in cache.");
-                return;
-            }
+//            String returnUrl = redisClient.get(out_trade_no+AlipayConstants.KEY_RETURN_URL_TAIL);
+//            if(returnUrl==null){
+//                logger.error("cannot find return url in cache.");
+//                return;
+//            }
 
 //            List<NameValuePair> paralist = new ArrayList<>();
 //            paralist.add(new BasicNameValuePair("tradeNo",out_trade_no));
 //            paralist.add(new BasicNameValuePair("tradeNo3rd",trade_no));
 //            paralist.add(new BasicNameValuePair("amount",total_amount));
-            returnUrl = returnUrl+"?tradeNo="+out_trade_no+"&tradeNo3rd="+trade_no+"&amount="+total_amount;
-            logger.info("sendRedirect:"+returnUrl);
-            response.sendRedirect(returnUrl);
+
+//            returnUrl = returnUrl+"?tradeNo="+out_trade_no+"&tradeNo3rd="+trade_no+"&amount="+total_amount;
+//            logger.info("sendRedirect:"+returnUrl);
+            Trade trade = tradeService.selectByTradeNo(trade_no);
+            forwardSubSystem(trade.getSubSystem(),out_trade_no,total_amount,response);
 
         } else {
             logger.error("验签失败"+request.toString());
@@ -328,7 +330,7 @@ public class PayController {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
         Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);  // 转换成map
-        //微信支付sdk这个接口有个缺陷，如果返回消息没有指明sign_type，sdk默认用md5签名，实际上api是按照HMACSHA256签的！MMP
+        //微信支付sdk这个接口有个缺陷，如果返回消息没有指明sign_type，sdk默认用md5签名，实际上api是按照HMACSHA256签的！
         //这里修改了sdk的代码，把默认签名算法改为HMAC_SHA256
         boolean signatureValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
         //for test
@@ -457,18 +459,27 @@ public class PayController {
 
     }
 
+    private void forwardSubSystem(String subSystem, String tradeNo, String amount,HttpServletResponse response) throws IOException {
+        String returnUrl = null;
+        switch (subSystem) {
+            case "saas":
+                returnUrl = "https://saas.ltsoftware.net/api/market/v1/buy/forward?tradeNo="+tradeNo+"&amount="+amount;
+        }
+        response.sendRedirect(returnUrl);
+    }
+
     private int execSubSystemCallback(String subSystem, String tradeNo, String amount){
-                    List<NameValuePair> paralist = new ArrayList<>();
-            paralist.add(new BasicNameValuePair("tradeNo",tradeNo));
-            paralist.add(new BasicNameValuePair("amount",amount));
-            String notifyUrl = null;
-            switch (subSystem) {
-                case "saas":
-                    notifyUrl = "https://saas.ltsoftware.net/api/market/v1/buy/callback";
-            }
-            String getResponse = httpUtil.get(notifyUrl,paralist);
-            logger.info("http get response: "+getResponse);
-            JSONObject respJson = JSONObject.parseObject(getResponse);
+        List<NameValuePair> paralist = new ArrayList<>();
+        paralist.add(new BasicNameValuePair("tradeNo", tradeNo));
+        paralist.add(new BasicNameValuePair("amount", amount));
+        String notifyUrl = null;
+        switch (subSystem) {
+            case "saas":
+                notifyUrl = "https://saas.ltsoftware.net/api/market/v1/buy/callback";
+        }
+        String getResponse = httpUtil.get(notifyUrl, paralist);
+        logger.info("http get response: " + getResponse);
+        JSONObject respJson = JSONObject.parseObject(getResponse);
 
         return respJson.getIntValue("code");
 
