@@ -306,8 +306,11 @@ public class PayController {
 
 //            returnUrl = returnUrl+"?tradeNo="+out_trade_no+"&tradeNo3rd="+trade_no+"&amount="+total_amount;
 //            logger.info("sendRedirect:"+returnUrl);
-            Trade trade = tradeService.selectByTradeNo(trade_no);
-            forwardSubSystem(trade.getSubSystem(),out_trade_no,total_amount,response);
+            Trade trade = tradeService.selectByTradeNo(out_trade_no);
+            String subSystem = trade.getSubSystem();
+            trade.setTradeNo3rd(trade_no);
+            trade.setStatus(3);
+            forwardSubSystem(subSystem,out_trade_no,total_amount,response);
 
         } else {
             logger.error("验签失败"+request.toString());
