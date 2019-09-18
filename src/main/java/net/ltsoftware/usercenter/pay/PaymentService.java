@@ -5,8 +5,10 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.github.wxpay.sdk.WXPay;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
@@ -115,6 +117,32 @@ public class PaymentService {
 //            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
         return payurl;
 
+    }
+
+    //alipay for h5
+    public String getAlipayH5Page(String tradeNo, Long amount) throws AlipayApiException {
+        AlipayTradeWapPayRequest wapPayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
+        wapPayRequest.setReturnUrl(AlipayConstants.RETURN_URL);
+        wapPayRequest.setNotifyUrl(AlipayConstants.NOTIFY_URL);//在公共参数中设置回跳和通知地址
+
+        String out_trade_no = tradeNo;
+        String total_amount = String.valueOf(amount);
+        String subject = AlipayConstants.CHANGE_TITLE;
+
+        //for test
+        total_amount = "0.01";
+
+        wapPayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
+                + "\"total_amount\":\"" + total_amount + "\","
+                + "\"subject\":\"" + subject + "\","
+                + "\"product_code\":\"QUICK_WAP_WAY\"}");
+        AlipayTradeWapPayResponse response = alipayClient.pageExecute(wapPayRequest);
+        if (response.isSuccess()) {
+            String h5Form = response.getBody();
+            logger.info(h5Form);
+            return h5Form;
+        }
+        return null;
     }
 
 

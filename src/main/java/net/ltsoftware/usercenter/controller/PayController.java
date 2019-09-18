@@ -89,7 +89,18 @@ public class PayController {
                 break;
 
             case AlipayConstants.CHANNEL_H5:
-
+                try {
+                    String h5Page = paymentServcie.getAlipayH5Page(tradeNo,amount);
+                    if(h5Page!=null){
+                        trade.setStatus(2);
+                        tradeService.updateByPrimaryKey(trade);
+                        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, h5Page);
+                    }else{
+                        JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                    }
+                } catch (AlipayApiException e) {
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, e.getErrMsg());
+                }
                 break;
 
             case WxpayConstants.CHANNEL_PC:
