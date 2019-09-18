@@ -64,7 +64,7 @@ public class PaymentService {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
-        Map<String, String> data = initWxpayData(tradeNo,clientIp);
+        Map<String, String> data = initWxpayData(tradeNo,clientIp,WxpayConstants.TRADE_TYPE_JSAPI);
         //jsapi need add openid
         data.put("openid",openId);
 
@@ -81,7 +81,7 @@ public class PaymentService {
 
     }
 
-    private Map<String, String> initWxpayData(String tradeNo, String clientIp ){
+    private Map<String, String> initWxpayData(String tradeNo, String clientIp, String tradeType){
         Map<String, String> data = new HashMap<>();
         data.put("body", "旅易软件服务购买");
         data.put("out_trade_no", tradeNo);
@@ -90,7 +90,7 @@ public class PaymentService {
         data.put("total_fee", "1");
         data.put("spbill_create_ip", clientIp);
         data.put("notify_url", WxpayConstants.NOTIFY_URL);
-        data.put("trade_type", WxpayConstants.TRADE_TYPE);  // 此处指定为扫码支付
+        data.put("trade_type", tradeType);  // 此处指定为扫码支付
         data.put("product_id", "12");
         return data;
     }
@@ -100,7 +100,7 @@ public class PaymentService {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
-        Map<String, String> data = initWxpayData(tradeNo,clientIp);
+        Map<String, String> data = initWxpayData(tradeNo,clientIp,WxpayConstants.TRADE_TYPE_NATIVE);
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());

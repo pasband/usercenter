@@ -7,7 +7,8 @@ public interface WxpayConstants {
     String CHANNEL_PC = "wxpay";
     String CHANNEL_H5 = "h5wxpay";
 
-    String TRADE_TYPE = "NATIVE";
+    String TRADE_TYPE_NATIVE = "NATIVE";
+
 
     String NOTIFY_URL = "https://uc.ltsoftware.net/pay/wxpay/notify";
 
@@ -24,7 +25,7 @@ public interface WxpayConstants {
 
     String CHANNEL_MP = "mwxpay";
 
-//    String TRADE_TYPE = "JSAPI";
+    String TRADE_TYPE_JSAPI = "JSAPI";
 
     String SIGN_TYPE_HMACSHA256 = "HMAC-SHA256";
 
