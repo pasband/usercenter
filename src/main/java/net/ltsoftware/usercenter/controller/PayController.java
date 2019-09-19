@@ -134,7 +134,18 @@ public class PayController {
                 }
                 break;
             case WxpayConstants.CHANNEL_H5:
-
+                try {
+                    String payUrl = paymentServcie.getWxpayH5Url(tradeNo,amount,clientIp);
+                    if(payUrl!=null){
+                        trade.setStatus(2);
+                        tradeService.updateByPrimaryKey(trade);
+                        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, payUrl);
+                    }else{
+                        JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, null);
+                    }
+                } catch (Exception e) {
+                    JsonUtil.toJsonMsg(response, ErrorCode.PAY_URL_FAIL, e.toString());
+                }
 
         }
     }

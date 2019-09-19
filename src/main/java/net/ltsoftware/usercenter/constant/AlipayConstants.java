@@ -18,7 +18,7 @@ public interface AlipayConstants {
 
     String CHANGE_TITLE = "旅通服务平台账户充值";
     String CHANNEL_PC = "alipay";
-    String CHANNEL_H5 = "h5alipay";
+    String CHANNEL_H5 = "alipay_h5";
 
     String KEY_RETURN_URL_TAIL ="_return_url";
     String KEY_NOTIFY_URL_TAIL ="_notify_url";

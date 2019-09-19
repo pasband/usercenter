@@ -98,11 +98,33 @@ public class PaymentService {
     }
 
     public String getWxpayUrl(String tradeNo, Long amount,
-                              String clientIp) throws Exception {
+                               String clientIp) throws Exception {
         MyWxpayConfig config = new MyWxpayConfig();
         WXPay wxpay = new WXPay(config);
 
         Map<String, String> data = initWxpayData(tradeNo,clientIp,WxpayConstants.TRADE_TYPE_NATIVE);
+
+        Map<String, String> resp = wxpay.unifiedOrder(data);
+        logger.info(resp.toString());
+        String returnCode = resp.get("return_code");
+        if(!WxpayConstants.NOTIFY_RETURN_SUCCESS.equals(returnCode)){
+            logger.error("wxpay get pay url failed, return msg: "+resp.get("return_msg"));
+            return null;
+        }
+        String payurl = resp.get("code_url");
+
+        logger.info(payurl);
+//            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
+        return payurl;
+
+    }
+
+    public String getWxpayH5Url(String tradeNo, Long amount,
+                              String clientIp) throws Exception {
+        MyWxpayConfig config = new MyWxpayConfig();
+        WXPay wxpay = new WXPay(config);
+
+        Map<String, String> data = initWxpayData(tradeNo,clientIp,WxpayConstants.TRADE_TYPE_H5);
 
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
