@@ -129,15 +129,10 @@ public class PaymentService {
         Map<String, String> resp = wxpay.unifiedOrder(data);
         logger.info(resp.toString());
         String returnCode = resp.get("return_code");
-        if(!WxpayConstants.NOTIFY_RETURN_SUCCESS.equals(returnCode)){
-            logger.error("wxpay get pay url failed, return msg: "+resp.get("return_msg"));
-            return null;
+        if(WxpayConstants.NOTIFY_RETURN_SUCCESS.equals(returnCode)) {
+            return resp.get("mweb_url");
         }
-        String payurl = resp.get("code_url");
-
-        logger.info(payurl);
-//            QrcodeUtil.createQrCode(new FileOutputStream(new File("/usr/local/usercenter/qrcode.jpg")), payurl, 900, "JPEG");
-        return payurl;
+        return null;
 
     }
 
