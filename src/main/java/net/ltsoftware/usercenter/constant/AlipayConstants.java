@@ -17,7 +17,7 @@ public interface AlipayConstants {
     String AES_KEY = "Nc3tQ95Cki5JHpIflTrCcA==";
 
     String CHANGE_TITLE = "旅通服务平台账户充值";
-    String CHANNEL_PC = "alipay";
+    String CHANNEL_PC = "alipay_web";
     String CHANNEL_H5 = "alipay_h5";
 
     String KEY_RETURN_URL_TAIL ="_return_url";

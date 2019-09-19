@@ -4,7 +4,7 @@ package net.ltsoftware.usercenter.constant;
 public interface WxpayConstants {
 
     //more constants see config.MyWxpayConfig
-    String CHANNEL_PC = "wxpay_pcweb";
+    String CHANNEL_PC = "wxpay_web";
     String CHANNEL_H5 = "wxpay_h5";
 
     String TRADE_TYPE_NATIVE = "NATIVE";
