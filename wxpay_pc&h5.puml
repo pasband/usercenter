@@ -1,0 +1,19 @@
+@startuml
+
+html -> saas: buy
+saas -> saas: create order
+saas -> user_center: pay
+user_center -> user_center: create trade
+user_center -> wxpay: unified order
+wxpay -> user_center: pay url
+user_center -> saas: pay params
+saas -> html: pay params
+html -> html: create qrcode
+wxpay -> user_center: success notify
+user_center -> user_center: update trade status
+user_center -> saas: subsystem callback
+saas -> saas: update order
+html -> saas: check order
+html -> html: redirect detail page
+
+@enduml

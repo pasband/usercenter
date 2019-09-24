@@ -1,0 +1,17 @@
+@startuml
+
+html -> saas: buy
+saas -> saas: create order
+saas -> user_center: pay
+user_center -> user_center: create trade
+user_center -> saas: pay params
+saas -> html: pay params
+html -> alipay: real pay
+alipay -> user_center: pay return
+user_center -> user_center: update trade status
+user_center -> saas: pay return
+saas -> saas: update order status
+saas -> html: return page
+html -> html: display detail
+
+@enduml

@@ -92,7 +92,7 @@ public class PaymentService {
         data.put("total_fee", "1");
         data.put("spbill_create_ip", clientIp);
         data.put("notify_url", WxpayConstants.NOTIFY_URL);
-        data.put("trade_type", tradeType);  // 此处指定为扫码支付
+        data.put("trade_type", tradeType);
         data.put("product_id", "12");
         return data;
     }
