@@ -1,7 +1,7 @@
 #默认使用配置
 spring:
   profiles:
-    active: local
+    active: dev
 
 #公共配置与profiles选择无关
 mybatis:
@@ -100,15 +100,16 @@ jedis:
 
 #开发服务器配置
 server:
-  port: 56443
-  ssl:
-    key-store: /etc/letsencrypt/live/ltsoftware.net/mykeystore.jks
-    key-store-password: S0kiShgsZwAk
-    keyAlias: springboot
-    protocol: TLS
-    key-password: S0kiShgsZwAk
-    enabled: true
-  max-http-header-size: 8192
+#  port: 56443
+  port: 12001
+#  ssl:
+#    key-store: /etc/letsencrypt/live/ltsoftware.net/mykeystore.jks
+#    key-store-password: S0kiShgsZwAk
+#    keyAlias: springboot
+#    protocol: TLS
+#    key-password: S0kiShgsZwAk
+#    enabled: true
+#  max-http-header-size: 8192
 
 spring:
   profiles: dev
@@ -123,8 +124,10 @@ spring:
 #redis配置
 jedis:
   pool:
-    host: r-wz9nogivnknogmkk30.redis.rds.aliyuncs.com
-    password: zPWkmOQ05KiD0Q
+#    host: r-wz9nogivnknogmkk30.redis.rds.aliyuncs.com
+#    password: zPWkmOQ05KiD0Q
+    host: 172.18.4.167
+    password: ltsoft6379
     port: 6379
     timeout: 60
     config:

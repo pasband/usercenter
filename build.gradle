@@ -1,9 +1,11 @@
 plugins {
     id 'org.springframework.boot' version '2.1.5.RELEASE'
     id 'java'
+
 }
 
 apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'maven'
 
 //def getDate() {
 //    def date = new Date()
@@ -56,10 +58,17 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
+}
+
+jar {
+    archiveFileName = 'uc.jar'
+    // Specify the desired output directory if needed
+    // destinationDirectory = file('custom/path/to/output')
 }

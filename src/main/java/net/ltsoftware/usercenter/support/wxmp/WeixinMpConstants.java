@@ -18,8 +18,12 @@ public interface WeixinMpConstants {
     String GRANT_TYPE = "authorization_code";
     String REDIRECT_URL = "https://uc.ltsoftware.net/wxmp/auth/redirect";
 
+    String USERINFO_API = "https://open.weixin.qq.com/connect/oauth2/authorize";
+
 
     int EXPIRES_TIME = 7200-15; //防止取到的token/ticket失效的情况，提前15秒释放
+
+
 
 }
 

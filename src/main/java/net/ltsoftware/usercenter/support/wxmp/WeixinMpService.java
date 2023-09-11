@@ -79,6 +79,24 @@ public class WeixinMpService {
 //    &scope=snsapi_base
 //    &state=123
 
+    // https://open.weixin.qq.com/connect/oauth2/authorize?
+    // appid=APPID
+    // &redirect_uri=REDIRECT_URI
+    // &response_type=code
+    // &scope=SCOPE
+    // &state=STATE#wechat_redirect
+
+    public String getSnsBase(String redirectUrl){
+        String snsBaseUrl = WeixinMpConstants.USERINFO_API+"?" +
+                "appid="+WeixinMpConstants.WEIXIN_MP_APPID+
+                "&redirect_uri="+redirectUrl+
+                "&response_type=code"+
+                "&scope=snsapi_base"+
+                "&state=123";
+        logger.info(snsBaseUrl);
+        return snsBaseUrl;
+    }
+
     public String getOpenid(String code){
 
 
@@ -131,6 +149,7 @@ public class WeixinMpService {
         }
         return null;
     }
+
 
 
 }

@@ -249,5 +249,9 @@ public class LoginController {
 //        JsonUtil.toJsonMsg(response, errCode, null);
     }
 
+    private void newLogin(){
+        
+    }
+
 
 }

@@ -57,10 +57,15 @@ public class WeixinMpController {
 
     }
 
-    @GetMapping("/MP_verify_HgwQzcbwgDoAAs0t.txt")
-    public void temp(HttpServletResponse response){
-        JsonUtil.writer(response,"HgwQzcbwgDoAAs0t");
+    @GetMapping("/wxmp/sns/base")
+    public void getSnsBase(String redirectUrl, HttpServletResponse response){
+        String snsBaseUrl = weixinMpService.getSnsBase(redirectUrl);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, snsBaseUrl);
     }
 
+//    @GetMapping("/MP_verify_HgwQzcbwgDoAAs0t.txt")
+//    public void temp(HttpServletResponse response){
+//        JsonUtil.writer(response,"HgwQzcbwgDoAAs0t");
+//    }
 
 }
