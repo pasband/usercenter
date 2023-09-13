@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Api(value = "WeixinMpController")
 @Controller
@@ -57,15 +58,50 @@ public class WeixinMpController {
 
     }
 
+
     @GetMapping("/wxmp/sns/base")
-    public void getSnsBase(String redirectUrl, HttpServletResponse response){
-        String snsBaseUrl = weixinMpService.getSnsBase(redirectUrl);
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, snsBaseUrl);
+    public void getSnsBaseUrl(HttpServletResponse response){
+        String snsBaseUrl = weixinMpService.getSnsBaseUrl();
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, snsBaseUrl);
+        logger.info(snsBaseUrl);
+        try {
+            response.sendRedirect(snsBaseUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    @GetMapping("/wxmp/sns")
+    public void getSnsUrl(HttpServletResponse response){
+        String snsUserinfoUrl = weixinMpService.getSnsUserinfoUrl();
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, snsBaseUrl);
+        logger.info(snsUserinfoUrl);
+        try {
+            response.sendRedirect(snsUserinfoUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @GetMapping("/wxmp/sns/redirect")
+    public void getSnsOpenid(HttpServletRequest request, HttpServletResponse response){
+        String state = request.getParameter("state");
+        String code = request.getParameter("code");
+        String openid = weixinMpService.getSnsOpenid(state,code);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, openid);
+
+    }
 //    @GetMapping("/MP_verify_HgwQzcbwgDoAAs0t.txt")
 //    public void temp(HttpServletResponse response){
 //        JsonUtil.writer(response,"HgwQzcbwgDoAAs0t");
 //    }
+
+    @GetMapping("/wxmp/sns/userinfo")
+    public void getSnsUserinfo(String openid, HttpServletResponse response){
+        String userinfo = weixinMpService.getSnsUserinfo(openid);
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, userinfo);
+    }
 
 }

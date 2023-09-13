@@ -13,17 +13,23 @@ public interface WeixinMpConstants {
 
 
     String RESPONSE_TYPE = "code";
-    String SCOPE = "snsapi_base";
+    String SNS_SCOPE_BASE = "snsapi_base";
+
+    String SNS_SCOPE_USERINFO = "snsapi_base";
     String TOKEN_API = "https://api.weixin.qq.com/sns/oauth2/access_token";
+
+    String REFRESH_TOKEN_API = "https://api.weixin.qq.com/sns/oauth2/refresh_token";
+
+    String SNS_USERINFO_API = "https://api.weixin.qq.com/sns/userinfo";
     String GRANT_TYPE = "authorization_code";
-    String REDIRECT_URL = "https://uc.ltsoftware.net/wxmp/auth/redirect";
+    String SNS_REDIRECT_URL = "https://uc.ltsoftware.net/wxmp/sns/redirect";
 
     String USERINFO_API = "https://open.weixin.qq.com/connect/oauth2/authorize";
 
 
-    int EXPIRES_TIME = 7200-15; //防止取到的token/ticket失效的情况，提前15秒释放
+    int EXPIRES_TIME_OF_ACCESS_TOKEN = 7200-15; //防止取到的token/ticket失效的情况，提前15秒释放
 
-
+    int EXPIRES_TIME_OF_REFRESH_TOKEN = 3600*24*30-5*60;
 
 }
 
