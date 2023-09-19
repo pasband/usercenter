@@ -13,8 +13,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getAuthenticationInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/MP_verify_HgwQzcbwgDoAAs0t.txt","/oauth/**","/token/**","/error","/phone/**","/wxmp/**","/pay/**","/pay2/**","/sns/**");
-
+                .excludePathPatterns("/MP_verify_HgwQzcbwgDoAAs0t.txt","/oauth/**",
+                        "/token/**","/error","/phone/**","/wxmp/**","/pay/**",
+                        "/pay2/**","/pay3/**","/sns/**","/**/*.html",
+                        "/**/*.js","/**/*.css","/**/*.jpg","/**/*.png","/**/*.txt","/**/*.json");
     }
 
     @Bean

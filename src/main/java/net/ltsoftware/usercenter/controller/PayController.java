@@ -5,31 +5,35 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.wechat.pay.java.core.http.UrlEncoder;
+import com.wechat.pay.java.service.partnerpayments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import net.ltsoftware.usercenter.config.MyWxpayConfig;
 import net.ltsoftware.usercenter.constant.AlipayConstants;
 import net.ltsoftware.usercenter.constant.ErrorCode;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.model.Trade;
 import net.ltsoftware.usercenter.pay.PaymentService;
+import net.ltsoftware.usercenter.pay.WxPartnerPayService;
 import net.ltsoftware.usercenter.service.TradeService;
 import net.ltsoftware.usercenter.service.UserService;
 import net.ltsoftware.usercenter.util.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -48,6 +52,9 @@ public class PayController {
 
     @Autowired
     private PaymentService paymentServcie;
+
+    @Autowired
+    private WxPartnerPayService wxPartnerPayService;
 
     @Autowired
     private RedisClient redisClient;
@@ -438,7 +445,7 @@ public class PayController {
         logger.info("[notify]signVerified: "+signVerified);
         //——请在这里编写您的程序（以下代码仅作参考）——
 
-	/* 实际验证过程建议商户务必添加以下校验：
+    /* 实际验证过程建议商户务必添加以下校验：
 	1、需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
 	2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
 	3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
@@ -510,14 +517,170 @@ public class PayController {
 
     }
 
+    @RequestMapping("/pay3/page")
+    @CrossOrigin
+    public void confirmPage(HttpServletRequest request, HttpServletResponse httpServletResponse){
+        try {
+//            String payChannel = request.getParameter("payChannel");
+//            String subMchid = request.getParameter("subMchid");
+//            String busNotify = request.getParameter("busNotify");
+            String amount = request.getParameter("amount");
+            String outTradeNo = request.getParameter("outTradeNo");
+            String orderListUrl = request.getParameter("orderListUrl");
+            String clientDomain = request.getParameter("clientDomain");
+            String softType = request.getParameter("softType");
+            JSONObject jsonObject = convertParametersToJSONObject(request);
+            String key = softType+"_"+clientDomain+"_"+outTradeNo;
+            System.out.println("key: " + key);
+            System.out.println("jsonObject: " + jsonObject.toString());
+            redisClient.set(key,jsonObject.toString());
+
+//            URL url = new URL(orderListUrl);
+//            String fileName = url.getFile();
+//            int lastSlashIndex = fileName.lastIndexOf("/");
+//            if (lastSlashIndex >= 0 && lastSlashIndex < fileName.length() - 1) {
+//                fileName = fileName.substring(lastSlashIndex + 1);
+//            }
+            String listPage = httpUtil.get(orderListUrl,null);
+            System.out.println("listPage: " + listPage);
+            listPage = UrlEncoder.urlEncode(listPage);
+//            listPage = HtmlUtils.htmlEscape(listPage);
+            // 生成文件
+//            String content = "This is the generated file content.";
+//            ClassPathResource resource = new ClassPathResource("static");
+//            String staticPath = resource.getFile().getAbsolutePath();
+
+//            System.out.println(staticPath);
+//            File file = new File(staticPath+fileName);
+//            FileWriter writer = new FileWriter(file);
+//            writer.write(listPage);
+//            writer.close();
+
+//            System.out.println("listPage: " + listPage);
+            String pageUrl = "/confirmPay.html";
+            pageUrl+="?key="+key;
+            pageUrl+="&amount="+amount;
+            pageUrl+="&listPage="+listPage;
+            httpServletResponse.sendRedirect(pageUrl);
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @RequestMapping("/pay3")
+    @CrossOrigin
+    public void pay3(HttpServletRequest request, HttpServletResponse httpServletResponse){
+        try {
+            String payChannel = request.getParameter("payChannel");
+            String key = request.getParameter("key");
+            System.out.println("key: " + key);
+            switch (payChannel) {
+                case WxpayConstants.CHANNEL_MP:
+                    String callback = "https://uc.ltsoftware.net/pay3/wxpay/jsapi?key="+UrlEncoder.urlEncode(key);
+//                             + "?redirectUrl="+ UrlEncoder.urlEncode(redirectUrl)
+                    String wxPayUrl = "http://ads.sanshak.com/action/ads/getWxOpenid2/?callback="
+                            + UrlEncoder.urlEncode(callback);
+                    System.out.println("wxPayUrl: " + wxPayUrl);
+                    httpServletResponse.sendRedirect(wxPayUrl);
+                    break;
+            }
+
+        }catch (Exception e) {
+            logger.error("pay3", e);
+        }
+
+    }
+
+    @RequestMapping("/pay3/wxpay/jsapi")
+    @CrossOrigin
+    public void wxPartnerPayJsapi(HttpServletRequest request, HttpServletResponse httpServletResponse){
+        try {
+        String openid = request.getParameter("openid");
+        String key = request.getParameter("key");
+        System.out.println("key: " + key);
+        String jsonString = redisClient.get(key);
+        System.out.println("jsonString: " + jsonString);
+        JSONObject json = JSONObject.parseObject(jsonString);
+//        String successUrl = request.getParameter("redirectUrl");
+        PrepayWithRequestPaymentResponse response = wxPartnerPayService.prepayWithRequestPayment(openid,key,json);
+        String respStr = response.toString();
+        System.out.println(respStr);
+//        System.out.println("successUrl: " +successUrl);
+        System.out.println("openid: " +openid);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("appId", response.getAppId());
+        jsonObject.put("timeStamp", response.getTimeStamp());
+        jsonObject.put("nonceStr", response.getNonceStr());
+        jsonObject.put("package", response.getPackageVal());
+        jsonObject.put("signType", response.getSignType());
+        jsonObject.put("paySign", response.getPaySign());
+//        JsonUtil.toJsonMsg(httpServletResponse,ErrorCode.SUCCESS,jsonObject);
+//        redirectUrl+="?data="+jsonObject.toString();
+
+            String redirectUrl = "/wxmpPay.html";
+            redirectUrl+="?isWeChatVisit=true";
+            redirectUrl+="&data="+UrlEncoder.urlEncode(jsonObject.toJSONString());
+//            redirectUrl+="&successUrl="+UrlEncoder.urlEncode(successUrl);
+//            request.setAttribute("url",jsonObject.toString());
+//            request.setAttribute("isWeChatVisit",true);
+            System.out.println("redirectUrl: " +redirectUrl);
+            httpServletResponse.sendRedirect(redirectUrl);
+        } catch (Exception e) {
+            logger.error("wxPartnerPayJsapi", e);
+        }
+
+    }
+    @RequestMapping("/pay3/wxpay/jsapi/notify")
+    @CrossOrigin
+    public void wxPartnerPayJsapiNotify(HttpServletRequest request, HttpServletResponse httpServletResponse){
+        //{"summary":"支付成功",
+        // "event_type":"TRANSACTION.SUCCESS",
+        // "create_time":"2023-09-18T15:29:46+08:00",
+        // "resource":{"original_type":"transaction",
+        // "algorithm":"AEAD_AES_256_GCM",
+        // "ciphertext":"TS9yC6KnxX43tU272OrQeErp4KY6j734FZCXXxbu/tdh0+OHDMvTugkxIEVhOhNtnWCNb/RjadZDpcghO3Ian/lzFi0YyeGxb+1OosNk/utDSmKsi4ZDVE72Gdv1jMohRdFzJ4JaCRrYGR2UUuA3uBpp9DcaKKuq1iT5kt3fIkT7umHQ6H2m4PCm8bjoNZ1ZKCHsOVu3bINAV1QJZktW08WmAHuUcpydLu0iF9blkrK2QoDOSU1F8yrnUWWzjL1hkq5K7DZF6W9UZ/cLAoEF5KYqVdU2vX/MXln2cOl8HNetlmnI8ai19A9aMF8sZC2DKclJ1TcDuuZhwZeQjHp4p5wgi/ulH3VODm5+x/8736iXhFNTzhY6UW74ZtnGDJ+nBEBR5NtOMI0v+Fq54579Kuiw7AaRD982+GQtfCr89gc/Z8FiJAL5l7OT3htoWT3KQhJ53dE8N3NEY5LI8LlgXNtUtQsP2/5nIo+bYgNkkfGOArndfZ0ag/JzuUfKMe1wxbTaRPwNvVVf4S9aJsmG2ka2pzBGvPdH+kDvuo6RxBZh6z+dcEPRKxioqc1Wk9aPFOkP8v4GIw7hZAVsV2sBMeDxB0p5mk5yVD2HTItiekvMNplniRhcj0BpmCdg4zGwpyVYsabOCqP6U3tI+TO+O6anICB4G2tKGdFB9QBqbkconeiG0O2Z40BPfAawDtS2NoVY19P/9hMzCG3azhDb2XA=",
+        // "associated_data":"transaction","nonce":"8vBACRCOU66x"},
+        // "resource_type":"encrypt-resource","id":"f6d3e392-7a32-5e7a-97d7-12a343048b1c"}
+        try {
+            Transaction transaction = wxPartnerPayService.getTransaction(request);
+            String key = transaction.getOutTradeNo();
+            String result = redisClient.get(key);
+            JSONObject json = JSONObject.parseObject(result);
+            String busNotifyUrl = json.getString("busNotify");
+            System.out.println("busNotifyUrl: " +busNotifyUrl);
+//            httpServletResponse.sendRedirect("http://ly.ltsoftware.net/action/website/listOrders/?t=jlkk");
+        } catch (Exception e) {
+            logger.error("wxPartnerPayJsapiNotify", e);
+        }
+    }
+
+    public JSONObject convertParametersToJSONObject(HttpServletRequest request) {
+        JSONObject jsonObject = new JSONObject();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+
+        for (String paramName : parameterMap.keySet()) {
+            String[] paramValues = parameterMap.get(paramName);
+            if (paramValues.length == 1) {
+                jsonObject.put(paramName, paramValues[0]);
+            } else {
+                jsonObject.put(paramName, paramValues);
+            }
+        }
+
+        return jsonObject;
+    }
+
     public static void main(String[] args) throws Exception {
-        String notifyData="<xml><appid><![CDATA[wxed61c321c91d5d92]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><device_info><![CDATA[WEB]]></device_info><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[N]]></is_subscribe><mch_id><![CDATA[1309846801]]></mch_id><nonce_str><![CDATA[JAgqfOFKTULMGcKf5M0OpK83YwT5NCCw]]></nonce_str><openid><![CDATA[oWvcPuHrXdhVYsKhR9oq39iIKQig]]></openid><out_trade_no><![CDATA[sk5q6swd_20190725145309]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[92FB5FB9461C48792FB14EED76CEF89E7C004A6E374399B2B769DBDB6CBA6013]]></sign><time_end><![CDATA[20190725145332]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[NATIVE]]></trade_type><transaction_id><![CDATA[4200000353201907252813793937]]></transaction_id></xml>";
-        MyWxpayConfig config = new MyWxpayConfig();
-        WXPay wxpay = new WXPay(config);
-        Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);
-        System.out.println(notifyMap);
-        boolean isValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
-        System.out.print(isValid);
+//        String notifyData="<xml><appid><![CDATA[wxed61c321c91d5d92]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><device_info><![CDATA[WEB]]></device_info><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[N]]></is_subscribe><mch_id><![CDATA[1309846801]]></mch_id><nonce_str><![CDATA[JAgqfOFKTULMGcKf5M0OpK83YwT5NCCw]]></nonce_str><openid><![CDATA[oWvcPuHrXdhVYsKhR9oq39iIKQig]]></openid><out_trade_no><![CDATA[sk5q6swd_20190725145309]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[92FB5FB9461C48792FB14EED76CEF89E7C004A6E374399B2B769DBDB6CBA6013]]></sign><time_end><![CDATA[20190725145332]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[NATIVE]]></trade_type><transaction_id><![CDATA[4200000353201907252813793937]]></transaction_id></xml>";
+//        MyWxpayConfig config = new MyWxpayConfig();
+//        WXPay wxpay = new WXPay(config);
+//        Map<String, String> notifyMap = WXPayUtil.xmlToMap(notifyData);
+//        System.out.println(notifyMap);
+//        boolean isValid = wxpay.isPayResultNotifySignatureValid(notifyMap);
+//        System.out.print(isValid);
 
     }
 

@@ -1,0 +1,107 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="This is my page" />
+    <link rel="stylesheet" type="text/css" href="/css/alert.css"/>
+    <!-- <link rel="stylesheet" type="text/css" href="/css/website/phone/css/styleTwo.css"/> -->
+    <link rel="stylesheet" type="text/css" href="/css/confirm-pay.css"/>
+</head>
+<body class="bdclr">
+<!-- 去支付 -->
+<div class="wap_nygopaybibx">
+    <div class="wap_nyzlgltit">
+        <span>支付订单</span>
+    </div>
+    <div class="waptogopay_top">
+        <input type="hidden" id="pactId" value="" />
+        <input type="hidden" id="orderTime" value="" />
+        <div class="time-price">
+            <h3><i>金额总计</i>  <b id="amount"></b><br/></h3>
+        </div>
+    </div>
+</div>
+
+<div class="wap_naygopaybotbx">
+    <h4>支付方式</h4>
+    <form id="payForm" action="" method="post">
+    <input type="hidden" name="payMoney" value="" />
+    <input type="hidden" name="payType" id="payType" />
+    <input type="hidden" name="routePactId" value="" />
+    </form>
+    <ul>
+
+            <li id="wxPay"><p><img src="/img/wxtb.jpg" width="25" height="25" />微信支付</p>
+                <label>
+                    <input name="radio1" type="radio" checked="checked"  class="toPay" isWeChatVisit="true" code="" payType="payByPhoneWX"/>
+                    <i class="icon"></i>
+                </label>
+            </li>
+
+    </ul>
+</div>
+<button type="button" class="qrzf">确认提交</b></button>
+<div class="waptogopay_top">
+    <h3><i>订单列表</i></h3>
+<div id="orderList">
+</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="/js/jquery.min-1.7.js"></script>
+<script type="text/javascript" src="/js/alert.min.js"></script>
+<script type="text/javascript" src="/css/website/js/validatePayedOrder.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const amount = urlParams.get('amount');
+        const key = urlParams.get('key');
+        var listPage = urlParams.get('listPage');
+
+        // $("#orderList").attr("src",orderListUrl);
+        listPage = decodeURIComponent(listPage);
+        loadXiaopiao(listPage);
+        $("#amount").html(amount);
+        var url = 'https://uc.ltsoftware.net/pay3?payChannel=wxpay_mp';
+        url += '&key=' + encodeURIComponent(key);
+        $('.qrzf').click(function () {
+            alert(url);
+            window.top.location.href = url;
+                //'https://uc.ltsoftware.net/pay3?payChannel=wxpay_mp&amp;redirectUrl=www.baidu.com';
+        });
+    })
+
+    function loadXiaopiao(listPage) {
+        // var url = 'https://example.com/otherpage'; // 要获取内容的页面 URL
+
+        // $.get(listPage, function(data) {
+        //     var htmlContent = $(data).find('body').html(); // 提取其他页面的 body 内容
+
+            // 将 HTML 内容填充到当前页面的元素中
+            //$('#orderList').html(listPage);
+
+        // 生成表格
+        var ul = $('<ul>');
+        //alert(listPage);
+        var jsonArray = JSON.parse(listPage);
+
+        $.each(jsonArray, function(index, item) {
+            var li = $('<li>');
+            li.html('<span>订单号：'+item.routePactNo+'</span> <span>线路：'+item.routePactName+'</span><span>金额：'+item.financialMoney+'</span>');
+            ul.append(li);
+
+        });
+
+        // 将表格插入到页面中
+        $('#orderList').append(ul);
+        // });
+    }
+</script>

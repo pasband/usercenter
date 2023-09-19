@@ -167,7 +167,7 @@ public class WeixinMpService {
         return snsUserinfoUrl;
     }
 
-    public String getSnsOpenid(String state, String code){
+    public String getSnsOpenid(String code){
         //https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         String getTokenUrl = WeixinMpConstants.TOKEN_API+
                 "?appid="+WeixinMpConstants.WEIXIN_MP_APPID+
@@ -178,12 +178,17 @@ public class WeixinMpService {
         System.out.println("respStr: "+respStr);
         JSONObject respJson = JSON.parseObject(respStr);
         String openid = respJson.getString("openid");
+
         String access_token = respJson.getString("access_token");
         String refresh_token = respJson.getString("refresh_token");
-        String access_token_key = openid+"_access_token";
-        String refresh_token_key = openid+"_refresh_token";
-        redisClient.setex(access_token_key,WeixinMpConstants.EXPIRES_TIME_OF_ACCESS_TOKEN,access_token);
-        redisClient.setex(refresh_token_key,WeixinMpConstants.EXPIRES_TIME_OF_REFRESH_TOKEN,refresh_token);
+        if(access_token!=null){
+            String access_token_key = openid+"_access_token";
+            redisClient.setex(access_token_key,WeixinMpConstants.EXPIRES_TIME_OF_ACCESS_TOKEN,access_token);
+        }
+        if(refresh_token!=null){
+            String refresh_token_key = openid+"_refresh_token";
+            redisClient.setex(refresh_token_key,WeixinMpConstants.EXPIRES_TIME_OF_REFRESH_TOKEN,refresh_token);
+        }
 //        responseStr: {"access_token":"72_HBa7rUwLdzKA6F4gkDxYqI8i4K8T2bn_ObhLs26u1Y4MBWw9T_YZyqIWX3017Ooem6W07UaJwqFvzFUMMarm6loAqJamX9E9ZW_NlY-2TlY",
 //                "expires_in":7200,
 //                "refresh_token":"72_5JYnA9lv6T1l9z8wak9GcnyPOAxM2aW3PVEkjBPTMA9fgeuD-IzDLvIgRUhja-CDRkY2TO7KVjAkGWzsT9zDPe1EBvdB-ImTl4kLAGChcr0",

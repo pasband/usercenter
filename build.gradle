@@ -59,6 +59,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    implementation 'com.github.wechatpay-apiv3:wechatpay-java:0.2.11'
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
 }
 
 dependencyManagement {

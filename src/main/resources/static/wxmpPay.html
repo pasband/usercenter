@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="/css/layui.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript" src="/js/jquery.min-1.7.js"></script>
+<script src="/js/layui.js"></script>
+<script type="text/javascript">
+    //var isWeChatVisit='${isWeChatVisit}';
+    //var url='${url}';
+    const urlParams = new URLSearchParams(window.location.search);
+    const data = urlParams.get('data');
+    const isWeChatVisit = urlParams.get('isWeChatVisit');
+    const successPayRedirectUrl = urlParams.get('successUrl');
+
+    // var tradeNo='${outTradeNo}';
+    // var orderId='${orderId}';
+    // var userId='${userId}';
+    // var successPayRedirectUrl='${successPayRedirectUrl}';
+    $().ready(function(){
+        if('true'==isWeChatVisit){
+            if (typeof WeixinJSBridge == "undefined"){
+                if( document.addEventListener ){
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                }else if (document.attachEvent){
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                }
+            }else{
+                onBridgeReady();
+            }
+        }else{
+            if(navigator.userAgent.indexOf('MQQBrowser')>-1){
+                layui.use('layer', function() {
+                    var index = layer.alert("此网站请求打开微信App",{
+                        btn: ['打开'],
+                        title:false,
+                        success:function(layero, index){
+                            $(".layui-layer-btn0",layero).attr("href",url);
+                        }
+                    });
+                })
+            }else{
+                //window.location.href='${url}';
+            }
+        }
+
+    });
+    function onBridgeReady(){
+        //alert(0);
+        //alert(successPayRedirectUrl);
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            $.parseJSON(data),
+            function(res){
+                // alert(res);
+                // alert(res.err_msg);
+                // if(res.err_msg == "get_brand_wcpay_request:ok" ){
+                //     // 使用以上方式判断前端返回,微信团队郑重提示：
+                //     //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                //     //验证订单有效性
+                //     validateOrder();
+                // }else if(res.err_msg == "get_brand_wcpay_request:cancel" ){
+                //     if(!confirm('您是否要取消支付？')){
+                //         onBridgeReady();
+                //     }else{
+                //         alert(1);
+                //         window.location.href=successPayRedirectUrl;
+                //     }
+                // }else if(res.err_msg == "get_brand_wcpay_request:fail" ){
+                //     alert(2);
+                //     window.location.href=successPayRedirectUrl;
+                // }
+            });
+    }
+
+    function validateOrder(){
+        alert(4);
+        $.ajax({
+            url:'/action/lTPay/wxQueryOrder/',
+            async:false,
+            cache:false,
+            dataType:'json',
+            type:"POST",
+            data:{'out_trade_no':tradeNo},
+            success:function(res){
+                var status=res.responseData.trade_state;
+                if(status=='SUCCESS'){
+                    alert(3);
+                    //window.location.href='/action/onlineSAAS/buyOk/?orderId='+orderId+'&userId='+userId;
+                    window.location.href=successPayRedirectUrl;
+                }
+            }
+        });
+    }
+
+</script>

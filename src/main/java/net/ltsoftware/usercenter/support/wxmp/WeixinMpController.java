@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,24 +74,37 @@ public class WeixinMpController {
     }
 
     @GetMapping("/wxmp/sns")
+//    @CrossOrigin
     public void getSnsUrl(HttpServletResponse response){
         String snsUserinfoUrl = weixinMpService.getSnsUserinfoUrl();
-//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, snsBaseUrl);
         logger.info(snsUserinfoUrl);
-        try {
-            response.sendRedirect(snsUserinfoUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, snsUserinfoUrl);
+
+//        try {
+            //response.setHeader("Access-Control-Allow-Origin", "*");
+//            response.sendRedirect(snsUserinfoUrl);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     @GetMapping("/wxmp/sns/redirect")
+    @CrossOrigin
     public void getSnsOpenid(HttpServletRequest request, HttpServletResponse response){
-        String state = request.getParameter("state");
+        String callback = request.getParameter("state");
         String code = request.getParameter("code");
-        String openid = weixinMpService.getSnsOpenid(state,code);
-        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, openid);
+        String openid = weixinMpService.getSnsOpenid(code);
+//        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, openid);
+        String location = callback+"&openid="+openid;
+        System.out.println("location: "+location);
+
+        try {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.sendRedirect(location);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 //    @GetMapping("/MP_verify_HgwQzcbwgDoAAs0t.txt")
@@ -99,6 +113,7 @@ public class WeixinMpController {
 //    }
 
     @GetMapping("/wxmp/sns/userinfo")
+    @CrossOrigin
     public void getSnsUserinfo(String openid, HttpServletResponse response){
         String userinfo = weixinMpService.getSnsUserinfo(openid);
         JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, userinfo);
