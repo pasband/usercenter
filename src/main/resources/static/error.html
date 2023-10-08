@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>error</title>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+
+  alert("支付错误！");
+  if (typeof WeixinJSBridge !== 'undefined') {
+    WeixinJSBridge.invoke('closeWindow', {}, function(res) {});
+  }
+</script>
+</html>

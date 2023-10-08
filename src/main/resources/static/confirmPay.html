@@ -70,7 +70,7 @@
         listPage = decodeURIComponent(listPage);
         loadXiaopiao(listPage);
         $("#amount").html(amount);
-        var url = 'https://uc.ltsoftware.net/pay3?payChannel=wxpay_mp';
+        var url = 'https://uc.ltsoftware.net/pay?payChannel=wxpay_mp';
         url += '&key=' + encodeURIComponent(key);
         $('.qrzf').click(function () {
             //alert(url);

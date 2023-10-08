@@ -16,7 +16,7 @@ import java.util.List;
 public class MybatisGenerator {
 
     public static void main(String[] args) throws IOException, XMLParserException, SQLException, InterruptedException, InvalidConfigurationException {
-        String configPath = "/Users/apple/IdeaProjects/platform/usercenter/src/main/resources/generatorConfig.xml";
+        String configPath = "/Users/ernest/Documents/LT_works/usercenter/src/main/resources/generatorConfig.xml";
 //        configPath = "E:\\IdeaProjects\\platform\\usercenter\\src\\main\\resources\\generatorConfig_pc.xml";
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;

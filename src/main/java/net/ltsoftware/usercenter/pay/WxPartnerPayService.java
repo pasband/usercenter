@@ -9,6 +9,7 @@ import com.wechat.pay.java.service.partnerpayments.jsapi.JsapiServiceExtension;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.*;
 import net.ltsoftware.usercenter.constant.WxpayConstants;
 import net.ltsoftware.usercenter.controller.LoginController;
+import net.ltsoftware.usercenter.model.PayOrder;
 import net.ltsoftware.usercenter.support.wxmp.WeixinMpConstants;
 import net.ltsoftware.usercenter.util.CodeHelper;
 import org.slf4j.Logger;
@@ -68,25 +69,17 @@ public class WxPartnerPayService {
     }
 
     /** JSAPI支付下单，并返回JSAPI调起支付数据 */
-    public PrepayWithRequestPaymentResponse prepayWithRequestPayment(String openid, String key, JSONObject jsonObject) {
+    public PrepayWithRequestPaymentResponse prepayWithRequestPayment(String openid, String key, PayOrder payOrder) {
         try {
-            // 商户申请的公众号对应的appid，由微信支付生成，可在公众号后台查看
-//        String requestPaymentAppid = "test-request-payment-appid";
-//        PrepayRequest request = new PrepayRequest();
-//        // 调用request.setXxx(val)设置所需参数，具体参数可见Request定义
-//        request.setSpAppid("test-sp-appid");
-            String subMchid = jsonObject.getString("subMchId");
-            int amount = jsonObject.getIntValue("amount")*100;
-//        String outTradeNo = jsonObject.getString("outTradeNo");
+            String subMchid = payOrder.getSubMchId();
+            long amount = payOrder.getAmount();
             PrepayRequest request = new PrepayRequest();
             request.setSpAppid(WeixinMpConstants.WEIXIN_MP_APPID);
             request.setSpMchid(merchantId);
-//        request.setSubMchid("1652286075");
             request.setSubMchid(subMchid);
             request.setDescription("特约商户支付测试");
-//        request.setOutTradeNo("test_"+ CodeHelper.getRandomString(10));
             request.setOutTradeNo(key);
-            request.setNotifyUrl("https://uc.ltsoftware.net/pay3/wxpay/jsapi/notify");
+            request.setNotifyUrl("https://uc.ltsoftware.net/pay/wxpay/jsapi/notify");
             Amount fen = new Amount();
 //            fen.setTotal(amount);
             fen.setTotal(1);
