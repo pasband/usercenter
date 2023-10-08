@@ -14,11 +14,13 @@ import net.ltsoftware.usercenter.util.CodeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,22 +28,25 @@ import java.io.IOException;
 @Service
 public class WxPartnerPayService {
 
-    public static String merchantId = "1649454671";
+    @Value("${wxpay.merchantId}")
+    private String merchantId; // = "1649454671";
     /** 商户API私钥路径 */
-    public static String privateKeyPath = "D:/xuyn/wxpay/apiclient_key.pem";
-//    public static String privateKeyPath = "/Users/ernest/Documents/LT_works/usercenter/src/main/resources/apiclient_key.pem";
+//    public static String privateKeyPath = "D:/xuyn/wxpay/apiclient_key.pem";
+    @Value("${wxpay.privateKeyPath}")
+    private String privateKeyPath; //= "/Users/ernest/Documents/LT_works/usercenter/src/main/resources/apiclient_key.pem";
     /** 商户证书序列号 */
-    public static String merchantSerialNumber = "2DA543568AD62C31089D5ED947B932BA762CBA8E";
+    @Value("${wxpay.merchantSerialNumber}")
+    private String merchantSerialNumber; // = "2DA543568AD62C31089D5ED947B932BA762CBA8E";
     /** 商户APIV3密钥 */
-    public static String apiV3Key = "7231d0955d2a4c85b2d038d39aa5588d";
+    @Value("${wxpay.apiV3Key}")
+    private String apiV3Key; // = "7231d0955d2a4c85b2d038d39aa5588d";
 
     public JsapiServiceExtension service;
 
     private static Logger logger = LoggerFactory.getLogger(WxPartnerPayService.class);
 
-    public WxPartnerPayService(){init();}
-
     private RSAAutoCertificateConfig config;
+    @PostConstruct
     private void init(){
 
             // 初始化商户配置
@@ -64,31 +69,35 @@ public class WxPartnerPayService {
 
     /** JSAPI支付下单，并返回JSAPI调起支付数据 */
     public PrepayWithRequestPaymentResponse prepayWithRequestPayment(String openid, String key, JSONObject jsonObject) {
-        // 商户申请的公众号对应的appid，由微信支付生成，可在公众号后台查看
+        try {
+            // 商户申请的公众号对应的appid，由微信支付生成，可在公众号后台查看
 //        String requestPaymentAppid = "test-request-payment-appid";
 //        PrepayRequest request = new PrepayRequest();
 //        // 调用request.setXxx(val)设置所需参数，具体参数可见Request定义
 //        request.setSpAppid("test-sp-appid");
-        String subMchid = jsonObject.getString("subMchid");
-        int amount = jsonObject.getIntValue("amount");
+            String subMchid = jsonObject.getString("subMchId");
+            int amount = jsonObject.getIntValue("amount")*100;
 //        String outTradeNo = jsonObject.getString("outTradeNo");
-        PrepayRequest request = new PrepayRequest();
-        request.setSpAppid(WeixinMpConstants.WEIXIN_MP_APPID);
-        request.setSpMchid("1649454671");
+            PrepayRequest request = new PrepayRequest();
+            request.setSpAppid(WeixinMpConstants.WEIXIN_MP_APPID);
+            request.setSpMchid(merchantId);
 //        request.setSubMchid("1652286075");
-        request.setSubMchid(subMchid);
-        request.setDescription("特约商户支付测试");
+            request.setSubMchid(subMchid);
+            request.setDescription("特约商户支付测试");
 //        request.setOutTradeNo("test_"+ CodeHelper.getRandomString(10));
-        request.setOutTradeNo(key);
-        request.setNotifyUrl("https://uc.ltsoftware.net/pay3/wxpay/jsapi/notify");
-        Amount fen = new Amount();
-        fen.setTotal(amount);
-        request.setAmount(fen);
-        Payer payer = new Payer();
-        payer.setSpOpenid(openid);
-        request.setPayer(payer);
-        // 调用接口
-        return service.prepayWithRequestPayment(request, WeixinMpConstants.WEIXIN_MP_APPID);
+            request.setOutTradeNo(key);
+            request.setNotifyUrl("https://uc.ltsoftware.net/pay3/wxpay/jsapi/notify");
+            Amount fen = new Amount();
+//            fen.setTotal(amount);
+            fen.setTotal(1);
+            request.setAmount(fen);
+            Payer payer = new Payer();
+            payer.setSpOpenid(openid);
+            request.setPayer(payer);
+            // 调用接口
+            return service.prepayWithRequestPayment(request, WeixinMpConstants.WEIXIN_MP_APPID);
+        }catch (Exception e) {e.printStackTrace();}
+        return null;
     }
 
     public String getRequestBody(HttpServletRequest request) throws IOException {

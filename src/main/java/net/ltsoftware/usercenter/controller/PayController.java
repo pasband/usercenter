@@ -1,5 +1,6 @@
 package net.ltsoftware.usercenter.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
@@ -529,44 +530,37 @@ public class PayController {
             String orderListUrl = request.getParameter("orderListUrl");
             String clientDomain = request.getParameter("clientDomain");
             String softType = request.getParameter("softType");
-            JSONObject jsonObject = convertParametersToJSONObject(request);
+            JSONObject jsonObject = HttpResponseUtil.convertParametersToJSONObject(request);
             String key = softType+"_"+clientDomain+"_"+outTradeNo;
             System.out.println("key: " + key);
             System.out.println("jsonObject: " + jsonObject.toString());
-            redisClient.set(key,jsonObject.toString());
 
-//            URL url = new URL(orderListUrl);
-//            String fileName = url.getFile();
-//            int lastSlashIndex = fileName.lastIndexOf("/");
-//            if (lastSlashIndex >= 0 && lastSlashIndex < fileName.length() - 1) {
-//                fileName = fileName.substring(lastSlashIndex + 1);
-//            }
             String listPage = httpUtil.get(orderListUrl,null);
             System.out.println("listPage: " + listPage);
-            listPage = UrlEncoder.urlEncode(listPage);
+//            listPage = UrlEncoder.urlEncode(listPage);
 //            listPage = HtmlUtils.htmlEscape(listPage);
-            // 生成文件
-//            String content = "This is the generated file content.";
-//            ClassPathResource resource = new ClassPathResource("static");
-//            String staticPath = resource.getFile().getAbsolutePath();
-
-//            System.out.println(staticPath);
-//            File file = new File(staticPath+fileName);
-//            FileWriter writer = new FileWriter(file);
-//            writer.write(listPage);
-//            writer.close();
-
+            JSONArray pageJson = JSONArray.parseArray(listPage);
+            JSONArray simpleJson = new JSONArray();
+            for (int i = 0; i < pageJson.size(); i++) {
+                JSONObject jsonObject1 = pageJson.getJSONObject(i);
+                JSONObject simpleJson1 = new JSONObject();
+                simpleJson1.put("routePactNo",jsonObject1.getString("routePactNo"));
+                simpleJson1.put("routePactName",jsonObject1.getString("routePactName"));
+                simpleJson1.put("financialMoney",jsonObject1.getString("financialMoney"));
+                simpleJson.add(simpleJson1);
+            }
+            jsonObject.put("addData",listPage);
+            redisClient.set(key,jsonObject.toString());
 //            System.out.println("listPage: " + listPage);
             String pageUrl = "/confirmPay.html";
             pageUrl+="?key="+key;
             pageUrl+="&amount="+amount;
-            pageUrl+="&listPage="+listPage;
+            pageUrl+="&listPage="+UrlEncoder.urlEncode(simpleJson.toString());
+            System.out.println("pageUrl: " + pageUrl);
             httpServletResponse.sendRedirect(pageUrl);
 
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -651,27 +645,21 @@ public class PayController {
             JSONObject json = JSONObject.parseObject(result);
             String busNotifyUrl = json.getString("busNotify");
             System.out.println("busNotifyUrl: " +busNotifyUrl);
+            HttpUtil httpUtil = new HttpUtil();
+//            String resp = httpUtil.get(busNotifyUrl,null);
+            System.out.println("addData: " +json.getString("addData"));
+//            String resp = httpUtil.post(busNotifyUrl,json.getString("addData"));
+            List<NameValuePair> list = new ArrayList<NameValuePair>();
+            list.add(new BasicNameValuePair("datas",json.getString("addData")));
+            list.add(new BasicNameValuePair("wxpay","uc"));
+            String resp = httpUtil.post(busNotifyUrl,list, "UTF-8");
+            System.out.println("resp: " +resp);
 //            httpServletResponse.sendRedirect("http://ly.ltsoftware.net/action/website/listOrders/?t=jlkk");
         } catch (Exception e) {
             logger.error("wxPartnerPayJsapiNotify", e);
         }
     }
 
-    public JSONObject convertParametersToJSONObject(HttpServletRequest request) {
-        JSONObject jsonObject = new JSONObject();
-        Map<String, String[]> parameterMap = request.getParameterMap();
-
-        for (String paramName : parameterMap.keySet()) {
-            String[] paramValues = parameterMap.get(paramName);
-            if (paramValues.length == 1) {
-                jsonObject.put(paramName, paramValues[0]);
-            } else {
-                jsonObject.put(paramName, paramValues);
-            }
-        }
-
-        return jsonObject;
-    }
 
     public static void main(String[] args) throws Exception {
 //        String notifyData="<xml><appid><![CDATA[wxed61c321c91d5d92]]></appid><bank_type><![CDATA[CFT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><device_info><![CDATA[WEB]]></device_info><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[N]]></is_subscribe><mch_id><![CDATA[1309846801]]></mch_id><nonce_str><![CDATA[JAgqfOFKTULMGcKf5M0OpK83YwT5NCCw]]></nonce_str><openid><![CDATA[oWvcPuHrXdhVYsKhR9oq39iIKQig]]></openid><out_trade_no><![CDATA[sk5q6swd_20190725145309]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[92FB5FB9461C48792FB14EED76CEF89E7C004A6E374399B2B769DBDB6CBA6013]]></sign><time_end><![CDATA[20190725145332]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[NATIVE]]></trade_type><transaction_id><![CDATA[4200000353201907252813793937]]></transaction_id></xml>";

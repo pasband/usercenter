@@ -8,6 +8,11 @@ mybatis:
   # typeAliasesPackage: net.ltsoftware.usercenter.model
   mapperLocations: classpath:mapper/*.xml
 
+wxpay:
+  merchantId: 1649454671
+  merchantSerialNumber: 2DA543568AD62C31089D5ED947B932BA762CBA8E
+  apiV3Key: 7231d0955d2a4c85b2d038d39aa5588d
+
 ---
 
 server:
@@ -55,7 +60,7 @@ jedis:
 ---
 
 server:
-  port: 6443
+  port: 12001
 #  ssl:
 #    key-store: /Users/apple/IdeaProjects/platform/saas/mykeystore.jks
 #    key-store-password: S0kiShgsZwAk
@@ -69,7 +74,7 @@ server:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://localhost:3306/dev-platform
+    url: jdbc:mysql://localhost:3306/ltpay
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -88,13 +93,16 @@ spring:
 jedis:
   pool:
     host: 127.0.0.1
-    password:
+    password: 123456
     port: 6379
     timeout: 60
     config:
       maxTotal: 20
       maxIdle: 10
       maxWaitMillis: 100000
+
+wxpay:
+  privateKeyPath: /Users/ernest/Documents/LT_works/usercenter/src/main/resources/apiclient_key.pem
 
 ---
 
@@ -138,6 +146,8 @@ jedis:
 #logging:
 #  level:
 #    net.ltsoftware.usercenter: trace
+wxpay:
+  privateKeyPath: D:/xuyn/wxpay/apiclient_key.pem
 
 ---
 

@@ -6,8 +6,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -24,6 +27,68 @@ import java.util.List;
 public class HttpUtil {
 
     private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
+
+//    public String post(String url,String jsonData){
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+//        CloseableHttpResponse response = null;
+//
+//        try {
+////            // 定义目标 URL
+////            String url = "http://example.com/api/endpoint";
+//
+//            // 创建 POST 请求
+//            HttpPost httpPost = new HttpPost(url);
+//
+//            // 设置请求头
+//            httpPost.setHeader("Content-Type", "application/json");
+//            httpPost.setHeader("Accept", "application/json");
+//
+//            // 创建 JSON 数据
+////            String jsonData = "{\"name\":\"John\",\"age\":30}";
+//
+//            // 设置请求体
+//            StringEntity requestEntity = new StringEntity(jsonData, ContentType.APPLICATION_JSON);
+//            httpPost.setEntity(requestEntity);
+//
+//            // 发送请求并获取响应
+//            response = httpClient.execute(httpPost);
+//
+//            // 获取响应实体
+//            HttpEntity responseEntity = response.getEntity();
+//
+//            // 解析响应数据
+//            String responseBody = EntityUtils.toString(responseEntity);
+//            int statusCode = response.getStatusLine().getStatusCode();
+//
+//            // 打印响应数据和状态码
+//            System.out.println("Response Code: " + statusCode);
+//            System.out.println("Response Body: " + responseBody);
+//
+//            // 关闭响应实体
+//            EntityUtils.consume(responseEntity);
+//            return responseBody;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                // 关闭响应
+//                if (response != null) {
+//                    response.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                // 关闭 HttpClient
+//                if (httpClient != null) {
+//                    httpClient.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
 
     public String post(String url, List<NameValuePair> paras, String charset) throws IOException {
 
