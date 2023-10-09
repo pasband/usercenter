@@ -55,11 +55,11 @@ public class WxpayController {
         try {
             String openid = request.getParameter("openid");
             String key = request.getParameter("key");
-            System.out.println("key: " + key);
+            logger.info("key: " + key);
 //            String jsonString = redisClient.get(key);
             PayOrder payOrder = payOrderService.selectByMchOrderNo(key);
             Byte state = payOrder.getState();
-            if(state!= PayOrderConstants.STATE_INIT){
+            if(state==null || state!= PayOrderConstants.STATE_INIT){
                 logger.error("PayOrder["+key+"] state:"+state);
                 return;
             }
@@ -67,9 +67,9 @@ public class WxpayController {
 //        String successUrl = request.getParameter("redirectUrl");
             PrepayWithRequestPaymentResponse response = wxPartnerPayService.prepayWithRequestPayment(openid, key, payOrder);
             String respStr = response.toString();
-            System.out.println(respStr);
+            logger.info(respStr);
 //        System.out.println("successUrl: " +successUrl);
-            System.out.println("openid: " + openid);
+            logger.info("openid: " + openid);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("appId", response.getAppId());
             jsonObject.put("timeStamp", response.getTimeStamp());
@@ -88,7 +88,7 @@ public class WxpayController {
 //            redirectUrl+="&successUrl="+UrlEncoder.urlEncode(successUrl);
 //            request.setAttribute("url",jsonObject.toString());
 //            request.setAttribute("isWeChatVisit",true);
-            System.out.println("redirectUrl: " + redirectUrl);
+            logger.info("redirectUrl: " + redirectUrl);
             httpServletResponse.sendRedirect(redirectUrl);
         } catch (Exception e) {
             logger.error("wxPartnerPayJsapi", e);
@@ -110,6 +110,7 @@ public class WxpayController {
         try {
             Transaction transaction = wxPartnerPayService.getTransaction(request);
             if(transaction==null){
+                logger.error("transaction is null.");
                 return;
             }
             String key = transaction.getOutTradeNo();
@@ -122,6 +123,10 @@ public class WxpayController {
             }
             Byte state = payOrder.getState();
             Byte notifyState = payOrder.getNotifyState();
+            if(state==null){
+                logger.error("state is null.");
+                return;
+            }
             if(state==PayOrderConstants.STATE_SUCCESS && notifyState==PayOrderConstants.NOTIFY_STATE_SUCCESS){
                 logger.error("payOrder state already is success");
                 return;
@@ -130,17 +135,17 @@ public class WxpayController {
             payOrderService.updateByPrimaryKey(payOrder);
             String busNotifyUrl = payOrder.getNotifyUrl();
 //            String busNotifyUrl = json.getString("busNotify");
-            System.out.println("busNotifyUrl: " + busNotifyUrl);
+            logger.info("busNotifyUrl: " + busNotifyUrl);
             HttpUtil httpUtil = new HttpUtil();
 //            String resp = httpUtil.get(busNotifyUrl,null);
             String addData = payOrder.getMchOrderList();
-            System.out.println("addData: " + addData);
+            logger.info("addData: " + addData);
 //            String resp = httpUtil.post(busNotifyUrl,json.getString("addData"));
             List<NameValuePair> list = new ArrayList<NameValuePair>();
             list.add(new BasicNameValuePair("datas", addData));
             list.add(new BasicNameValuePair("wxpay", "uc"));
             String resp = httpUtil.post(busNotifyUrl, list, "UTF-8");
-            System.out.println("resp: " + resp);
+            logger.info("resp: " + resp);
             JSONObject json = JSONObject.parseObject(resp);
             Integer isSuccess = json.getInteger("isSuccess");
             if(isSuccess==1) {

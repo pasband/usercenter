@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Controller
@@ -59,7 +60,7 @@ public class UnifiedOrderController {
     @PostMapping(value = "/pay/unifiedOrder", consumes = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public void unifiedOrder(@RequestBody String requestBody, HttpServletResponse httpServletResponse) {
-        System.out.println(requestBody);
+        logger.info(requestBody);
         try {
             JSONObject jsonObject = JSONObject.parseObject(requestBody);
             String mchOrderNo = savePayOrder(jsonObject);
@@ -106,7 +107,7 @@ public class UnifiedOrderController {
         String subMchId = jsonObject.getString("subMchId");
         String mchOrderNo = "P"+System.currentTimeMillis()+CodeHelper.getRandomNum(3);
 //        String listPage = jsonObject.getString("orderList");
-        System.out.println("orderList: " + orderList);
+        logger.info("orderList: " + orderList);
         //持久化
         PayOrder payOrder = new PayOrder();
         payOrder.setAmount(amount);
@@ -130,15 +131,17 @@ public class UnifiedOrderController {
             String tradeNo = request.getParameter("key");
 //            String jsonStr = redisClient.get(tradeNo);
 //            JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-            System.out.println("tradeNo: " + tradeNo);
+            logger.info("tradeNo: " + tradeNo);
             PayOrder payOrder = payOrderService.selectByMchOrderNo(tradeNo);
+            if(payOrder == null){
+                logger.error("payOrder not exist.");
+                return;
+            }
             long amount = payOrder.getAmount();
-//            String amount = jsonObject.getString("amount");
-//            String listPage = jsonObject.getString("orderList");
             String listPage = payOrder.getMchOrderList();
-            System.out.println("listPage: " + listPage);
+            logger.info("listPage: " + listPage);
             JSONArray pageJson = JSONArray.parseArray(listPage);
-            System.out.println("pageJson: " + pageJson);
+            logger.info("pageJson: " + pageJson);
             JSONArray simpleJsonArray = new JSONArray();
             for (int i = 0; i < pageJson.size(); i++) {
                 JSONObject orderJson = pageJson.getJSONObject(i);
@@ -152,7 +155,7 @@ public class UnifiedOrderController {
             pageUrl+="?key="+tradeNo;
             pageUrl+="&amount="+amount;
             pageUrl+="&listPage="+UrlEncoder.urlEncode(simpleJsonArray.toString());
-            System.out.println("pageUrl: " + pageUrl);
+            logger.info("pageUrl: " + pageUrl);
             httpServletResponse.sendRedirect(pageUrl);
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,10 +167,10 @@ public class UnifiedOrderController {
         try {
             String payChannel = request.getParameter("payChannel");
             String key = request.getParameter("key");
-            System.out.println("key: " + key);
+            logger.info("key: " + key);
             PayOrder payOrder = payOrderService.selectByMchOrderNo(key);
             Byte state = payOrder.getState();
-            if(state!=PayOrderConstants.STATE_INIT){
+            if(state==null||state!=PayOrderConstants.STATE_INIT){
                 logger.error("PayOrder["+key+"] state:"+state);
                 httpServletResponse.sendRedirect("/error.html");
                 return;
@@ -178,7 +181,7 @@ public class UnifiedOrderController {
 //                             + "?redirectUrl="+ UrlEncoder.urlEncode(redirectUrl)
                     String wxPayUrl = "http://ads.sanshak.com/action/ads/getWxOpenid2/?callback="
                             + UrlEncoder.urlEncode(callback);
-                    System.out.println("wxPayUrl: " + wxPayUrl);
+                    logger.info("wxPayUrl: " + wxPayUrl);
                     httpServletResponse.sendRedirect(wxPayUrl);
                     break;
             }

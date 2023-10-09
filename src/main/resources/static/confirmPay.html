@@ -62,10 +62,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
-        const amount = urlParams.get('amount');
+        var amount = urlParams.get('amount');
         const key = urlParams.get('key');
         var listPage = urlParams.get('listPage');
-
+        amount = (amount / 100).toFixed(2);
         // $("#orderList").attr("src",orderListUrl);
         listPage = decodeURIComponent(listPage);
         loadXiaopiao(listPage);
