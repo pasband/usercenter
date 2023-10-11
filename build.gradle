@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'org.springframework.boot' version '2.3.12.RELEASE'
     id 'java'
 
 }
@@ -24,7 +24,15 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "Greenwich.SR1")
+    set("springCloudVersion", "Hoxton.SR12")
+    set("alibabaCloudVersion", "2.2.7.RELEASE")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${alibabaCloudVersion}"
+    }
 }
 
 dependencies {
@@ -35,32 +43,39 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
     implementation 'org.mybatis.generator:mybatis-generator-core:1.3.7'
-    compile 'com.alibaba:fastjson:1.2.57'
-    compile 'log4j:log4j:1.2.17'
-    compile 'com.alibaba:druid:1.1.9'
-    compile 'redis.clients:jedis:3.0.1'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.8'
-    compile 'commons-lang:commons-lang:2.6'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    
     implementation 'com.alipay.sdk:alipay-sdk-java:3.7.89.ALL'
-    compile group: 'com.google.zxing', name: 'core', version: '3.4.0'
-    compile group: 'com.google.zxing', name: 'javase', version: '3.4.0'
-    compile 'org.elasticsearch:elasticsearch:6.3.2'
+//compile
+    implementation 'com.alibaba:fastjson:1.2.57'
+    implementation 'log4j:log4j:1.2.17'
+    implementation 'com.alibaba:druid:1.1.9'
+    implementation 'redis.clients:jedis:3.0.1'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.8'
+    implementation 'commons-lang:commons-lang:2.6'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    implementation group: 'com.google.zxing', name: 'core', version: '3.4.0'
+    implementation group: 'com.google.zxing', name: 'javase', version: '3.4.0'
+    implementation 'org.elasticsearch:elasticsearch:6.3.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    implementation group: 'com.google.guava', name: 'guava', version: '28.0-jre'
+    implementation group: 'io.swagger', name: 'swagger-models', version: '1.5.22'
+    implementation fileTree(dir: 'lib', includes: ['*jar'])
 
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    compile group: 'com.google.guava', name: 'guava', version: '28.0-jre'
-    compile group: 'io.swagger', name: 'swagger-models', version: '1.5.22'
 //    compile project(':commons')
     runtimeOnly 'mysql:mysql-connector-java'
-    compile fileTree(dir: 'lib', includes: ['*jar'])
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'com.github.wechatpay-apiv3:wechatpay-java:0.2.11'
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.1'
+
+    implementation ('com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery') {
+        exclude group: 'org.springframework.cloud', module: 'spring-cloud-starter-netflix-ribbon'
+    }
 
 }
 

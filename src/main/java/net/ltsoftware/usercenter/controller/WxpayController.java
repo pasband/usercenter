@@ -138,7 +138,7 @@ public class WxpayController {
             logger.info("busNotifyUrl: " + busNotifyUrl);
             HttpUtil httpUtil = new HttpUtil();
 //            String resp = httpUtil.get(busNotifyUrl,null);
-            String addData = payOrder.getMchOrderList();
+            String addData = payOrder.getNotifyData();
             logger.info("addData: " + addData);
 //            String resp = httpUtil.post(busNotifyUrl,json.getString("addData"));
             List<NameValuePair> list = new ArrayList<NameValuePair>();

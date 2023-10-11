@@ -97,6 +97,7 @@ public class UnifiedOrderController {
     private String savePayOrder(JSONObject jsonObject){
         Long amount = jsonObject.getLong("amount");
         String busNotify = jsonObject.getString("busNotify");
+        String busNotifyData = jsonObject.getString("busNotifyData");
         String clientDomain = jsonObject.getString("clientDomain");
         String divisionMode = jsonObject.getString("divisionMode");
 //            String mchOrderNo = jsonObject.getString("mchOrderNo");
@@ -114,6 +115,7 @@ public class UnifiedOrderController {
         payOrder.setClientIp(clientDomain);
         payOrder.setDivisionMode(PayOrderConstants.DIVISION_MODE_FORBID);
         payOrder.setNotifyUrl(busNotify);
+        payOrder.setNotifyData(busNotifyData);
         payOrder.setMchOrderNo(mchOrderNo);
         payOrder.setSubject(orderTitle);
         payOrder.setSubMchId(subMchId);
@@ -138,23 +140,13 @@ public class UnifiedOrderController {
                 return;
             }
             long amount = payOrder.getAmount();
-            String listPage = payOrder.getMchOrderList();
-            logger.info("listPage: " + listPage);
-            JSONArray pageJson = JSONArray.parseArray(listPage);
-            logger.info("pageJson: " + pageJson);
-            JSONArray simpleJsonArray = new JSONArray();
-            for (int i = 0; i < pageJson.size(); i++) {
-                JSONObject orderJson = pageJson.getJSONObject(i);
-                JSONObject simpleJson = new JSONObject();
-                simpleJson.put("routePactNo", orderJson.getString("routePactNo"));
-                simpleJson.put("routePactName", orderJson.getString("routePactName"));
-                simpleJson.put("financialMoney", orderJson.getString("financialMoney"));
-                simpleJsonArray.add(simpleJson);
-            }
+            String orderList = payOrder.getMchOrderList();
+            logger.info("orderList: " + orderList);
+
             String pageUrl = "/confirmPay.html";
             pageUrl+="?key="+tradeNo;
             pageUrl+="&amount="+amount;
-            pageUrl+="&listPage="+UrlEncoder.urlEncode(simpleJsonArray.toString());
+            pageUrl+="&listPage="+UrlEncoder.urlEncode(orderList);
             logger.info("pageUrl: " + pageUrl);
             httpServletResponse.sendRedirect(pageUrl);
         } catch (Exception e) {

@@ -95,7 +95,7 @@
 
         $.each(jsonArray, function(index, item) {
             var li = $('<li>');
-            li.html('<span>订单号：'+item.routePactNo+'</span> <span>线路：'+item.routePactName+'</span><span>金额：'+item.financialMoney+'</span>');
+            li.html('<span>订单号：'+item.title+'</span> <span>线路：'+item.description+'</span><span>金额：'+item.money+'</span>');
             ul.append(li);
 
         });

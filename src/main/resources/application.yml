@@ -1,7 +1,21 @@
 #默认使用配置
 spring:
   profiles:
-    active: dev
+    active: local
+  application:
+    name: pay-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        group: DEFAULT_GROUP
+        locator:
+          enabled: true
+      config:
+        username: nacos
+        password: nacos
 
 #公共配置与profiles选择无关
 mybatis:
