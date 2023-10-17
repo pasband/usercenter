@@ -81,8 +81,8 @@ public class WxPartnerPayService {
             request.setOutTradeNo(key);
             request.setNotifyUrl("https://uc.ltsoftware.net/pay/wxpay/jsapi/notify");
             Amount fen = new Amount();
-//            fen.setTotal(amount);
-            fen.setTotal(1);
+            fen.setTotal((int)amount);
+//            fen.setTotal(1);
             request.setAmount(fen);
             Payer payer = new Payer();
             payer.setSpOpenid(openid);

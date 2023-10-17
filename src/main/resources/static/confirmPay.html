@@ -70,7 +70,7 @@
         listPage = decodeURIComponent(listPage);
         loadXiaopiao(listPage);
         $("#amount").html(amount);
-        var url = 'https://uc.ltsoftware.net/pay?payChannel=wxpay_mp';
+        var url = 'https://uc.ltsoftware.net/pay?payChannel=wxpay_jsapi';
         url += '&key=' + encodeURIComponent(key);
         $('.qrzf').click(function () {
             //alert(url);
@@ -95,7 +95,7 @@
 
         $.each(jsonArray, function(index, item) {
             var li = $('<li>');
-            li.html('<span>订单号：'+item.title+'</span> <span>线路：'+item.description+'</span><span>金额：'+item.money+'</span>');
+            li.html('<span>订单号：'+item.title+'</span><br><span>线路：'+item.description+'</span><br><span>金额：'+item.money+'</span><br>');
             ul.append(li);
 
         });

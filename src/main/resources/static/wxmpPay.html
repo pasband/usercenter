@@ -21,7 +21,8 @@
     const urlParams = new URLSearchParams(window.location.search);
     const data = urlParams.get('data');
     const isWeChatVisit = urlParams.get('isWeChatVisit');
-    const successPayRedirectUrl = urlParams.get('successUrl');
+    //const successPayRedirectUrl = urlParams.get('successUrl');
+    const key = urlParams.get('key');
 
     // var tradeNo='${outTradeNo}';
     // var orderId='${orderId}';
@@ -63,24 +64,24 @@
             'getBrandWCPayRequest',
             $.parseJSON(data),
             function(res){
-                // alert(res);
-                // alert(res.err_msg);
+                //alert(res);
+                //alert(res.err_msg);
                 // if(res.err_msg == "get_brand_wcpay_request:ok" ){
                 //     // 使用以上方式判断前端返回,微信团队郑重提示：
                 //     //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
                 //     //验证订单有效性
                 //     validateOrder();
-                // }else if(res.err_msg == "get_brand_wcpay_request:cancel" ){
-                //     if(!confirm('您是否要取消支付？')){
-                //         onBridgeReady();
-                //     }else{
-                //         alert(1);
-                //         window.location.href=successPayRedirectUrl;
-                //     }
-                // }else if(res.err_msg == "get_brand_wcpay_request:fail" ){
-                //     alert(2);
-                //     window.location.href=successPayRedirectUrl;
-                // }
+                // }else
+                if(res.err_msg == "get_brand_wcpay_request:cancel" ){
+                    // if(!confirm('您是否要选择其它方式支付？')){
+                    //     onBridgeReady();
+                    // }else{
+                    //     // alert(1);
+                    window.location.href="/pay/page?key="+key;
+                    // }
+                }else if(res.err_msg == "get_brand_wcpay_request:fail" ){
+                    window.location.href="/error.html";
+                }
             });
     }
 

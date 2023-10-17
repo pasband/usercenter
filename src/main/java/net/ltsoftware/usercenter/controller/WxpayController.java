@@ -59,7 +59,7 @@ public class WxpayController {
 //            String jsonString = redisClient.get(key);
             PayOrder payOrder = payOrderService.selectByMchOrderNo(key);
             Byte state = payOrder.getState();
-            if(state==null || state!= PayOrderConstants.STATE_INIT){
+            if(state==null || state!= PayOrderConstants.STATE_INIT && state!= PayOrderConstants.STATE_ING){
                 logger.error("PayOrder["+key+"] state:"+state);
                 return;
             }
@@ -79,12 +79,15 @@ public class WxpayController {
             jsonObject.put("paySign", response.getPaySign());
 //        JsonUtil.toJsonMsg(httpServletResponse,ErrorCode.SUCCESS,jsonObject);
 //        redirectUrl+="?data="+jsonObject.toString();
+            payOrder.setChannelUser(openid);
+            payOrder.setWayCode(WxpayConstants.CHANNEL_JSAPI);
             payOrder.setState(PayOrderConstants.STATE_ING);
             payOrder.setNotifyState(PayOrderConstants.NOTIFY_STATE_NONE);
             payOrderService.updateByPrimaryKey(payOrder);
             String redirectUrl = "/wxmpPay.html";
             redirectUrl += "?isWeChatVisit=true";
             redirectUrl += "&data=" + UrlEncoder.urlEncode(jsonObject.toJSONString());
+            redirectUrl += "&key=" + key;
 //            redirectUrl+="&successUrl="+UrlEncoder.urlEncode(successUrl);
 //            request.setAttribute("url",jsonObject.toString());
 //            request.setAttribute("isWeChatVisit",true);
@@ -131,7 +134,13 @@ public class WxpayController {
                 logger.error("payOrder state already is success");
                 return;
             }
+            //获取
+            String transactionId = transaction.getTransactionId();
+            String spOpenid = transaction.getPayer().getSpOpenid();
+            String subOpenid = transaction.getPayer().getSubOpenid();
+            logger.info("spOpenid: " + spOpenid + ", subOpenid: " + subOpenid);
             payOrder.setState(PayOrderConstants.STATE_SUCCESS);
+            payOrder.setChannelOrderNo(transactionId);
             payOrderService.updateByPrimaryKey(payOrder);
             String busNotifyUrl = payOrder.getNotifyUrl();
 //            String busNotifyUrl = json.getString("busNotify");
@@ -142,8 +151,15 @@ public class WxpayController {
             logger.info("addData: " + addData);
 //            String resp = httpUtil.post(busNotifyUrl,json.getString("addData"));
             List<NameValuePair> list = new ArrayList<NameValuePair>();
+            String openId = payOrder.getChannelUser();
+            String mchOrderNo = payOrder.getMchOrderNo();
+            String wxPayOrderNo = transactionId;
+            logger.info("openId: " +openId + " mchOrderNo: " + mchOrderNo + " wxPayOrderNo: " + wxPayOrderNo);
+            String remark = "【支付方式：微信扫码支付, 支付流水号："+mchOrderNo+", 微信支付单号："+wxPayOrderNo+"】, 【支付人信息：openId="+openId+"】";
+
             list.add(new BasicNameValuePair("datas", addData));
-            list.add(new BasicNameValuePair("wxpay", "uc"));
+            list.add(new BasicNameValuePair("payChannel", payOrder.getWayCode()));
+            list.add(new BasicNameValuePair("extra",remark));
             String resp = httpUtil.post(busNotifyUrl, list, "UTF-8");
             logger.info("resp: " + resp);
             JSONObject json = JSONObject.parseObject(resp);

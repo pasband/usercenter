@@ -2,6 +2,7 @@ package net.ltsoftware.usercenter.support.wxmp;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wechat.pay.java.core.http.UrlEncoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -86,18 +87,23 @@ public class WeixinMpController {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
     }
 
     @GetMapping("/wxmp/sns/redirect")
     @CrossOrigin
     public void getSnsOpenid(HttpServletRequest request, HttpServletResponse response){
+        // 获取请求的查询参数
+        String queryString = request.getQueryString();
+        logger.info("queryString: "+queryString);
         String callback = request.getParameter("state");
         String code = request.getParameter("code");
         String openid = weixinMpService.getSnsOpenid(code);
 //        JsonUtil.toJsonMsg(response, ErrorCode.SUCCESS, openid);
+        logger.info("callback: "+callback);
+        //适配临时转义
+        callback = callback.replaceAll("@","&");
         String location = callback+"&openid="+openid;
-        System.out.println("location: "+location);
+        logger.info("location: "+location);
 
         try {
             response.setHeader("Access-Control-Allow-Origin", "*");

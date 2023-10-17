@@ -162,14 +162,14 @@ public class UnifiedOrderController {
             logger.info("key: " + key);
             PayOrder payOrder = payOrderService.selectByMchOrderNo(key);
             Byte state = payOrder.getState();
-            if(state==null||state!=PayOrderConstants.STATE_INIT){
+            if(state==null||state!=PayOrderConstants.STATE_INIT&&state!=PayOrderConstants.STATE_ING){
                 logger.error("PayOrder["+key+"] state:"+state);
                 httpServletResponse.sendRedirect("/error.html");
                 return;
             }
             switch (payChannel) {
-                case WxpayConstants.CHANNEL_MP:
-                    String callback = "https://uc.ltsoftware.net/pay/wxpay/jsapi?key=" + UrlEncoder.urlEncode(key);
+                case WxpayConstants.CHANNEL_JSAPI:
+                    String callback = "https://uc.ltsoftware.net/pay/wxpay/jsapi?key=" + key;
 //                             + "?redirectUrl="+ UrlEncoder.urlEncode(redirectUrl)
                     String wxPayUrl = "http://ads.sanshak.com/action/ads/getWxOpenid2/?callback="
                             + UrlEncoder.urlEncode(callback);

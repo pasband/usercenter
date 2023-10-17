@@ -175,7 +175,7 @@ public class WeixinMpService {
                 "&code="+code+
                 "&grant_type="+WeixinMpConstants.GRANT_TYPE;
         String respStr = new HttpUtil().get(getTokenUrl,null);
-        System.out.println("respStr: "+respStr);
+        logger.info("respStr: "+respStr);
         JSONObject respJson = JSON.parseObject(respStr);
         String openid = respJson.getString("openid");
 

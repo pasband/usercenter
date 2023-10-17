@@ -1,7 +1,7 @@
 #默认使用配置
 spring:
   profiles:
-    active: local
+    active: dev
   application:
     name: pay-service
   cloud:
@@ -27,6 +27,9 @@ wxpay:
   merchantSerialNumber: 2DA543568AD62C31089D5ED947B932BA762CBA8E
   apiV3Key: 7231d0955d2a4c85b2d038d39aa5588d
 
+logging:
+  file:
+    name: pay.log
 ---
 
 server:

@@ -24,6 +24,8 @@ public interface WxpayConstants {
 
     String CHANNEL_MP = "wxpay_mp";
 
+    String CHANNEL_JSAPI = "wxpay_jsapi";;
+
     String TRADE_TYPE_JSAPI = "JSAPI";
 
     String SIGN_TYPE_HMACSHA256 = "HMAC-SHA256";
