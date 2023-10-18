@@ -3,5 +3,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'usercenter'
+rootProject.name = 'pay-service'
 //includeFlat 'commons'

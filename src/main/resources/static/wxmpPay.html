@@ -77,32 +77,12 @@
                     //     onBridgeReady();
                     // }else{
                     //     // alert(1);
-                    window.location.href="/pay/page?key="+key;
+                    window.history.go(-1)
                     // }
                 }else if(res.err_msg == "get_brand_wcpay_request:fail" ){
                     window.location.href="/error.html";
                 }
             });
-    }
-
-    function validateOrder(){
-        alert(4);
-        $.ajax({
-            url:'/action/lTPay/wxQueryOrder/',
-            async:false,
-            cache:false,
-            dataType:'json',
-            type:"POST",
-            data:{'out_trade_no':tradeNo},
-            success:function(res){
-                var status=res.responseData.trade_state;
-                if(status=='SUCCESS'){
-                    alert(3);
-                    //window.location.href='/action/onlineSAAS/buyOk/?orderId='+orderId+'&userId='+userId;
-                    window.location.href=successPayRedirectUrl;
-                }
-            }
-        });
     }
 
 </script>

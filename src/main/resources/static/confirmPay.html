@@ -57,8 +57,6 @@
 </body>
 </html>
 <script type="text/javascript" src="/js/jquery.min-1.7.js"></script>
-<script type="text/javascript" src="/js/alert.min.js"></script>
-<script type="text/javascript" src="/css/website/js/validatePayedOrder.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
@@ -75,19 +73,11 @@
         $('.qrzf').click(function () {
             //alert(url);
             window.top.location.href = url;
-                //'https://uc.ltsoftware.net/pay3?payChannel=wxpay_mp&amp;redirectUrl=www.baidu.com';
+
         });
     })
 
     function loadXiaopiao(listPage) {
-        // var url = 'https://example.com/otherpage'; // 要获取内容的页面 URL
-
-        // $.get(listPage, function(data) {
-        //     var htmlContent = $(data).find('body').html(); // 提取其他页面的 body 内容
-
-            // 将 HTML 内容填充到当前页面的元素中
-            //$('#orderList').html(listPage);
-
         // 生成表格
         var ul = $('<ul>');
         //alert(listPage);
