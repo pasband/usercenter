@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="referrer" content="origin">
+  <meta name="viewport"
+        content="width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>支付完成</title>
+  <head>
+    <script type="text/javascript" charset="UTF-8" src="https://wx.gtimg.com/pay_h5/goldplan/js/jgoldplan-1.0.0.js"></script>
+    <script type="text/javascript">
+      window.onload=function(){
+        var mchData ={action:'onIframeReady',displayStyle:'SHOW_CUSTOM_PAGE'};
+        var postData = JSON.stringify(mchData);
+        parent.postMessage(postData,'https://payapp.weixin.qq.com');
+      }
+    </script>
+
+  </head>
+  <style>
+    body {
+      font-family: PingFang SC, "Helvetica Neue", Arial, sans-serif;
+    }
+    .order_box {
+      text-align: center;
+    }
+
+    .order_box .bussiness_avt img {
+      width: 100%;
+      height: 68px;
+      border: 1px solid #E0E0E0;
+    }
+
+    .b_name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333333;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="order_box">
+  <div class="bussiness_avt">
+<!--    <img id="b_avt" src="https://xxxxxxx/121212.png"-->
+<!--         alt="">-->
+  </div>
+  <div class="b_name" id="b_name">
+    支付成功
+  </div>
+</div>
+</body>
+
+</html>
